@@ -14,37 +14,59 @@ namespace DownKyi.Models
             DownloadedFiles = new List<string>();
         }
 
-        // Aria相关
+        /// <summary>
+        /// Aria相关
+        /// </summary>
         public string Gid { get; set; }
 
-        // 下载的文件
+        /// <summary>
+        /// 下载的文件
+        /// </summary>
         public Dictionary<string, string> DownloadFiles { get; set; }
 
-        // 已下载的文件
+        /// <summary>
+        /// 已下载的文件
+        /// </summary>
         public List<string> DownloadedFiles { get; set; }
 
-        // 视频类别
+        /// <summary>
+        /// 视频类别
+        /// </summary>
         public PlayStreamType PlayStreamType { get; set; }
 
-        // 下载状态
+        /// <summary>
+        /// 下载状态
+        /// </summary>
         public DownloadStatus DownloadStatus { get; set; }
 
-        // 正在下载内容（音频、视频、弹幕、字幕、封面）
+        /// <summary>
+        /// 正在下载内容（音频、视频、弹幕、字幕、封面）
+        /// </summary>
         public string DownloadContent { get; set; }
 
-        // 下载状态显示
+        /// <summary>
+        /// 下载状态显示
+        /// </summary>
         public string DownloadStatusTitle { get; set; }
 
-        // 下载进度
+        /// <summary>
+        /// 下载进度
+        /// </summary>
         public float Progress { get; set; }
 
-        //  已下载大小/文件大小
+        /// <summary>
+        /// 已下载大小/文件大小
+        /// </summary>
         public string DownloadingFileSize { get; set; }
 
-        // 下载的最高速度
+        /// <summary>
+        /// 下载的最高速度
+        /// </summary>
         public long MaxSpeed { get; set; }
 
-        //  下载速度
+        /// <summary>
+        /// 下载速度
+        /// </summary>
         public string SpeedDisplay { get; set; }
 
     }
