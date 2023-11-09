@@ -1,18 +1,51 @@
-﻿namespace DownKyi.Core.BiliApi.Danmaku.Models
+namespace DownKyi.Core.BiliApi.Danmaku.Models
 {
+    /// <summary>
+    /// BiliBili_弹幕类
+    /// </summary>
     public class BiliDanmaku
     {
-        public long Id { get; set; }          //弹幕dmID
-        public int Progress { get; set; }     //出现时间
-        public int Mode { get; set; }         //弹幕类型
-        public int Fontsize { get; set; }     //文字大小
-        public uint Color { get; set; }       //弹幕颜色
-        public string MidHash { get; set; }   //发送者UID的HASH
-        public string Content { get; set; }   //弹幕内容
-        public long Ctime { get; set; }       //发送时间
-        public int Weight { get; set; }       //权重
+        /// <summary>
+        /// 弹幕dmID
+        /// </summary>
+        public long Id { get; set; }
+        /// <summary>
+        /// 出现时间
+        /// </summary>
+        public int Progress { get; set; }
+        /// <summary>
+        /// 弹幕类型
+        /// </summary>
+        public int Mode { get; set; }
+        /// <summary>
+        /// 文字大小
+        /// </summary>
+        public int Fontsize { get; set; }
+        /// <summary>
+        /// 弹幕颜色
+        /// </summary>
+        public uint Color { get; set; }
+        /// <summary>
+        /// 发送者UID的HASH
+        /// </summary>
+        public string MidHash { get; set; }
+        /// <summary>
+        /// 弹幕内容
+        /// </summary>
+        public string Content { get; set; }
+        /// <summary>
+        /// 发送时间
+        /// </summary>
+        public long Ctime { get; set; }
+        /// <summary>
+        /// 权重
+        /// </summary>
+        public int Weight { get; set; }
         //public string Action { get; set; }    //动作？
-        public int Pool { get; set; }         //弹幕池
+        /// <summary>
+        /// 弹幕池
+        /// </summary>
+        public int Pool { get; set; }
 
         public override string ToString()
         {
