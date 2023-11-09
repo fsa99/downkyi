@@ -5,6 +5,9 @@ using System;
 
 namespace DownKyi.Core.BiliApi.Bangumi
 {
+    /// <summary>
+    /// 剧集/番剧类
+    /// </summary>
     public static class BangumiInfo
     {
 
