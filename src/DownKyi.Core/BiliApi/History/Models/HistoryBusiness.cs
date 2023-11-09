@@ -1,11 +1,26 @@
-﻿namespace DownKyi.Core.BiliApi.History.Models
+namespace DownKyi.Core.BiliApi.History.Models
 {
     public enum HistoryBusiness
     {
-        ARCHIVE = 1, // 稿件
-        PGC, // 番剧（影视）
-        LIVE, // 直播
-        ARTICLE_LIST, // 文集
-        ARTICLE, // 文章
+        /// <summary>
+        /// 稿件
+        /// </summary>
+        ARCHIVE = 1,
+        /// <summary>
+        /// 番剧（影视）
+        /// </summary>
+        PGC,
+        /// <summary>
+        /// 直播
+        /// </summary>
+        LIVE, 
+        /// <summary>
+        /// 文集
+        /// </summary>
+        ARTICLE_LIST,
+        /// <summary>
+        /// 文章
+        /// </summary>
+        ARTICLE,
     }
 }
