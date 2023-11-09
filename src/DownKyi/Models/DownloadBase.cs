@@ -1,4 +1,4 @@
-﻿using DownKyi.Core.BiliApi.BiliUtils;
+using DownKyi.Core.BiliApi.BiliUtils;
 using System;
 using System.Collections.Generic;
 
@@ -23,52 +23,82 @@ namespace DownKyi.Models
             };
         }
 
-        // 此条下载项的id
+        /// <summary>
+        /// 此条下载项的id
+        /// </summary>
         public string Uuid { get; }
 
-        // 需要下载的内容
+        /// <summary>
+        /// 需要下载的内容
+        /// </summary>
         public Dictionary<string, bool> NeedDownloadContent { get; set; }
 
-        // 视频的id
+        /// <summary>
+        /// 视频的id
+        /// </summary>
         public string Bvid { get; set; }
         public long Avid { get; set; }
         public long Cid { get; set; }
         public long EpisodeId { get; set; }
 
-        // 视频封面的url
+        /// <summary>
+        /// 视频封面的url
+        /// </summary>
         public string CoverUrl { get; set; }
 
-        // 视频page的封面的url
+        /// <summary>
+        /// 视频page的封面的url
+        /// </summary>
         public string PageCoverUrl { get; set; }
 
-        // 分区id
+        /// <summary>
+        /// 分区id
+        /// </summary>
         public int ZoneId { get; set; }
 
-        // 视频序号
+        /// <summary>
+        /// 视频序号
+        /// </summary>
         public int Order { get; set; }
 
-        // 视频主标题
+        /// <summary>
+        /// 视频主标题
+        /// </summary>
         public string MainTitle { get; set; }
 
-        // 视频标题
+        /// <summary>
+        /// 视频标题
+        /// </summary>
         public string Name { get; set; }
 
-        // 时长
+        /// <summary>
+        /// 时长
+        /// </summary>
         public string Duration { get; set; }
 
-        // 视频编码名称，AVC、HEVC
+        /// <summary>
+        /// 视频编码名称，AVC、HEVC
+        /// </summary>
         public string VideoCodecName { get; set; }
 
-        // 视频画质
+        /// <summary>
+        /// 视频画质
+        /// </summary>
         public Quality Resolution { get; set; }
 
-        // 音频编码
+        /// <summary>
+        /// 音频编码
+        /// </summary>
         public Quality AudioCodec { get; set; }
 
-        // 文件路径，不包含扩展名，所有内容均以此路径下载
+        /// <summary>
+        /// 文件路径，不包含扩展名，所有内容均以此路径下载
+        /// </summary>
         public string FilePath { get; set; }
 
-        // 文件大小
+        /// <summary>
+        /// 文件大小
+        /// </summary>
         public string FileSize { get; set; }
 
     }
