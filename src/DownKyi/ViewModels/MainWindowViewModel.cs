@@ -248,11 +248,23 @@ namespace DownKyi.ViewModels
             // 皮肤按钮点击事件
             SkinCommand = new DelegateCommand(() =>
             {
-                // 设置主题
-                DictionaryResource.LoadTheme("ThemeDiy");
+                string cur_Language = DictionaryResource.GetCurLanguage();
+                if (cur_Language.Contains("zh_CN") || cur_Language.Contains("Default"))
+                {
+                    // 切换语言
+                    DictionaryResource.LoadLanguage("en_US");
+                    // 设置主题
+                    DictionaryResource.LoadTheme("ThemeDiy");
+                }
+                else
+                {
+                    // 设置主题
+                    DictionaryResource.LoadTheme("ThemeDefault");
 
-                // 切换语言
-                DictionaryResource.LoadLanguage("en_US");
+                    // 切换语言
+                    DictionaryResource.LoadLanguage("zh_CN");
+                }
+                
             });
             SkinEnterCommand = new DelegateCommand(() =>
             {
