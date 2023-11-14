@@ -1,4 +1,4 @@
-﻿using DownKyi.Core.Settings;
+using DownKyi.Core.Settings;
 using DownKyi.Events;
 using DownKyi.Models;
 using DownKyi.Utils;
@@ -10,6 +10,9 @@ using System.Linq;
 
 namespace DownKyi.ViewModels.Settings
 {
+    /// <summary>
+    /// 设置-基础
+    /// </summary>
     public class ViewBasicViewModel : BaseViewModel
     {
         public const string Tag = "PageSettingsBasic";
@@ -19,6 +22,9 @@ namespace DownKyi.ViewModels.Settings
         #region 页面属性申明
 
         private bool none;
+        /// <summary>
+        /// 下载完成后的操作，什么都不做
+        /// </summary>
         public bool None
         {
             get { return none; }
@@ -26,6 +32,9 @@ namespace DownKyi.ViewModels.Settings
         }
 
         private bool closeApp;
+        /// <summary>
+        /// 下载完成后的操作，是否关闭APP
+        /// </summary>
         public bool CloseApp
         {
             get { return closeApp; }
@@ -33,10 +42,23 @@ namespace DownKyi.ViewModels.Settings
         }
 
         private bool closeSystem;
+        /// <summary>
+        /// 下载完成后的操作，是否关闭系统
+        /// </summary>
         public bool CloseSystem
         {
             get { return closeSystem; }
             set { SetProperty(ref closeSystem, value); }
+        }
+
+        private bool createUpUpResource;
+        /// <summary>
+        /// 下载完成后的操作，是否创建UpUp资源
+        /// </summary>
+        public bool CreateUpUpResource
+        {
+            get { return createUpUpResource; }
+            set { SetProperty(ref createUpUpResource, value); }
         }
 
         private bool listenClipboard;
@@ -116,7 +138,6 @@ namespace DownKyi.ViewModels.Settings
             AllowStatus isAutoParseVideo = SettingsManager.GetInstance().IsAutoParseVideo();
             AutoParseVideo = isAutoParseVideo == AllowStatus.YES;
 
-            // 解析范围
             ParseScope parseScope = SettingsManager.GetInstance().GetParseScope();
             SelectedParseScope = ParseScopes.FirstOrDefault(t => { return t.ParseScope == parseScope; });
 
@@ -149,6 +170,9 @@ namespace DownKyi.ViewModels.Settings
                     break;
                 case "CloseSystem":
                     afterDownload = AfterDownloadOperation.CLOSE_SYSTEM;
+                    break;
+                case "CreateUpUpResource":
+                    afterDownload = AfterDownloadOperation.CREATE_UPUPRESOURCE;
                     break;
                 default:
                     afterDownload = AfterDownloadOperation.NONE;
@@ -239,6 +263,9 @@ namespace DownKyi.ViewModels.Settings
                     break;
                 case AfterDownloadOperation.CLOSE_SYSTEM:
                     CloseSystem = true;
+                    break;
+                case AfterDownloadOperation.CREATE_UPUPRESOURCE:
+                    CreateUpUpResource = true;
                     break;
             }
         }
