@@ -53,6 +53,15 @@
                             Foreground="{DynamicResource BrushTextDark}"
                             IsChecked="{Binding CloseSystem}"
                             Style="{StaticResource RadioStyle}" />
+                        <RadioButton
+                            Margin="20,0,0,0"
+                            Command="{Binding AfterDownloadOperationCommand}"
+                            CommandParameter="CreateUpUpResource"
+                            Content="{DynamicResource AfterDownloadOperationCreateUpUpResource}"
+                            FontSize="12"
+                            Foreground="{DynamicResource BrushTextDark}"
+                            IsChecked="{Binding CreateUpUpResource}"
+                            Style="{StaticResource RadioStyle}" />
                     </StackPanel>
                 </GroupBox>
             </StackPanel>
