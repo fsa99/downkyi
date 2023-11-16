@@ -1,15 +1,30 @@
-﻿using Prism.Mvvm;
+using Prism.Mvvm;
 using System.Windows.Media.Imaging;
 
 namespace DownKyi.ViewModels.PageViewModels
 {
+    /// <summary>
+    /// 视频信息
+    /// </summary>
     public class VideoInfoView : BindableBase
     {
+        /// <summary>
+        /// 封面地址
+        /// </summary>
         public string CoverUrl { get; set; }
+        /// <summary>
+        /// UP主 id
+        /// </summary>
         public long UpperMid { get; set; }
+        /// <summary>
+        /// 视频类型id
+        /// </summary>
         public int TypeId { get; set; }
 
         private BitmapImage cover;
+        /// <summary>
+        /// 封面
+        /// </summary>
         public BitmapImage Cover
         {
             get => cover;
@@ -17,6 +32,9 @@ namespace DownKyi.ViewModels.PageViewModels
         }
 
         private string title;
+        /// <summary>
+        /// 标题
+        /// </summary>
         public string Title
         {
             get => title;
@@ -24,6 +42,9 @@ namespace DownKyi.ViewModels.PageViewModels
         }
 
         private string videoZone;
+        /// <summary>
+        /// 视频分类
+        /// </summary>
         public string VideoZone
         {
             get => videoZone;
@@ -31,6 +52,9 @@ namespace DownKyi.ViewModels.PageViewModels
         }
 
         private string createTime;
+        /// <summary>
+        /// 视频上传时间
+        /// </summary>
         public string CreateTime
         {
             get => createTime;
@@ -38,6 +62,9 @@ namespace DownKyi.ViewModels.PageViewModels
         }
 
         private string playNumber;
+        /// <summary>
+        /// 播放数量
+        /// </summary>
         public string PlayNumber
         {
             get => playNumber;
@@ -45,6 +72,9 @@ namespace DownKyi.ViewModels.PageViewModels
         }
 
         private string danmakuNumber;
+        /// <summary>
+        /// 弹幕数量
+        /// </summary>
         public string DanmakuNumber
         {
             get => danmakuNumber;
@@ -52,6 +82,9 @@ namespace DownKyi.ViewModels.PageViewModels
         }
 
         private string likeNumber;
+        /// <summary>
+        /// 喜欢/点赞数量
+        /// </summary>
         public string LikeNumber
         {
             get => likeNumber;
@@ -59,6 +92,9 @@ namespace DownKyi.ViewModels.PageViewModels
         }
 
         private string coinNumber;
+        /// <summary>
+        /// 投币数量
+        /// </summary>
         public string CoinNumber
         {
             get => coinNumber;
@@ -66,6 +102,9 @@ namespace DownKyi.ViewModels.PageViewModels
         }
 
         private string favoriteNumber;
+        /// <summary>
+        /// 收藏数量
+        /// </summary>
         public string FavoriteNumber
         {
             get => favoriteNumber;
@@ -73,6 +112,9 @@ namespace DownKyi.ViewModels.PageViewModels
         }
 
         private string shareNumber;
+        /// <summary>
+        /// 分享数量
+        /// </summary>
         public string ShareNumber
         {
             get => shareNumber;
@@ -87,6 +129,9 @@ namespace DownKyi.ViewModels.PageViewModels
         }
 
         private string description;
+        /// <summary>
+        /// 视频描述
+        /// </summary>
         public string Description
         {
             get => description;
@@ -94,6 +139,9 @@ namespace DownKyi.ViewModels.PageViewModels
         }
 
         private string upName;
+        /// <summary>
+        /// Up主名字
+        /// </summary>
         public string UpName
         {
             get => upName;
@@ -101,11 +149,13 @@ namespace DownKyi.ViewModels.PageViewModels
         }
 
         private BitmapImage upHeader;
+        /// <summary>
+        /// Up主头像
+        /// </summary>
         public BitmapImage UpHeader
         {
             get => upHeader;
             set => SetProperty(ref upHeader, value);
         }
-
     }
 }
