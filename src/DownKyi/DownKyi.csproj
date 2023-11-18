@@ -569,7 +569,7 @@
     </PackageReference>
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
     <PackageReference Include="System.Data.SQLite.Core">
-      <Version>1.0.112.2</Version>
+      <Version>1.0.118</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
