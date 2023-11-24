@@ -1,4 +1,4 @@
-﻿namespace DownKyi.Images
+namespace DownKyi.Images
 {
     public class ButtonIcon
     {
@@ -138,19 +138,71 @@
                 Fill = "#FF000000"
             };
 
+            UpTheme = new VectorImage
+            {
+                Height = 20,
+                Width = 20,
+                Data = @"m828.92047,987.38275l-424.14573,0a127.98766,127.98766 0 0 1 -127.87663,-127.82728l0,-384.07402l-38.13474,38.13474a43.04501,43.04501 
+                        0 0 1 -59.10825,0l-167.49185,-167.45484a41.76193,41.76193 0 0 1 0,-59.0959l95.56511,-95.54044a474.65484,474.65484 0 0 1 
+                        276.85012,-134.88424l57.75113,-7.04463a41.81128,41.81128 0 0 1 46.88193,41.49051l0,54.61745c0,76.19547 65.95547,103.33763 
+                        127.67923,103.33763s127.7039,-27.1545 127.7039,-103.34997l0,-54.60511a41.81128,41.81128 0 0 1 
+                        46.88193,-41.49051l57.70178,7.04463a474.65484,474.65484 0 0 1 276.78844,134.88424l95.5651,95.54044a41.76193,41.76193 
+                        0 0 1 0,59.0959l-167.49185,167.45484a41.81128,41.81128 0 0 1 -29.60964,12.23865a41.81128,41.81128 0 0 1 
+                        -29.60964,-12.23865l-38.02371,-38.13474l0,384.07402a127.98766,127.98766 0 0 1 -127.87663,127.82728zm-529.79045,-627.03345a61.36598,61.36598 
+                        0 0 1 61.37831,61.31663l0,437.88954a44.30342,44.30342 0 0 0 44.26641,44.24173l424.14573,0a44.30342,44.30342 0 0 0 
+                        44.25408,-44.24173l0,-437.88954a61.32896,61.32896 0 0 1 
+                        104.67007,-43.34111l46.64752,46.63518l108.38361,-108.33427l-66.00482,-65.99248a390.71152,390.71152 0 0 0 
+                        -227.87084,-111.03614l-10.84453,-1.3201l0,7.40241c0,110.04916 -86.89195,186.92318 
+                        -211.30178,186.92318s-211.30179,-76.86169 -211.30179,-186.91084l0,-7.40241l-10.85686,1.3201a390.69918,390.69918 
+                        0 0 0 -227.84617,111.03614l-66.01716,65.96781l108.32193,108.33426l46.64751,-46.63518a61.20559,61.20559 0 0 1 43.32878,-17.96318z",
+                Fill = "#FF000000"
+            };
         }
 
+        /// <summary>
+        /// 通用查询
+        /// </summary>
         public VectorImage GeneralSearch { get; private set; }
+        /// <summary>
+        /// 设置
+        /// </summary>
         public VectorImage Settings { get; private set; }
+        /// <summary>
+        /// 下载管理
+        /// </summary>
         public VectorImage DownloadManage { get; private set; }
+        /// <summary>
+        /// 工具箱
+        /// </summary>
         public VectorImage Toolbox { get; private set; }
-
+        /// <summary>
+        /// 垃圾桶
+        /// </summary>
         public VectorImage Trash { get; private set; }
+        /// <summary>
+        /// 删除  'X'
+        /// </summary>
         public VectorImage Delete { get; private set; }
+        /// <summary>
+        /// 开始
+        /// </summary>
         public VectorImage Start { get; private set; }
+        /// <summary>
+        /// 暂停
+        /// </summary>
         public VectorImage Pause { get; private set; }
+        /// <summary>
+        /// 重试
+        /// </summary>
         public VectorImage Retry { get; private set; }
+        /// <summary>
+        /// 文件夹
+        /// </summary>
         public VectorImage Folder { get; private set; }
+        /// <summary>
+        /// Upup资源
+        /// </summary>
+        public VectorImage UpTheme { get; private set; }
 
     }
 }
