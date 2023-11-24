@@ -1,4 +1,4 @@
-﻿<ResourceDictionary
+<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:DownKyi.Languages"
@@ -148,7 +148,7 @@
     <system:String x:Key="TipAddDownloadingFinished1">成功添加了</system:String>
     <system:String x:Key="TipAddDownloadingFinished2">项~</system:String>
 
-    <!--  DownloadManager  -->
+    <!--  DownloadManager下载管理  -->
     <system:String x:Key="Downloading">正在下载</system:String>
     <system:String x:Key="DownloadFinished">已下载</system:String>
     <system:String x:Key="DownloadSuccess">下载完成</system:String>
@@ -182,6 +182,7 @@
     <system:String x:Key="DeleteDownload">移除</system:String>
     <system:String x:Key="OpenFolder">打开文件夹</system:String>
     <system:String x:Key="OpenVideo">播放</system:String>
+    <system:String x:Key="CreateUpupTheme">生成Upup资源</system:String>
 
     <!--  Settings  -->
     <system:String x:Key="PressEnterToApplySettingTip">按回车键应用设置</system:String>
