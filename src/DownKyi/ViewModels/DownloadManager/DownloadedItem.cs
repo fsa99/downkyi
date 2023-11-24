@@ -1,4 +1,4 @@
-﻿using DownKyi.Images;
+using DownKyi.Images;
 using DownKyi.Models;
 using DownKyi.Services;
 using DownKyi.Utils;
@@ -24,6 +24,10 @@ namespace DownKyi.ViewModels.DownloadManager
             // 打开视频按钮
             OpenVideo = ButtonIcon.Instance().Start;
             OpenVideo.Fill = DictionaryResource.GetColor("ColorPrimary");
+
+            // UpUp资源按钮
+            UpupTheme = ButtonIcon.Instance().UpTheme;
+            UpupTheme.Fill = DictionaryResource.GetColor("ColorPrimary");
 
             // 删除按钮
             RemoveVideo = ButtonIcon.Instance().Trash;
@@ -69,6 +73,14 @@ namespace DownKyi.ViewModels.DownloadManager
         {
             get => openVideo;
             set => SetProperty(ref openVideo, value);
+        }
+
+        private VectorImage upupTheme;
+
+        public VectorImage UpupTheme
+        {
+            get => upupTheme;
+            set => SetProperty(ref upupTheme, value);
         }
 
         private VectorImage removeVideo;
