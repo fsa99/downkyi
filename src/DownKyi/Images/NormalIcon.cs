@@ -1,4 +1,4 @@
-﻿using DownKyi.ViewModels.UserSpace;
+using DownKyi.ViewModels.UserSpace;
 
 namespace DownKyi.Images
 {
@@ -375,19 +375,62 @@ namespace DownKyi.Images
                 Fill = "#FF000000"
             };
 
+            UpzhuIcon = new VectorImage
+            {
+                Height = 16,
+                Width = 16,
+                Data = @"m896,736l0,-448c0,-54.4 -41.6,-96 -96,-96l-576,0c-54.4,0 -96,41.6 -96,96l0,448c0,54.4 41.6,96 96,96l576,0c54.4,0 
+                        96,-41.6 96,-96zm-96,-608c89.6,0 160,70.4 160,160l0,448c0,89.6 -70.4,160 -160,160l-576,0c-89.6,0 
+                        -160,-70.4 -160,-160l0,-448c0,-89.6 70.4,-160 160,-160l576,0zm-380.8,416l0,-217.6l60.8,0l0,240c0,96 -57.6,144 
+                        -147.2,144s-140.8,-44.8 -140.8,-140.8l0,-243.2l60.8,0l0,217.6c0,51.2 3.2,108.8 83.2,108.8s83.2,-57.6 
+                        83.2,-108.8zm288,-38.4c28.8,0 60.8,-16 60.8,-60.8c0,-48 -28.8,-60.8 -60.8,-60.8l-92.8,0l0,121.6l92.8,0zm3.2,-179.2c102.4,0 
+                        121.6,70.4 121.6,115.2c0,48 -19.2,115.2 -121.6,115.2l-96,0l0,147.2l-60.8,0l0,-377.6l156.8,0z",
+                Fill = "#FF000000"
+            };
         }
-
+        /// <summary>
+        /// UP主- 圆角矩形中 UP
+        /// </summary>
+        public VectorImage UpzhuIcon { get; private set; }
+        /// <summary>
+        /// 播放
+        /// </summary>
         public VectorImage Play { get; private set; }
+        /// <summary>
+        /// 喜欢
+        /// </summary>
         public VectorImage Like { get; private set; }
+        /// <summary>
+        /// 收藏
+        /// </summary>
         public VectorImage Favorite { get; private set; }
+        /// <summary>
+        /// 分享
+        /// </summary>
         public VectorImage Share { get; private set; }
-
+        /// <summary>
+        /// 云下载  云朵里面有下载图标
+        /// </summary>
         public VectorImage CloudDownload { get; private set; }
+        /// <summary>
+        /// 文件夹
+        /// </summary>
         public VectorImage Folder { get; private set; }
+        /// <summary>
+        /// 下载中
+        /// </summary>
         public VectorImage Downloading { get; private set; }
+        /// <summary>
+        /// 已下载
+        /// </summary>
         public VectorImage DownloadFinished { get; private set; }
-
+        /// <summary>
+        /// 投币图   圈中是个“币”
+        /// </summary>
         public VectorImage CoinIcon { get; private set; }
+        /// <summary>
+        /// 投币图   圈中是个 “B”
+        /// </summary>
         public VectorImage MoneyIcon { get; private set; }
         public VectorImage BindingEmail { get; private set; }
         public VectorImage BindingPhone { get; private set; }
@@ -401,7 +444,9 @@ namespace DownKyi.Images
         public VectorImage Channel { get; private set; }
         public VectorImage Channel1 { get; private set; }
         public VectorImage SeasonsSeries { get; private set; }
-
+        /// <summary>
+        /// Ipad平台
+        /// </summary>
         public VectorImage PlatformIpad { get; private set; }
         public VectorImage PlatformMobile { get; private set; }
         public VectorImage PlatformPC { get; private set; }
