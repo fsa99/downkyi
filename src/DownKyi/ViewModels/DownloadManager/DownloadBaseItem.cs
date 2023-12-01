@@ -1,4 +1,5 @@
-﻿using DownKyi.Core.BiliApi.BiliUtils;
+using DownKyi.Core.BiliApi.BiliUtils;
+using DownKyi.Core.BiliApi.Models;
 using DownKyi.Core.BiliApi.Zone;
 using DownKyi.Models;
 using Prism.Mvvm;
@@ -122,8 +123,9 @@ namespace DownKyi.ViewModels.DownloadManager
                 RaisePropertyChanged("AudioCodec");
             }
         }
-
-        // 文件大小
+        /// <summary>
+        /// 文件大小
+        /// </summary>
         public string FileSize
         {
             get => DownloadBase == null ? "" : DownloadBase.FileSize;
@@ -134,5 +136,115 @@ namespace DownKyi.ViewModels.DownloadManager
             }
         }
 
+        /// <summary>
+        /// 视频创建时间
+        /// </summary>
+        public string CreateTime
+        {
+            get => DownloadBase == null ? "" : DownloadBase.CreateTime;
+            set
+            {
+                DownloadBase.CreateTime = value;
+                RaisePropertyChanged("CreateTime");
+            }
+        }
+
+        /// <summary>
+        /// 播放数量
+        /// </summary>
+        public string PlayNumber
+        {
+            get => DownloadBase == null ? "" : DownloadBase.PlayNumber;
+            set
+            {
+                DownloadBase.PlayNumber = value;
+                RaisePropertyChanged("PlayNumber");
+            }
+        }
+        /// <summary>
+        /// 弹幕数量
+        /// </summary>
+        public string DanmakuNumber
+        {
+            get => DownloadBase == null ? "" : DownloadBase.DanmakuNumber;
+            set
+            {
+                DownloadBase.DanmakuNumber = value;
+                RaisePropertyChanged("DanmakuNumber");
+            }
+        }
+        /// <summary>
+        /// 点赞人数
+        /// </summary>
+        public string LikeNumber
+        {
+            get => DownloadBase == null ? "" : DownloadBase.LikeNumber;
+            set
+            {
+                DownloadBase.LikeNumber = value;
+                RaisePropertyChanged("LikeNumber");
+            }
+        }
+        /// <summary>
+        /// 投币数量
+        /// </summary>
+        public string CoinNumber
+        {
+            get => DownloadBase == null ? "" : DownloadBase.CoinNumber;
+            set
+            {
+                DownloadBase.CoinNumber = value;
+                RaisePropertyChanged("CoinNumber");
+            }
+        }
+        /// <summary>
+        /// 收藏数量
+        /// </summary>
+        public string FavoriteNumber
+        {
+            get => DownloadBase == null ? "" : DownloadBase.FavoriteNumber;
+            set
+            {
+                DownloadBase.FavoriteNumber = value;
+                RaisePropertyChanged("FavoriteNumber");
+            }
+        }
+        /// <summary>
+        /// 分享数量
+        /// </summary>
+        public string ShareNumber
+        {
+            get => DownloadBase == null ? "" : DownloadBase.ShareNumber;
+            set
+            {
+                DownloadBase.ShareNumber = value;
+                RaisePropertyChanged("ShareNumber");
+            }
+        }
+        /// <summary>
+        /// 描述
+        /// </summary>
+        public string Description
+        {
+            get => DownloadBase == null ? "" : DownloadBase.Description;
+            set
+            {
+                DownloadBase.Description = value;
+                RaisePropertyChanged("Description");
+            }
+        }
+
+        /// <summary>
+        /// UP主
+        /// </summary>
+        public VideoOwner UpOwner
+        {
+            get => DownloadBase == null ? new VideoOwner() : DownloadBase.UpOwner;
+            set
+            {
+                DownloadBase.UpOwner = value;
+                RaisePropertyChanged("UpOwner");
+            }
+        }
     }
 }
