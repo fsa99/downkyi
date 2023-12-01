@@ -1,4 +1,4 @@
-﻿using DownKyi.Core.BiliApi.BiliUtils;
+using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.VideoStream;
 using DownKyi.Core.BiliApi.Zone;
 using DownKyi.Core.FileName;
@@ -399,6 +399,16 @@ namespace DownKyi.Services.Download
                             VideoCodecName = page.VideoQuality.SelectedVideoCodec,
                             Resolution = new Quality { Name = page.VideoQuality.QualityFormat, Id = page.VideoQuality.Quality },
                             AudioCodec = Constant.GetAudioQualities().FirstOrDefault(t => { return t.Name == page.AudioQualityFormat; }),
+                            UpOwner = page.Owner,
+
+                            CreateTime = videoInfoView.CreateTime,
+                            PlayNumber = videoInfoView.PlayNumber,
+                            DanmakuNumber = videoInfoView.DanmakuNumber,
+                            LikeNumber = videoInfoView.LikeNumber,
+                            CoinNumber = videoInfoView.CoinNumber,
+                            ShareNumber = videoInfoView.ShareNumber,
+                            Description = videoInfoView.Description,
+                            FavoriteNumber = videoInfoView.FavoriteNumber,
                         };
                         Downloading downloading = new Downloading
                         {
