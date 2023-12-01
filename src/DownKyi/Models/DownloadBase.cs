@@ -103,10 +103,24 @@ namespace DownKyi.Models
         /// </summary>
         public string FileSize { get; set; }
 
+        private VideoStat videoAchievement;
         /// <summary>
         /// 视频的成就 包括投币、弹幕、收藏、喜欢、重播、分享、观看
         /// </summary>
-        public VideoStat VideoAchievement { get; set; }
+        public VideoStat VideoAchievement 
+        { 
+            get
+            {
+                return videoAchievement;
+            }
+            set
+            {
+                if (value != null && value.Aid == Avid)
+                {
+                    videoAchievement = value;
+                }
+            }
+        }
 
         /// <summary>
         /// 视频的UP主
