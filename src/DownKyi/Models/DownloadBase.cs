@@ -1,4 +1,6 @@
 using DownKyi.Core.BiliApi.BiliUtils;
+using DownKyi.Core.BiliApi.Models;
+using DownKyi.Core.BiliApi.Video.Models;
 using System;
 using System.Collections.Generic;
 
@@ -101,5 +103,14 @@ namespace DownKyi.Models
         /// </summary>
         public string FileSize { get; set; }
 
+        /// <summary>
+        /// 视频的成就 包括投币、弹幕、收藏、喜欢、重播、分享、观看
+        /// </summary>
+        public VideoStat VideoAchievement { get; set; }
+
+        /// <summary>
+        /// 视频的UP主
+        /// </summary>
+        public VideoOwner UpOwner { get; set; } 
     }
 }
