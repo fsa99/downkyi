@@ -103,24 +103,45 @@ namespace DownKyi.Models
         /// </summary>
         public string FileSize { get; set; }
 
-        private VideoStat videoAchievement;
         /// <summary>
-        /// 视频的成就 包括投币、弹幕、收藏、喜欢、重播、分享、观看
+        /// 视频上传时间
         /// </summary>
-        public VideoStat VideoAchievement 
-        { 
-            get
-            {
-                return videoAchievement;
-            }
-            set
-            {
-                if (value != null && value.Aid == Avid)
-                {
-                    videoAchievement = value;
-                }
-            }
-        }
+        public string CreateTime { get; set; }
+
+        /// <summary>
+        /// 播放数量
+        /// </summary>
+        public string PlayNumber { get; set; }
+
+        /// <summary>
+        /// 弹幕数量
+        /// </summary>
+        public string DanmakuNumber { get; set; }
+
+        /// <summary>
+        /// 喜欢/点赞数量
+        /// </summary>
+        public string LikeNumber { get; set; }
+
+        /// <summary>
+        /// 投币数量
+        /// </summary>
+        public string CoinNumber { get; set; }
+
+        /// <summary>
+        /// 收藏数量
+        /// </summary>
+        public string FavoriteNumber { get; set; }
+
+        /// <summary>
+        /// 分享数量
+        /// </summary>
+        public string ShareNumber { get; set; }
+
+        /// <summary>
+        /// 视频描述
+        /// </summary>
+        public string Description { get; set; }
 
         /// <summary>
         /// 视频的UP主
