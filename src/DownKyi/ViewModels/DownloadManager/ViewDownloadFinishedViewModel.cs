@@ -1,4 +1,4 @@
-﻿using DownKyi.Core.Logging;
+using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
 using DownKyi.Services;
 using DownKyi.Utils;
@@ -56,8 +56,20 @@ namespace DownKyi.ViewModels.DownloadManager
                 case DownloadFinishedSort.DOWNLOAD:
                     FinishedSortBy = 0;
                     break;
-                case DownloadFinishedSort.NUMBER:
+                case DownloadFinishedSort.UPZHUID:
                     FinishedSortBy = 1;
+                    break;
+                case DownloadFinishedSort.FILESIZE:
+                    FinishedSortBy = 2;
+                    break;
+                case DownloadFinishedSort.VIDEODURATION:
+                    FinishedSortBy = 3;
+                    break;
+                case DownloadFinishedSort.ZONEID:
+                    FinishedSortBy = 4;
+                    break;
+                case DownloadFinishedSort.NUMBER:
+                    FinishedSortBy = 5;
                     break;
                 default:
                     FinishedSortBy = 0;
@@ -88,6 +100,26 @@ namespace DownKyi.ViewModels.DownloadManager
                     SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.DOWNLOAD);
                     break;
                 case 1:
+                    App.SortDownloadedList(DownloadFinishedSort.UPZHUID);
+                    // 更新设置
+                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.UPZHUID);
+                    break;
+                case 2:
+                    App.SortDownloadedList(DownloadFinishedSort.FILESIZE);
+                    // 更新设置
+                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.FILESIZE);
+                    break;
+                case 3:
+                    App.SortDownloadedList(DownloadFinishedSort.VIDEODURATION);
+                    // 更新设置
+                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.VIDEODURATION);
+                    break;
+                case 4:
+                    App.SortDownloadedList(DownloadFinishedSort.ZONEID);
+                    // 更新设置
+                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.ZONEID);
+                    break;
+                case 5:
                     App.SortDownloadedList(DownloadFinishedSort.NUMBER);
                     // 更新设置
                     SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.NUMBER);
@@ -98,6 +130,7 @@ namespace DownKyi.ViewModels.DownloadManager
                     SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.DOWNLOAD);
                     break;
             }
+            DownloadedList = App.DownloadedList;
         }
 
         // 清空下载完成列表事件
