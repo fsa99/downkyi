@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
+using System;
 
 namespace DownKyi.Core.BiliApi.Models
 {
+    [Serializable]
     public abstract class BaseModel
     {
         public string ToString(string format = "")
