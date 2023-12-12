@@ -1,4 +1,5 @@
-﻿using DownKyi.Core.Storage.Database.Download;
+using DownKyi.Core.Logging;
+using DownKyi.Core.Storage.Database.Download;
 using DownKyi.Models;
 using DownKyi.ViewModels.DownloadManager;
 using System.Collections.Generic;
@@ -45,7 +46,7 @@ namespace DownKyi.Services.Download
         public void RemoveDownloading(DownloadingItem downloadingItem)
         {
             if (downloadingItem == null || downloadingItem.DownloadBase == null) { return; }
-
+            LogManager.Info("数据库交互记录", nameof(RemoveDownloading), $"删除下载中数据{downloadingItem.DownloadBase.Uuid}");
             RemoveDownloadBase(downloadingItem.DownloadBase.Uuid);
 
             DownloadingDb downloadingDb = new DownloadingDb();
@@ -109,8 +110,13 @@ namespace DownKyi.Services.Download
         /// <param name="downloadedItem"></param>
         public void AddDownloaded(DownloadedItem downloadedItem)
         {
-            if (downloadedItem == null || downloadedItem.DownloadBase == null) { return; }
+            if (downloadedItem == null || downloadedItem.DownloadBase == null)
+            {
+                LogManager.Info("数据库交互记录", nameof(AddDownloaded), "downloadedItem为空");
+                return;
+            }
 
+            LogManager.Info("数据库交互记录", nameof(AddDownloaded), $"添加下载完成数据{downloadedItem.DownloadBase.Uuid}");
             AddDownloadBase(downloadedItem.DownloadBase);
 
             DownloadedDb downloadedDb = new DownloadedDb();
@@ -210,8 +216,15 @@ namespace DownKyi.Services.Download
         /// <param name="downloadBase"></param>
         private void RemoveDownloadBase(string uuid)
         {
-            DownloadBaseDb downloadBaseDb = new DownloadBaseDb();
-            downloadBaseDb.Delete(uuid);
+            DownloadedDb downloadedDb = new DownloadedDb();
+            object obj = downloadedDb.QueryById(uuid);
+            if (obj == null)
+            {
+                DownloadBaseDb downloadBaseDb = new DownloadBaseDb();
+                downloadBaseDb.Delete(uuid);
+            }
+            //DownloadBaseDb downloadBaseDb = new DownloadBaseDb();
+            //downloadBaseDb.Delete(uuid);
             //downloadBaseDb.Close();
         }
 
