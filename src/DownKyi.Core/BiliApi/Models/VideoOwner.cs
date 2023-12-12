@@ -1,10 +1,12 @@
 using Newtonsoft.Json;
+using System;
 
 namespace DownKyi.Core.BiliApi.Models
 {
     /// <summary>
     /// 视频的作者
     /// </summary>
+    [Serializable]
     public class VideoOwner : BaseModel
     {
         [JsonProperty("mid")]
