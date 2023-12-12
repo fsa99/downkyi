@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="DownKyi.Views.DownloadManager.ViewDownloadFinished"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -16,20 +16,36 @@
                         <Grid Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=ActualWidth}" Height="70">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="70" />
+                                    <ColumnDefinition Width="112" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="auto" />
-                                    <ColumnDefinition Width="120" />
-                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="165" />
+                                    <ColumnDefinition Width="20" />
                                 </Grid.ColumnDefinitions>
-
-                                <Image
+                                <!--视频封面图-->
+                                <Border ToolTip="{Binding Description}">
+                                    <Image
                                     Grid.Column="0"
-                                    Width="48"
-                                    Height="48"
-                                    Source="{Binding ZoneImage}" />
-
-                                <!--  标题等视频信息  -->
+                                    Width="112"
+                                    Height="70"
+                                    Source="{Binding VideoCoverImage}" />
+                                </Border>
+                                <!--视频截图上的时长-->
+                                <Canvas Grid.Column="0" Width="112" Height="70">
+                                    <Border
+                                        Canvas.Right="3"
+                                        Canvas.Bottom="3"
+                                        Background="#91000000"
+                                        CornerRadius="3"
+                                        Padding="1">
+                                        <TextBlock
+                                            FontSize="12"
+                                            Foreground="{DynamicResource BrushText}"
+                                            TextTrimming="CharacterEllipsis"
+                                            Text="{Binding Duration}" />
+                                    </Border>
+                                </Canvas>
+                                <!--视频信息展示-->
                                 <Grid
                                     Grid.Column="1"
                                     Margin="0,0,10,0"
@@ -38,61 +54,316 @@
                                         <RowDefinition />
                                         <RowDefinition />
                                     </Grid.RowDefinitions>
+                                    <!--详细信息第一行-->
+                                    <StackPanel 
+                                        Grid.Row="0" 
+                                        Orientation="Horizontal"
+                                        HorizontalAlignment="Left">
+                                        <!--分区图片-->
+                                        <Border 
+                                            Width="23"
+                                            Height="23" 
+                                            Margin="5 0 5 0" 
+                                            BorderBrush="White" 
+                                            BorderThickness="1" 
+                                            CornerRadius="16"
+                                            ToolTip="{Binding ZoneAndParent}">
+                                            <Border.Clip>
+                                                <EllipseGeometry Center="11.5, 11.5" RadiusX="11.5" RadiusY="11.5" />
+                                            </Border.Clip>
+                                            <Image Width="23" Height="23" Source="{Binding ZoneImage}" />
+                                        </Border>
+                                        <TextBlock
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            FontSize="14"
+                                            Foreground="{DynamicResource BrushTextDark}"
+                                            TextTrimming="CharacterEllipsis"
+                                            Text="{Binding MainTitle}">
 
-                                    <TextBlock
-                                        Grid.Row="0"
+                                            <TextBlock.ToolTip>
+                                                <TextBlock>
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="{}{0}-{1}">
+                                                            <Binding Path="MainTitle" />
+                                                            <Binding Path="Resolution.Name" />
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                    </StackPanel>
+                                    
+                                    <!--详细信息第二行-->
+                                    <Grid Grid.Row="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="40" />
+                                            <ColumnDefinition Width="100" />
+                                            <ColumnDefinition Width="60" />
+                                            <ColumnDefinition Width="60" />
+                                            <ColumnDefinition Width="60" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <!--头像-->
+                                        <Border 
+                                            Grid.Column="0"
+                                            Width="32"
+                                            Height="32" 
+                                            Margin="5 0 5 0" 
+                                            BorderBrush="White" 
+                                            BorderThickness="1" 
+                                            CornerRadius="16">
+                                            <Border.ToolTip>
+                                                <TextBlock>
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="{}{0}/Mid:{1}">
+                                                            <Binding Path="UpOwner.Name" />
+                                                            <Binding Path="UpOwner.Mid" />
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </Border.ToolTip>
+                                            <Border.Clip>
+                                                <EllipseGeometry Center="16, 16" RadiusX="14.5" RadiusY="14.5" />
+                                            </Border.Clip>
+                                            <Image Width="33" Height="33" Source="{Binding UPHeaderFaceImage}" />
+                                        </Border>
+                                        <!--UP主图标和 名字-->
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                            <ContentControl Width="20" Height="20">
+                                                <Path
+                                                Width="{Binding UpzhuIconIcon.Width}"
+                                                Height="{Binding UpzhuIconIcon.Height}"
+                                                Data="{Binding UpzhuIconIcon.Data}"
+                                                Fill="{Binding UpzhuIconIcon.Fill}"
+                                                Stretch="Uniform" />
+                                            </ContentControl>
+                                            <TextBlock
+                                            Margin="0,0,2,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            Foreground="{DynamicResource BrushTextGrey2}"
+                                            Text="{Binding UpOwner.Name}" />
+                                        </StackPanel>
+                                        <!--播放数图标和 值-->
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                            <ContentControl Width="15" Height="20" Grid.Column="1">
+                                                <Path
+                                                Width="{Binding PlayIcon.Width}"
+                                                Height="{Binding PlayIcon.Height}"
+                                                Data="{Binding PlayIcon.Data}"
+                                                Fill="{Binding PlayIcon.Fill}"
+                                                Stretch="Uniform" />
+                                            </ContentControl>
+                                            <TextBlock
+                                            Margin="0,0,2,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            Foreground="{DynamicResource BrushTextGrey2}"
+                                            Text="{Binding PlayNumber}" />
+                                        </StackPanel>
+                                        <!--收藏数图标和 值-->
+                                        <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                            <ContentControl Width="20" Height="20" Grid.Column="2">
+                                                <Path
+                                                Width="{Binding FavoriteIcon.Width}"
+                                                Height="{Binding FavoriteIcon.Height}"
+                                                Data="{Binding FavoriteIcon.Data}"
+                                                Fill="{Binding FavoriteIcon.Fill}"
+                                                Stretch="Uniform" />
+                                            </ContentControl>
+                                            <TextBlock
+                                            Margin="0,0,2,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            Foreground="{DynamicResource BrushTextGrey2}"
+                                            Text="{Binding FavoriteNumber}" />
+                                        </StackPanel>
+                                        <!--点赞数图标和 值-->
+                                        <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                            <ContentControl Width="20" Height="20" Grid.Column="3">
+                                                <Path
+                                                Width="{Binding LikeIcon.Width}"
+                                                Height="{Binding LikeIcon.Height}"
+                                                Data="{Binding LikeIcon.Data}"
+                                                Fill="{Binding LikeIcon.Fill}"
+                                                Stretch="Uniform" />
+                                            </ContentControl>
+                                            <TextBlock
+                                            Margin="0,0,2,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            Foreground="{DynamicResource BrushTextGrey2}"
+                                            Text="{Binding LikeNumber}" />
+                                        </StackPanel>
+                                    </Grid>
+                                    
+                                    <!--<StackPanel
+                                        Grid.Row="1"
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Center"
-                                        FontSize="14"
+                                        Orientation="Horizontal">
+                                        --><!--头像--><!--
+                                        <Border 
+                                            Width="32"
+                                            Height="32" 
+                                            Margin="5 0 5 0" 
+                                            BorderBrush="White" 
+                                            BorderThickness="1" 
+                                            CornerRadius="16">
+                                            <Border.ToolTip>
+                                                <TextBlock>
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="{}{0}/Mid:{1}">
+                                                            <Binding Path="UpOwner.Name" />
+                                                            <Binding Path="UpOwner.Mid" />
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </Border.ToolTip>
+                                            <Border.Clip>
+                                                <EllipseGeometry Center="16, 16" RadiusX="14.5" RadiusY="14.5" />
+                                            </Border.Clip>
+                                            <Image Width="33" Height="33" Source="{Binding UPHeaderFaceImage}" />
+                                        </Border>
+
+                                        --><!--<Ellipse Width="33" Height="33" Stroke="Transparent" StrokeThickness="0">
+                                            <Ellipse.Fill>
+                                                <ImageBrush ImageSource="{Binding UPHeaderFaceImage}" />
+                                            </Ellipse.Fill>
+                                        </Ellipse>-->
+
+                                        <!--UP主图标和 名字--><!--
+                                        <ContentControl Width="20" Height="20">
+                                            <Path
+                                                Width="{Binding UpzhuIconIcon.Width}"
+                                                Height="{Binding UpzhuIconIcon.Height}"
+                                                Data="{Binding UpzhuIconIcon.Data}"
+                                                Fill="{Binding UpzhuIconIcon.Fill}"
+                                                Stretch="Uniform" />
+                                         </ContentControl>
+                                        <TextBlock
+                                            Margin="0,0,2,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            Foreground="{DynamicResource BrushTextGrey2}"
+                                            Text="{Binding UpOwner.Name}" />
+                                        --><!--播放数图标和 值--><!--
+                                        <ContentControl Width="15" Height="20">
+                                            <Path
+                                                Width="{Binding PlayIcon.Width}"
+                                                Height="{Binding PlayIcon.Height}"
+                                                Data="{Binding PlayIcon.Data}"
+                                                Fill="{Binding PlayIcon.Fill}"
+                                                Stretch="Uniform" />
+                                        </ContentControl>
+                                        <TextBlock
+                                            Margin="0,0,2,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            Foreground="{DynamicResource BrushTextGrey2}"
+                                            Text="{Binding PlayNumber}" />
+                                        --><!--收藏数图标和 值--><!--
+                                        <ContentControl Width="20" Height="20">
+                                            <Path
+                                                Width="{Binding FavoriteIcon.Width}"
+                                                Height="{Binding FavoriteIcon.Height}"
+                                                Data="{Binding FavoriteIcon.Data}"
+                                                Fill="{Binding FavoriteIcon.Fill}"
+                                                Stretch="Uniform" />
+                                        </ContentControl>
+                                        <TextBlock
+                                            Margin="0,0,2,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            Foreground="{DynamicResource BrushTextGrey2}"
+                                            Text="{Binding FavoriteNumber}" />
+                                        --><!--点赞数图标和 值--><!--
+                                        <ContentControl Width="20" Height="20">
+                                            <Path
+                                                Width="{Binding LikeIcon.Width}"
+                                                Height="{Binding LikeIcon.Height}"
+                                                Data="{Binding LikeIcon.Data}"
+                                                Fill="{Binding LikeIcon.Fill}"
+                                                Stretch="Uniform" />
+                                        </ContentControl>
+                                        <TextBlock
+                                            Margin="0,0,2,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            Foreground="{DynamicResource BrushTextGrey2}"
+                                            Text="{Binding LikeNumber}" />
+                                        --><!--<TextBlock
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            Foreground="{DynamicResource BrushTextGrey2}">
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}{0} · {1} · {2} · {3} · {4} · {5}">
+                                                    <Binding Path="UpOwner.Name" />
+                                                    <Binding Path="FavoriteNumber" />
+                                                    <Binding Path="PlayNumber" />
+                                                    <Binding Path="Resolution.Name" />
+                                                    <Binding Path="VideoCodecName" />
+                                                    <Binding Path="AudioCodec.Name" />
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>--><!--
+                                    </StackPanel>-->
+
+                                </Grid>
+                                <!--文件大小下载时间展示-->
+                                <Grid
+                                    Grid.Column="2"
+                                    Margin="0 0 10 0"
+                                    HorizontalAlignment="Left">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock
+                                        Grid.Row="0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        FontSize="12"
                                         Foreground="{DynamicResource BrushTextDark}"
-                                        TextTrimming="CharacterEllipsis">
+                                        Text="{Binding FinishedTime}" 
+                                        ToolTip="下载完成时间"/>
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        FontSize="12"
+                                        Foreground="{DynamicResource BrushTextGrey2}">
                                         <TextBlock.Text>
-                                            <MultiBinding StringFormat="{}{0}-{1}-{2}">
-                                                <Binding Path="Order" />
-                                                <Binding Path="MainTitle" />
-                                                <Binding Path="Name" />
+                                            <MultiBinding StringFormat="{}{0} / {1}">
+                                                <Binding Path="MaxSpeedDisplay" />
+                                                <Binding Path="FileSize" />
                                             </MultiBinding>
                                         </TextBlock.Text>
                                         <TextBlock.ToolTip>
                                             <TextBlock>
                                                 <TextBlock.Text>
-                                                    <MultiBinding StringFormat="{}{0}-{1}">
-                                                        <Binding Path="MainTitle" />
-                                                        <Binding Path="Name" />
+                                                    <MultiBinding StringFormat="{}视频画质:{0} 视频编码:{1} 音频编码:{2}">
+                                                        <Binding Path="Resolution.Name" />
+                                                        <Binding Path="VideoCodecName" />
+                                                        <Binding Path="AudioCodec.Name" />
                                                     </MultiBinding>
                                                 </TextBlock.Text>
                                             </TextBlock>
                                         </TextBlock.ToolTip>
                                     </TextBlock>
-
-                                    <TextBlock
-                                        Grid.Row="1"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Center"
-                                        FontSize="12"
-                                        Foreground="{DynamicResource BrushTextGrey2}">
-                                        <TextBlock.Text>
-                                            <MultiBinding StringFormat="{}{0} · {1} · {2} · {3} · {4} · {5}">
-                                                <Binding Path="Duration" />
-                                                <Binding Path="Resolution.Name" />
-                                                <Binding Path="VideoCodecName" />
-                                                <Binding Path="AudioCodec.Name" />
-                                                <Binding Path="FileSize" />
-                                                <Binding Path="MaxSpeedDisplay" />
-                                            </MultiBinding>
-                                        </TextBlock.Text>
-                                    </TextBlock>
                                 </Grid>
 
-                                <TextBlock
-                                    Grid.Column="2"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Center"
-                                    FontSize="12"
-                                    Foreground="{DynamicResource BrushTextDark}"
-                                    Text="{Binding FinishedTime}" />
-
-                                <!--  控制面板，暂停继续删除 Upup资源生成  -->
+                                <!--  控制面板，暂停 继续 删除 Upup资源生成  -->
                                 <Grid Grid.Column="3">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition />
@@ -151,7 +422,7 @@
                                                 Stretch="Uniform" />
                                         </ContentControl>
                                     </Button>
-                                    
+
                                     <Button
                                         Grid.Column="3"
                                         HorizontalAlignment="Right"
@@ -277,6 +548,10 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <ComboBoxItem Content="{DynamicResource DownloadedSortByTime}" />
+                    <ComboBoxItem Content="{DynamicResource DownloadedSortByUPID}" />
+                    <ComboBoxItem Content="{DynamicResource DownloadedSortByFileSize}" />
+                    <ComboBoxItem Content="{DynamicResource DownloadedSortByDuration}" />
+                    <ComboBoxItem Content="{DynamicResource DownloadedSortByZoneID}" />
                     <ComboBoxItem Content="{DynamicResource DownloadedSortByOrder}" />
                 </ComboBox>
 
