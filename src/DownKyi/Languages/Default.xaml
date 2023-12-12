@@ -172,7 +172,11 @@
 
     <system:String x:Key="TotalDownloaded1">已下载</system:String>
     <system:String x:Key="TotalDownloaded2">个视频！</system:String>
-    <system:String x:Key="DownloadedSortByTime">按下载先后排序</system:String>
+    <system:String x:Key="DownloadedSortByTime">按下载完成时间排序</system:String>
+    <system:String x:Key="DownloadedSortByUPID">按UP主排序</system:String>
+    <system:String x:Key="DownloadedSortByFileSize">按文件大小排序</system:String>
+    <system:String x:Key="DownloadedSortByDuration">按视频时长排序</system:String>
+    <system:String x:Key="DownloadedSortByZoneID">按视频分区排序</system:String>
     <system:String x:Key="DownloadedSortByOrder">按序号排序</system:String>
     <system:String x:Key="ClearAllDownloaded">清空所有记录</system:String>
 
