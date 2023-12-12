@@ -1,11 +1,17 @@
 using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.Models;
 using DownKyi.Core.BiliApi.Zone;
+using DownKyi.Core.Storage;
+using DownKyi.Images;
 using DownKyi.Models;
+using DownKyi.Utils;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace DownKyi.ViewModels.DownloadManager
 {
@@ -23,8 +29,10 @@ namespace DownKyi.ViewModels.DownloadManager
             DialogService = dialogService;
         }
 
-        // model数据
         private DownloadBase downloadBase;
+        /// <summary>
+        /// 下载的model数据
+        /// </summary>
         public DownloadBase DownloadBase
         {
             get => downloadBase;
@@ -34,20 +42,110 @@ namespace DownKyi.ViewModels.DownloadManager
 
                 if (value != null)
                 {
+                    // B站 投币的图标
+                    CoinIcon = NormalIcon.Instance().CoinIcon;
+                    CoinIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
+                    PlayIcon = NormalIcon.Instance().Play;
+                    PlayIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
+                    LikeIcon = NormalIcon.Instance().Like;
+                    LikeIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
+                    FavoriteIcon = NormalIcon.Instance().Favorite;
+                    FavoriteIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
+                    UpzhuIconIcon = NormalIcon.Instance().UpzhuIcon;
+                    UpzhuIconIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
                     ZoneImage = (DrawingImage)Application.Current.Resources[VideoZoneIcon.Instance().GetZoneImageKey(DownloadBase.ZoneId)];
+                    StorageCover storageCover = new StorageCover();
+                    VideoCoverImage = storageCover.GetCoverThumbnail(DownloadBase.Avid, DownloadBase.Bvid, DownloadBase.Cid, DownloadBase.CoverUrl, 112, 70);
+                    if (value.UpOwner != null)
+                    {
+                        StorageHeader storageHeader = new StorageHeader();
+                        UPHeaderFaceImage = storageHeader.GetHeaderThumbnail(DownloadBase.UpOwner.Mid, DownloadBase.UpOwner.Name, DownloadBase.UpOwner.Face, 33, 33);
+                    }
                 }
             }
         }
 
-        // 视频分区image
+        #region 图片或图标
+        private BitmapImage videoCoverImage;
+        /// <summary>
+        /// 视频封面image
+        /// </summary>
+        public BitmapImage VideoCoverImage
+        {
+            get => videoCoverImage;
+            set => SetProperty(ref videoCoverImage, value);
+        }
+
+        private BitmapImage upHeaderFaceImage;
+        /// <summary>
+        /// UP主头像image
+        /// </summary>
+        public BitmapImage UPHeaderFaceImage
+        {
+            get => upHeaderFaceImage;
+            set => SetProperty(ref upHeaderFaceImage, value);
+        }
+
         private DrawingImage zoneImage;
+        /// <summary>
+        /// 视频分区image
+        /// </summary>
         public DrawingImage ZoneImage
         {
             get => zoneImage;
             set => SetProperty(ref zoneImage, value);
         }
+        private VectorImage coinIcon;
+        /// <summary>
+        /// 投币 币 图
+        /// </summary>
+        public VectorImage CoinIcon
+        {
+            get => coinIcon;
+            set => SetProperty(ref coinIcon, value);
+        }
+        private VectorImage playIcon;
+        /// <summary>
+        /// 播放 图标
+        /// </summary>
+        public VectorImage PlayIcon
+        {
+            get => playIcon;
+            set => SetProperty(ref playIcon, value);
+        }
+        private VectorImage likeIcon;
+        /// <summary>
+        /// 点赞 图标
+        /// </summary>
+        public VectorImage LikeIcon
+        {
+            get => likeIcon;
+            set => SetProperty(ref likeIcon, value);
+        }
+        private VectorImage favoriteIcon;
+        /// <summary>
+        /// 收藏 图标
+        /// </summary>
+        public VectorImage FavoriteIcon
+        {
+            get => favoriteIcon;
+            set => SetProperty(ref favoriteIcon, value);
+        }
+        private VectorImage upzhuIconIcon;
+        /// <summary>
+        /// UP 图标
+        /// </summary>
+        public VectorImage UpzhuIconIcon
+        {
+            get => upzhuIconIcon;
+            set => SetProperty(ref upzhuIconIcon, value);
+        }
+        #endregion
 
-        // 视频序号
+        #region 视频 文件信息编码画质等
+        /// <summary>
+        /// 视频序号
+        /// </summary>
         public int Order
         {
             get => DownloadBase == null ? 0 : DownloadBase.Order;
@@ -58,7 +156,9 @@ namespace DownKyi.ViewModels.DownloadManager
             }
         }
 
-        // 视频主标题
+        /// <summary>
+        /// 视频主标题
+        /// </summary>
         public string MainTitle
         {
             get => DownloadBase == null ? "" : DownloadBase.MainTitle;
@@ -69,7 +169,9 @@ namespace DownKyi.ViewModels.DownloadManager
             }
         }
 
-        // 视频标题
+        /// <summary>
+        /// 视频标题
+        /// </summary>
         public string Name
         {
             get => DownloadBase == null ? "" : DownloadBase.Name;
@@ -80,7 +182,9 @@ namespace DownKyi.ViewModels.DownloadManager
             }
         }
 
-        // 时长
+        /// <summary>
+        /// 时长
+        /// </summary>
         public string Duration
         {
             get => DownloadBase == null ? "" : DownloadBase.Duration;
@@ -91,7 +195,9 @@ namespace DownKyi.ViewModels.DownloadManager
             }
         }
 
-        // 视频编码名称，AVC、HEVC
+        /// <summary>
+        /// 视频编码名称，AVC、HEVC
+        /// </summary>
         public string VideoCodecName
         {
             get => DownloadBase == null ? "" : DownloadBase.VideoCodecName;
@@ -102,7 +208,9 @@ namespace DownKyi.ViewModels.DownloadManager
             }
         }
 
-        // 视频画质
+        /// <summary>
+        /// 视频画质
+        /// </summary>
         public Quality Resolution
         {
             get => DownloadBase == null ? null : DownloadBase.Resolution;
@@ -113,7 +221,9 @@ namespace DownKyi.ViewModels.DownloadManager
             }
         }
 
-        // 音频编码
+        /// <summary>
+        /// 音频编码
+        /// </summary>
         public Quality AudioCodec
         {
             get => DownloadBase == null ? null : DownloadBase.AudioCodec;
@@ -148,7 +258,9 @@ namespace DownKyi.ViewModels.DownloadManager
                 RaisePropertyChanged("CreateTime");
             }
         }
+        #endregion
 
+        #region 视频播放 收藏等
         /// <summary>
         /// 播放数量
         /// </summary>
@@ -233,7 +345,9 @@ namespace DownKyi.ViewModels.DownloadManager
                 RaisePropertyChanged("Description");
             }
         }
+        #endregion
 
+        #region 其他信息 UP主 分区
         /// <summary>
         /// UP主
         /// </summary>
@@ -246,5 +360,33 @@ namespace DownKyi.ViewModels.DownloadManager
                 RaisePropertyChanged("UpOwner");
             }
         }
+
+        /// <summary>
+        /// 视频分区id  以及主分区id和名称
+        /// </summary>
+        public string ZoneAndParent
+        {
+            get
+            {
+                if (DownloadBase == null)
+                {
+                    return string.Empty;
+                }
+                else
+                {
+                    var zones = VideoZone.Instance().GetCurAndParentZoneAttrs(DownloadBase.ZoneId);
+                    if (zones.Count > 0)
+                    {
+                        return string.Join("=>", zones.Select(zone => $"{zone.Id}:{zone.Name}"));
+                    }
+                    return string.Empty;
+                }
+            }
+            set
+            {
+                RaisePropertyChanged("ZoneAndParent");
+            }
+        }
+        #endregion
     }
 }
