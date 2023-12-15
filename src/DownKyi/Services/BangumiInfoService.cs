@@ -1,4 +1,4 @@
-﻿using DownKyi.Core.BiliApi.Bangumi;
+using DownKyi.Core.BiliApi.Bangumi;
 using DownKyi.Core.BiliApi.Bangumi.Models;
 using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.VideoStream;
