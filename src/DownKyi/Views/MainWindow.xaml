@@ -1,4 +1,4 @@
-﻿<Window
+<Window
     x:Class="DownKyi.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -20,7 +20,7 @@
     <WindowChrome.WindowChrome>
         <WindowChrome
             CaptionHeight="0"
-            CornerRadius="0"
+            CornerRadius="8"
             GlassFrameThickness="0"
             NonClientFrameEdges="None"
             ResizeBorderThickness="4"
@@ -33,7 +33,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="1">
+    <Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="2" CornerRadius="8"  Background="#00FFFFFF">
         <Border.Style>
             <Style TargetType="{x:Type Border}">
                 <Style.Triggers>
@@ -93,7 +93,7 @@
                     Command="{Binding SkinCommand}"
                     Style="{StaticResource SystemBtnStyle}"
                     ToolTip="{DynamicResource Skin}"
-                    Visibility="Collapsed">
+                    Visibility="Visible">
                     <Path
                         Width="{Binding SkinIcon.Width}"
                         Height="{Binding SkinIcon.Height}"
