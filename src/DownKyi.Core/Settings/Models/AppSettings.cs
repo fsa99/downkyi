@@ -1,4 +1,4 @@
-﻿namespace DownKyi.Core.Settings.Models
+namespace DownKyi.Core.Settings.Models
 {
     public class AppSettings
     {
@@ -8,5 +8,6 @@
         public DanmakuSettings Danmaku { get; set; } = new DanmakuSettings();
         public AboutSettings About { get; set; } = new AboutSettings();
         public UserInfoSettings UserInfo { get; set; } = new UserInfoSettings();
+        public UpupSettings UpupInfo { get; set; } = new UpupSettings();
     }
 }
