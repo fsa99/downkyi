@@ -410,7 +410,7 @@
                                         Grid.Column="2"
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Center"
-                                        Command="{Binding RemoveVideoCommand}"
+                                        Command="{Binding CreateUpupTheme}"
                                         Style="{StaticResource ImageBtnStyle}"
                                         ToolTip="{DynamicResource CreateUpupTheme}">
                                         <ContentControl Width="20" Height="20">
@@ -545,6 +545,9 @@
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding FinishedSortCommand}" CommandParameter="{Binding ElementName=nameFinishedSort, Path=SelectedIndex}" />
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="DropDownClosed">
+                            <i:InvokeCommandAction Command="{Binding ReverseSortCommand}" CommandParameter="{Binding ElementName=nameFinishedSort, Path=SelectedIndex}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <ComboBoxItem Content="{DynamicResource DownloadedSortByTime}" />
