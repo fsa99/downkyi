@@ -1,6 +1,7 @@
 using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.Models;
 using DownKyi.Core.BiliApi.Zone;
+using DownKyi.Core.Logging;
 using DownKyi.Core.Storage;
 using DownKyi.Images;
 using DownKyi.Models;
@@ -241,6 +242,7 @@ namespace DownKyi.ViewModels.DownloadManager
             get => DownloadBase == null ? "" : DownloadBase.FileSize;
             set
             {
+                LogManager.Info("设置FileSize", $"设置FileSize为：{value}");
                 DownloadBase.FileSize = value;
                 RaisePropertyChanged("FileSize");
             }
