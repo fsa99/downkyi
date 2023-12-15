@@ -1,9 +1,35 @@
-﻿using System.Text.RegularExpressions;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace DownKyi.Core.Utils
 {
     public static class Format
     {
+        /// <summary>
+        /// 将不同格式的时间字符串转换为总秒数  用于排序 比较
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static int ConvertTimeToSeconds(string input)
+        {
+            if (string.IsNullOrEmpty(input)) { return 0; }
+            int hours = 0, minutes = 0, seconds = 0;
+
+            // 使用正则表达式匹配输入格式
+            Match match = Regex.Match(input, @"(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?");
+
+            if (match.Success)
+            {
+                // 将匹配到的部分转换为整数
+                int.TryParse(match.Groups[1].Value, out hours);
+                int.TryParse(match.Groups[2].Value, out minutes);
+                int.TryParse(match.Groups[3].Value, out seconds);
+            }
+
+            // 计算总秒数
+            return hours * 3600 + minutes * 60 + seconds;
+        }
+
 
         /// <summary>
         /// 格式化Duration时间
@@ -18,11 +44,13 @@ namespace DownKyi.Core.Utils
                 long dur = duration / 60;
                 if (dur / 60 > 0)
                 {
-                    formatDuration = $"{dur / 60}h{dur % 60}m{duration % 60}s";
+                    //formatDuration = $"{dur / 60}h{dur % 60}m{duration % 60}s";
+                    formatDuration = $"{dur / 60}:{dur % 60}:{duration % 60}";
                 }
                 else
                 {
-                    formatDuration = $"{duration / 60}m{duration % 60}s";
+                    //formatDuration = $"{duration / 60}m{duration % 60}s";
+                    formatDuration = $"{duration / 60}:{duration % 60}";
                 }
             }
             else
@@ -133,6 +161,24 @@ namespace DownKyi.Core.Utils
                 formatSpeed = string.Format("{0:F2}", speed / 1024 / 1024) + "MB/s";
             }
             return formatSpeed;
+        }
+
+        /// <summary>
+        /// 格式化字节大小为数字，用于文件大小的比较
+        /// </summary>
+        /// <param name="fileSize"></param>
+        /// <returns></returns>
+        public static double ParseFileSize(string fileSize)
+        {
+            if (string.IsNullOrEmpty(fileSize)){ return 0; }
+            string numericPart = new string(fileSize.Where(char.IsDigit).ToArray());
+
+            if (double.TryParse(numericPart, out double result))
+            {
+                return result;
+            }
+            // 解析失败时，默认返回 0
+            return 0;
         }
 
         /// <summary>
