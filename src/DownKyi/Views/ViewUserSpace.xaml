@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="DownKyi.Views.ViewUserSpace"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -124,7 +124,7 @@
     <Grid>
         <Grid Visibility="{Binding ViewVisibility}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="300" />
+                <RowDefinition Height="150" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
