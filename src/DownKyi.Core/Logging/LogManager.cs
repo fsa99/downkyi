@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -106,6 +106,26 @@ namespace DownKyi.Core.Logging
         public static void Info(string source, string info)
         {
             LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(), $"{Now}   [{Thread.CurrentThread.ManagedThreadId}]   {nameof(info).ToUpper()}   {source}  {info}"));
+            LogInfo log = new LogInfo()
+            {
+                LogLevel = LogLevel.Info,
+                Message = info,
+                Time = Now,
+                ThreadId = Thread.CurrentThread.ManagedThreadId,
+                Source = source
+            };
+            Event?.Invoke(log);
+        }
+
+
+        /// <summary>
+        /// 写入Info级别的日志
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="info"></param>
+        public static void Info(string logName, string source, string info)
+        {
+            LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(logName), $"{Now}   [{Thread.CurrentThread.ManagedThreadId}]   {nameof(info).ToUpper()}   {source}  {info}"));
             LogInfo log = new LogInfo()
             {
                 LogLevel = LogLevel.Info,
@@ -398,7 +418,7 @@ namespace DownKyi.Core.Logging
             Event?.Invoke(log);
         }
 
-        private static string GetLogPath()
+        private static string GetLogPath(string otherName = null)
         {
             string newFilePath;
             var logDir = string.IsNullOrEmpty(LogDirectory) ? Path.Combine(Environment.CurrentDirectory, "logs") : LogDirectory;
@@ -428,7 +448,7 @@ namespace DownKyi.Core.Logging
             else
             {
                 var newFileName = string.Concat(fileNameNotExt, $"({0})", extension);
-                newFilePath = Path.Combine(logDir, newFileName);
+                newFilePath = string.IsNullOrEmpty(otherName) ? Path.Combine(logDir, newFileName) : Path.Combine(logDir, otherName ,newFileName);
             }
 
             return newFilePath;
