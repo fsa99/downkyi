@@ -1,4 +1,4 @@
-﻿using DownKyi.ViewModels.PageViewModels;
+using DownKyi.ViewModels.PageViewModels;
 using System.Collections.Generic;
 
 namespace DownKyi.Services
