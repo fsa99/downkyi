@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DownKyi.Core.BiliApi.Zone
 {
@@ -23,6 +24,32 @@ namespace DownKyi.Core.BiliApi.Zone
         public List<ZoneAttr> GetZones()
         {
             return zones;
+        }
+
+        public List<ZoneAttr> GetCurAndParentZoneAttrs(int id)
+        {
+            List<ZoneAttr> resultZones = zones
+                                        .Where(zone => zone.Id == id)
+                                        .SelectMany(zone => new[] { zone }.Concat(zones.Where(zoneAttr => zone.ParentId == zoneAttr.Id).Take(1)))
+                                        .ToList();
+            //List<ZoneAttr> resultZones = new List<ZoneAttr>();
+            //foreach (var zone in zones)
+            //{
+            //    if (zone.Id == id)
+            //    {
+            //        resultZones.Add(zone);
+            //        foreach (var zoneAttr in zones)
+            //        {
+            //            if (zone.ParentId == zoneAttr.Id)
+            //            {
+            //                resultZones.Add(zoneAttr);
+            //                break;
+            //            }
+            //        }
+            //        break;
+            //    }
+            //}
+            return resultZones;
         }
 
         private VideoZone()
