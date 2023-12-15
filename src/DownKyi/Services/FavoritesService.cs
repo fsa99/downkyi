@@ -1,4 +1,4 @@
-﻿using DownKyi.Core.BiliApi.Favorites;
+using DownKyi.Core.BiliApi.Favorites;
 using DownKyi.Core.Storage;
 using DownKyi.Core.Utils;
 using DownKyi.ViewModels.PageViewModels;
