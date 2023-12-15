@@ -1,4 +1,4 @@
-﻿using DownKyi.Core.BiliApi.BiliUtils;
+using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.Cheese;
 using DownKyi.Core.BiliApi.Cheese.Models;
 using DownKyi.Core.BiliApi.VideoStream;
