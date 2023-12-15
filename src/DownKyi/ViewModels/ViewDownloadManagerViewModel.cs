@@ -1,4 +1,4 @@
-﻿using DownKyi.Events;
+using DownKyi.Events;
 using DownKyi.Images;
 using DownKyi.Utils;
 using DownKyi.ViewModels.DownloadManager;
