@@ -1,4 +1,4 @@
-﻿using DownKyi.Core.BiliApi.BiliUtils;
+using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.VideoStream;
 using DownKyi.Core.BiliApi.VideoStream.Models;
 using DownKyi.Core.Danmaku2Ass;
@@ -743,6 +743,10 @@ namespace DownKyi.Services.Download
                 case AfterDownloadOperation.CLOSE_SYSTEM:
                     // 关机
                     System.Diagnostics.Process.Start("shutdown.exe", "-s");
+                    break;
+                case AfterDownloadOperation.CREATE_UPUPRESOURCE:
+                    // 生成UpUp壁纸资源文件夹及其文件
+
                     break;
                 default:
                     break;
