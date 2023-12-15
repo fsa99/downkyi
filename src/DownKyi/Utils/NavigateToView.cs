@@ -1,4 +1,4 @@
-﻿using DownKyi.Core.Logging;
+using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
 using DownKyi.Core.Settings.Models;
 using DownKyi.Events;
