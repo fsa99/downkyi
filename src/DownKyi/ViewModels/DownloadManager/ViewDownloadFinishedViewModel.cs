@@ -1,5 +1,6 @@
 using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
+using DownKyi.Events;
 using DownKyi.Services;
 using DownKyi.Utils;
 using Prism.Commands;
@@ -25,7 +26,11 @@ namespace DownKyi.ViewModels.DownloadManager
         public ObservableCollection<DownloadedItem> DownloadedList
         {
             get => downloadedList;
-            set => SetProperty(ref downloadedList, value);
+            set
+            {
+                SetProperty(ref downloadedList, value);
+                UpdateEventListeners();
+            }
         }
 
         private int finishedSortBy;
@@ -34,7 +39,24 @@ namespace DownKyi.ViewModels.DownloadManager
             get => finishedSortBy;
             set => SetProperty(ref finishedSortBy, value);
         }
+        private void UpdateEventListeners()
+        {
+            // 移除之前的监听
+            foreach (var item in DownloadedList)    
+            {
+                item.PublishTip -= PublishTipHandler;
+            }
 
+            // 添加新的监听
+            foreach (var item in DownloadedList)
+            {
+                item.PublishTip += PublishTipHandler;
+            }
+        }
+        /// <summary>
+        /// 上次选择的排序方式
+        /// </summary>
+        private int lastTimeSortSelected;
         #endregion
 
         public ViewDownloadFinishedViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(eventAggregator, dialogService)
@@ -75,10 +97,28 @@ namespace DownKyi.ViewModels.DownloadManager
                     FinishedSortBy = 0;
                     break;
             }
+            lastTimeSortSelected = FinishedSortBy;
             App.SortDownloadedList(finishedSort);
         }
 
         #region 命令申明
+        // 两次选则相同的排序 则逆序
+        private DelegateCommand<object> reverseSortCommand;
+        public DelegateCommand<object> ReverseSortCommand => reverseSortCommand ?? (reverseSortCommand = new DelegateCommand<object>(ExecuteReverseSortCommand));
+
+        /// <summary>
+        /// 两次选则相同的排序 则逆序
+        /// </summary>
+        /// <param name="parameter"></param>
+        private void ExecuteReverseSortCommand(object parameter)
+        {
+            if (!(parameter is int index)) { return; }
+
+            if (index == lastTimeSortSelected)
+            {
+                DownloadedList = new ObservableCollection<DownloadedItem>(DownloadedList.Reverse());
+            }
+        }
 
         // 下载完成列表排序事件
         private DelegateCommand<object> finishedSortCommand;
@@ -130,6 +170,7 @@ namespace DownKyi.ViewModels.DownloadManager
                     SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.DOWNLOAD);
                     break;
             }
+            lastTimeSortSelected = index;
             DownloadedList = App.DownloadedList;
         }
 
@@ -196,6 +237,13 @@ namespace DownKyi.ViewModels.DownloadManager
 
             SetDialogService();
         }
-
+        /// <summary>
+        /// 发送需要显示的tip
+        /// </summary>
+        /// <param name="isSucceed"></param>
+        private void PublishTipHandler(string message)
+        {
+            eventAggregator.GetEvent<MessageEvent>().Publish(message);
+        }
     }
 }
