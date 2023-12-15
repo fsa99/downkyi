@@ -1,4 +1,4 @@
-﻿using DownKyi.Core.Logging;
+using DownKyi.Core.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
