@@ -270,6 +270,18 @@
     <system:String x:Key="LayoutAlgorithmAsync">速度异步</system:String>
     <system:String x:Key="LayoutAlgorithmAsyncTip">弹幕滚动速度取决于它的文本长度</system:String>
 
+    <system:String x:Key="SettingUpup">UPUP资源</system:String>
+    <system:String x:Key="SelectCreateUpupResourceDirectory">生成Upup设置</system:String>
+    <system:String x:Key="DefaultUserName">默认使用者名</system:String>
+    <system:String x:Key="DefaultUpDirectory">默认生成目录</system:String>
+    <system:String x:Key="SettingUseDefaultUpDirectory">设此文件夹为默认生成文件夹</system:String>
+    <system:String x:Key="IsUseDefaultUpDirectory">使用默认生成目录</system:String>
+    <system:String x:Key="IsMoveVideoUpDirectory">将视频复制到生成目录</system:String>
+    <system:String x:Key="DefaultUpVer">默认版本号  </system:String>
+    <system:String x:Key="UpupCreate">生成</system:String>
+    <system:String x:Key="ButtonUpFileSelect">选择...</system:String>
+    <system:String x:Key="DefaultUpupDirectoryTip">默认将upup资源生成到该文件夹中</system:String>
+
     <system:String x:Key="About">关于</system:String>
     <system:String x:Key="GotoHomepage">访问主页</system:String>
     <system:String x:Key="CurrentAppVersion">当前版本：</system:String>
