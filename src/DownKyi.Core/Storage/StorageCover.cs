@@ -1,4 +1,4 @@
-﻿using DownKyi.Core.Logging;
+using DownKyi.Core.Logging;
 using DownKyi.Core.Storage.Database;
 using DownKyi.Core.Utils.Encryptor;
 using System;
@@ -92,7 +92,7 @@ namespace DownKyi.Core.Storage
         /// <summary>
         /// 获取封面
         /// </summary>
-        /// <param name="aid"></param>
+        /// <param name="avid"></param>
         /// <param name="bvid"></param>
         /// <param name="cid"></param>
         /// <param name="url"></param>
