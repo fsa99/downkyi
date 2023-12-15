@@ -1,4 +1,4 @@
-﻿using DownKyi.ViewModels.DownloadManager;
+using DownKyi.ViewModels.DownloadManager;
 using System.Collections.Generic;
 
 namespace DownKyi.Services.Download
