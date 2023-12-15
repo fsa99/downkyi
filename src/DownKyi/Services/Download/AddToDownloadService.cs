@@ -190,7 +190,10 @@ namespace DownKyi.Services.Download
                     }
                 });
             }
-
+            if (string.IsNullOrEmpty(directory))
+            {
+                return null;
+            }
             if (!Directory.Exists(Directory.GetDirectoryRoot(directory)))
             {
                 var alert = new AlertService(dialogService);
