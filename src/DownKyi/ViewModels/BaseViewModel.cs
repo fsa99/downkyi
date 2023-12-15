@@ -1,4 +1,4 @@
-﻿using Prism.Events;
+using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
