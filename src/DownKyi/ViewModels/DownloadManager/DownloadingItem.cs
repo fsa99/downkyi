@@ -1,4 +1,4 @@
-﻿using DownKyi.Core.BiliApi.VideoStream.Models;
+using DownKyi.Core.BiliApi.VideoStream.Models;
 using DownKyi.Images;
 using DownKyi.Models;
 using DownKyi.Services;
