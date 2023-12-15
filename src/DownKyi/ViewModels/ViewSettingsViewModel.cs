@@ -1,4 +1,4 @@
-﻿using DownKyi.Events;
+using DownKyi.Events;
 using DownKyi.Images;
 using DownKyi.Utils;
 using DownKyi.ViewModels.PageViewModels;
@@ -57,7 +57,8 @@ namespace DownKyi.ViewModels
                 new TabHeader { Id = 1, Title = DictionaryResource.GetString("Network") },
                 new TabHeader { Id = 2, Title = DictionaryResource.GetString("Video") },
                 new TabHeader { Id = 3, Title = DictionaryResource.GetString("SettingDanmaku") },
-                new TabHeader { Id = 4, Title = DictionaryResource.GetString("About") }
+                new TabHeader { Id = 4, Title = DictionaryResource.GetString("SettingUpup")},
+                new TabHeader { Id = 5, Title = DictionaryResource.GetString("About") },
             };
 
             #endregion
@@ -113,6 +114,9 @@ namespace DownKyi.ViewModels
                     regionManager.RequestNavigate("SettingsContentRegion", ViewDanmakuViewModel.Tag, param);
                     break;
                 case 4:
+                    regionManager.RequestNavigate("SettingsContentRegion", ViewUpupViewModel.Tag, param);
+                    break;
+                case 5:
                     regionManager.RequestNavigate("SettingsContentRegion", ViewAboutViewModel.Tag, param);
                     break;
             }
