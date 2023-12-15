@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -45,7 +45,7 @@ namespace DownKyi.Core.Utils
                 if (name == "Expires" || name == "gourl") { continue; }
 
                 // 添加cookie
-                cookieContainer.Add(new Cookie(name, value, "/", ".bilibili.com") { Expires = dateTime });
+                cookieContainer.Add(new Cookie(name, value.Replace(",", "%2c"), "/", ".bilibili.com") { Expires = dateTime });
                 Debugging.Console.PrintLine(name + ": " + value + "\t" + cookieContainer.Count);
             }
 
