@@ -1,4 +1,4 @@
-﻿using DownKyi.Core.Settings;
+using DownKyi.Core.Settings;
 using DownKyi.Core.Settings.Models;
 using DownKyi.Core.Utils;
 using DownKyi.Events;
@@ -22,6 +22,9 @@ namespace DownKyi.ViewModels.Dialogs
         #region 页面属性申明
 
         private VectorImage cloudDownloadIcon;
+        /// <summary>
+        /// 云下载图标
+        /// </summary>
         public VectorImage CloudDownloadIcon
         {
             get { return cloudDownloadIcon; }
@@ -29,6 +32,9 @@ namespace DownKyi.ViewModels.Dialogs
         }
 
         private VectorImage folderIcon;
+        /// <summary>
+        /// 文件夹图标
+        /// </summary>
         public VectorImage FolderIcon
         {
             get { return folderIcon; }
