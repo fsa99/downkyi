@@ -1,4 +1,4 @@
-﻿using DownKyi.Core.FileName;
+using DownKyi.Core.FileName;
 using DownKyi.Core.Settings.Models;
 using System;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace DownKyi.Core.Settings
         // 历史下载目录
         private readonly List<string> historyVideoRootPaths = new List<string>();
 
-        // 是否使用默认下载目录，如果是，则每次点击下载选中项时不再询问下载目录
+        // 是否使用默认下载目录，如果是，则每次点击下载选中项时不再询问生成目录
         private readonly AllowStatus isUseSaveVideoRootPath = AllowStatus.NO;
 
         // 下载内容
