@@ -1,4 +1,4 @@
-﻿using DownKyi.Core.BiliApi.Login;
+using DownKyi.Core.BiliApi.Login;
 using DownKyi.Core.BiliApi.VideoStream.Models;
 using DownKyi.Core.Downloader;
 using DownKyi.Core.Logging;
