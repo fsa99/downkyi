@@ -18,7 +18,7 @@ namespace DownKyi.Core.UpupTheme
         [JsonProperty("description")]
         public string Description { get; set; }
         /// <summary>
-        /// 是否原创 
+        /// 是否原创  1:原创 | 2:转载 | 3:二次创作
         /// </summary>
         [JsonProperty("isOriginal")]
         public int IsOriginal { get; set; }
@@ -53,7 +53,7 @@ namespace DownKyi.Core.UpupTheme
         [JsonProperty("tag")]
         public string Tag { get; set; }
         /// <summary>
-        /// 用户界面类型
+        /// 主题类型 1:视频 | 3:HTML
         /// </summary>
         [JsonProperty("themeType")]
         public int ThemeType { get; set; }
