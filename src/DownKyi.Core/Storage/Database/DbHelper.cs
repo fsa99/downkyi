@@ -103,6 +103,7 @@ namespace DownKyi.Core.Storage.Database
         {
             if (conn == null) { return; }
 
+            int res = 0;
             try
             {
                 lock (conn)
@@ -115,11 +116,12 @@ namespace DownKyi.Core.Storage.Database
                             command.CommandText = sql;
                             // 添加参数
                             action?.Invoke(command.Parameters);
-                            command.ExecuteNonQuery();
+                            res = command.ExecuteNonQuery();
                         }
                         tr.Commit();
                     }
                 }
+                LogManager.Info("SQLite执行记录", nameof(ExecuteNonQuery), $"执行语句：{sql}\t 成功影响行数：{res}");
             }
             catch (SQLiteException e)
             {

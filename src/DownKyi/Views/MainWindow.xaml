@@ -7,7 +7,7 @@
     xmlns:prism="http://prismlibrary.com/"
     Title="{DynamicResource AppName}"
     Width="1100"
-    Height="750"
+    Height="550"
     MinWidth="800"
     MinHeight="550"
     local:WindowAdaptation.HeightByScreenRatio="0.75"

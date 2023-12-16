@@ -194,10 +194,7 @@ namespace DownKyi.ViewModels.DownloadManager
             if (DownloadBase == null) { return; }
             // 选择文件夹
             string directory = SetDirectory(DialogService);
-            if (string.IsNullOrEmpty(directory))
-            {
-
-            }
+            if (string.IsNullOrEmpty(directory)){ return; }
             UpupModel upupModel = new UpupModel()
             {
                 UserName = SettingsManager.GetInstance().GetDefaultUseName(),
@@ -214,7 +211,7 @@ namespace DownKyi.ViewModels.DownloadManager
             {
                 Directory.CreateDirectory(targetDirectory);
             }
-            string sourceIMGFileName = DownloadBase.FilePath + ".jpg";
+            string sourceIMGFileName = DownloadBase.FilePath + ".Cover.jpg";
             string targetIMGFileName = Path.Combine(targetDirectory, "preview.jpg");
             string sourceVideoFileName = DownloadBase.FilePath + ".mp4";
             string targetVideoFileName = Path.Combine(targetDirectory, Path.GetFileName(sourceVideoFileName));
@@ -230,7 +227,7 @@ namespace DownKyi.ViewModels.DownloadManager
                 if (SettingsManager.GetInstance().GetIsMoveVideoUpDirectory() == AllowStatus.YES)
                 {
                     System.Threading.Tasks.Task.Run(() => File.Copy(sourceVideoFileName, targetVideoFileName, true));
-                    upupModel.Src = targetVideoFileName;
+                    upupModel.Src = Path.GetFileName(sourceVideoFileName);
                 }
                 // 判断有没有下载封面
                 #region 封面的处理

@@ -6,9 +6,9 @@ namespace DownKyi.Core.UpupTheme
 {
     public class UpupWallpaper
     {
-        private List<UpupTheme> _upupData;
+        private List<UpupModel> _upupData;
         [JsonProperty("data")]
-        public List<UpupTheme> UpupData 
+        public List<UpupModel> UpupData 
         {
             get => _upupData;
             set{

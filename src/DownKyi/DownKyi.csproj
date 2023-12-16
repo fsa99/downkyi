@@ -122,6 +122,7 @@
     <Compile Include="Services\Download\BuiltinDownloadService.cs" />
     <Compile Include="Services\Download\DownloadStorageService.cs" />
     <Compile Include="Services\SearchService.cs" />
+    <Compile Include="ViewModels\Dialogs\ViewUpCreateSetterViewModel.cs" />
     <Compile Include="ViewModels\Friends\ViewFollowerViewModel.cs" />
     <Compile Include="ViewModels\Friends\ViewFollowingViewModel.cs" />
     <Compile Include="Utils\WindowAdaptation.cs" />
@@ -167,6 +168,7 @@
     <Compile Include="ViewModels\Settings\ViewDanmakuViewModel.cs" />
     <Compile Include="ViewModels\DownloadManager\ViewDownloadFinishedViewModel.cs" />
     <Compile Include="ViewModels\DownloadManager\ViewDownloadingViewModel.cs" />
+    <Compile Include="ViewModels\Settings\ViewUpupViewModel.cs" />
     <Compile Include="ViewModels\Toolbox\ViewBiliHelperViewModel.cs" />
     <Compile Include="ViewModels\Toolbox\ViewDelogoViewModel.cs" />
     <Compile Include="ViewModels\UserSpace\SeasonsSeries.cs" />
@@ -207,6 +209,9 @@
     <Compile Include="Views\Dialogs\ViewParsingSelector.xaml.cs">
       <DependentUpon>ViewParsingSelector.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dialogs\ViewUpCreateSetter.xaml.cs">
+      <DependentUpon>ViewUpCreateSetter.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DownloadManager\ViewDownloadFinished.xaml.cs">
       <DependentUpon>ViewDownloadFinished.xaml</DependentUpon>
     </Compile>
@@ -230,6 +235,9 @@
     </Compile>
     <Compile Include="Views\Settings\ViewNetwork.xaml.cs">
       <DependentUpon>ViewNetwork.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\ViewUpup.xaml.cs">
+      <DependentUpon>ViewUpup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Settings\ViewVideo.xaml.cs">
       <DependentUpon>ViewVideo.xaml</DependentUpon>
@@ -386,6 +394,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Dialogs\ViewUpCreateSetter.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\DownloadManager\ViewDownloadFinished.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -433,6 +445,10 @@
     <Page Include="Views\Settings\ViewNetwork.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\ViewUpup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Settings\ViewVideo.xaml">
       <SubType>Designer</SubType>

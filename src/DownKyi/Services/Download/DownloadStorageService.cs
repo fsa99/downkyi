@@ -2,7 +2,11 @@ using DownKyi.Core.Logging;
 using DownKyi.Core.Storage.Database.Download;
 using DownKyi.Models;
 using DownKyi.ViewModels.DownloadManager;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 
 namespace DownKyi.Services.Download
 {
@@ -28,6 +32,17 @@ namespace DownKyi.Services.Download
         {
             if (downloadingItem == null || downloadingItem.DownloadBase == null) { return; }
 
+            //LogManager.Info("数据库交互记录", nameof(RemoveDownloading), $"添加下载中数据{downloadingItem.DownloadBase.Uuid}");
+            //string jsonContent = JsonConvert.SerializeObject(downloadingItem, Formatting.Indented);
+            //string fileName = $"{downloadingItem.DownloadBase.Uuid}_{Stopwatch.GetTimestamp()}.json";
+            //string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            //string filePath = Path.Combine(appDirectory, "jsonData", fileName);
+            //Directory.CreateDirectory(Path.Combine(appDirectory, "jsonData"));
+            //using (StreamWriter sw = new StreamWriter(filePath))
+            //{
+            //    sw.Write(jsonContent);
+            //}
+
             AddDownloadBase(downloadingItem.DownloadBase);
 
             DownloadingDb downloadingDb = new DownloadingDb();
@@ -46,8 +61,8 @@ namespace DownKyi.Services.Download
         public void RemoveDownloading(DownloadingItem downloadingItem)
         {
             if (downloadingItem == null || downloadingItem.DownloadBase == null) { return; }
-            LogManager.Info("数据库交互记录", nameof(RemoveDownloading), $"删除下载中数据{downloadingItem.DownloadBase.Uuid}");
-            RemoveDownloadBase(downloadingItem.DownloadBase.Uuid);
+
+            // RemoveDownloadBase(downloadingItem.DownloadBase.Uuid);
 
             DownloadingDb downloadingDb = new DownloadingDb();
             downloadingDb.Delete(downloadingItem.DownloadBase.Uuid);
@@ -110,13 +125,8 @@ namespace DownKyi.Services.Download
         /// <param name="downloadedItem"></param>
         public void AddDownloaded(DownloadedItem downloadedItem)
         {
-            if (downloadedItem == null || downloadedItem.DownloadBase == null)
-            {
-                LogManager.Info("数据库交互记录", nameof(AddDownloaded), "downloadedItem为空");
-                return;
-            }
+            if (downloadedItem == null || downloadedItem.DownloadBase == null){ return; }
 
-            LogManager.Info("数据库交互记录", nameof(AddDownloaded), $"添加下载完成数据{downloadedItem.DownloadBase.Uuid}");
             AddDownloadBase(downloadedItem.DownloadBase);
 
             DownloadedDb downloadedDb = new DownloadedDb();
@@ -135,6 +145,19 @@ namespace DownKyi.Services.Download
         public void RemoveDownloaded(DownloadedItem downloadedItem)
         {
             if (downloadedItem == null || downloadedItem.DownloadBase == null) { return; }
+
+            LogManager.Info("数据库交互记录", nameof(AddDownloaded), $"删除下载完成数据{downloadedItem.DownloadBase.Uuid}");
+
+            string jsonContent = JsonConvert.SerializeObject(downloadedItem, Formatting.Indented);
+            string fileName = $"{downloadedItem.DownloadBase.Uuid}_{Stopwatch.GetTimestamp()}.json";
+            string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string filePath = Path.Combine(appDirectory, "jsonData", fileName);
+            Directory.CreateDirectory(Path.Combine(appDirectory, "jsonData"));
+            //File.WriteAllText(filePath, jsonContent);
+            using (StreamWriter sw = new StreamWriter(filePath))
+            {
+                sw.Write(jsonContent);
+            }
 
             RemoveDownloadBase(downloadedItem.DownloadBase.Uuid);
 
@@ -206,6 +229,10 @@ namespace DownKyi.Services.Download
             if (obj == null)
             {
                 downloadBaseDb.Insert(downloadBase.Uuid, downloadBase);
+            }
+            else
+            {
+                downloadBaseDb.Update(downloadBase.Uuid, downloadBase);
             }
             //downloadBaseDb.Close();
         }
