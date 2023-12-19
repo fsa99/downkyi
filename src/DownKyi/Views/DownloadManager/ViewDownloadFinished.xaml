@@ -512,27 +512,39 @@
                     <ColumnDefinition Width="130" />
                     <ColumnDefinition Width="110" />
                 </Grid.ColumnDefinitions>
-
                 <StackPanel
                     Grid.Column="0"
                     Margin="10,0,0,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
+
                     <TextBlock
                         VerticalAlignment="Center"
                         FontSize="14"
-                        Text="{DynamicResource TotalDownloaded1}" />
+                        Text="{DynamicResource TotalDownloaded1}" >
+                        <TextBlock.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RefreDownloadFinishedList}" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
                     <TextBlock
                         Margin="3,0"
                         VerticalAlignment="Center"
                         FontSize="14"
                         Foreground="{DynamicResource BrushPrimary}"
-                        Text="{Binding DownloadedList.Count}" />
+                        Text="{Binding DownloadedList.Count}" >
+                        <TextBlock.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RefreDownloadFinishedList}" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
                     <TextBlock
                         VerticalAlignment="Center"
                         FontSize="14"
-                        Text="{DynamicResource TotalDownloaded2}" />
+                        Text="{DynamicResource TotalDownloaded2}" >
+                        <TextBlock.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RefreDownloadFinishedList}" />
+                        </TextBlock.InputBindings>
+                    </TextBlock>
                 </StackPanel>
 
                 <ComboBox
