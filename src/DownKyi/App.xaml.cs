@@ -289,5 +289,19 @@ namespace DownKyi
             return reverseOrder ? DownloadedList.OrderByDescending(keySelector) : DownloadedList.OrderBy(keySelector);
         }
 
+        /// <summary>
+        /// 刷新下载完成列表
+        /// </summary>
+        public static void RefreshDownloadedList()
+        {
+            DownloadStorageService downloadStorageService = new DownloadStorageService();
+
+            // 从数据库读取
+            //List<DownloadedItem> downloadedItems = downloadStorageService.GetDownloaded();
+            //IEnumerable<DownloadedItem> newItems = downloadedItems.Except(DownloadedList);
+            //DownloadedList.AddRange(newItems.ToList());
+            DownloadedList.Clear();
+            DownloadedList.AddRange(downloadStorageService.GetDownloaded());
+        }
     }
 }
