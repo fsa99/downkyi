@@ -6,7 +6,6 @@ using DownKyi.Models;
 using DownKyi.Services;
 using DownKyi.Utils;
 using DownKyi.ViewModels.Dialogs;
-using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Services.Dialogs;
 using System;
@@ -195,88 +194,53 @@ namespace DownKyi.ViewModels.DownloadManager
             // 选择文件夹
             string directory = SetDirectory(DialogService);
             if (string.IsNullOrEmpty(directory)){ return; }
+
+            // 构造upup类
             UpupModel upupModel = new UpupModel()
             {
                 UserName = SettingsManager.GetInstance().GetDefaultUseName(),
                 Author = DownloadBase.UpOwner.Name,
                 Name = DownloadBase.Name,
                 Src = DownloadBase.FilePath + ".mp4",
-                Themeno = (int)DownloadBase.Avid,
                 Tag = DownloadBase.ZoneId.ToString(),
-                Description = DownloadBase.Description,
-                ReprintUrl = DownloadBase.Bvid,
+                Description = DownloadBase.Description
             };
-            string targetDirectory = Path.Combine(directory, upupModel.Themeno.ToString());
-            if (!Directory.Exists(targetDirectory))
-            {
-                Directory.CreateDirectory(targetDirectory);
-            }
-            string sourceIMGFileName = DownloadBase.FilePath + ".Cover.jpg";
-            string targetIMGFileName = Path.Combine(targetDirectory, "preview.jpg");
-            string sourceVideoFileName = DownloadBase.FilePath + ".mp4";
-            string targetVideoFileName = Path.Combine(targetDirectory, Path.GetFileName(sourceVideoFileName));
+            upupModel.SetReprintUrl(DownloadBase.Bvid);
+            upupModel.SetThemeno((int)DownloadBase.Avid);
+            UpupUtils upupUtils = new UpupUtils(directory, DownloadBase.FilePath, ref upupModel);
+            
             // 判断是否下载了视频
             if (DownloadBase.NeedDownloadContent.ContainsKey("downloadVideo") && DownloadBase.NeedDownloadContent["downloadVideo"])
             {
-                if (!File.Exists(sourceVideoFileName))
-                {
-                    // 视频文件不存在或被删除
-                    return;
-                }
-                //判断视频是复制到目标目录  还是放在源  Src要做对应改变
+                // 视频的处理
                 if (SettingsManager.GetInstance().GetIsMoveVideoUpDirectory() == AllowStatus.YES)
                 {
-                    System.Threading.Tasks.Task.Run(() => File.Copy(sourceVideoFileName, targetVideoFileName, true));
-                    upupModel.Src = Path.GetFileName(sourceVideoFileName);
+                    var videores = upupUtils.UpupCreate_Video();
+                    if (!videores) { PublishTip?.Invoke(DictionaryResource.GetString("CreateUpupFailedTip2")); }
                 }
-                // 判断有没有下载封面
-                #region 封面的处理
+                // 封面的处理
+                bool coverres = true;
                 if (DownloadBase.NeedDownloadContent.ContainsKey("downloadCover") && DownloadBase.NeedDownloadContent["downloadCover"])
+                    coverres = upupUtils.UpupCreate_CoverCopy();
+                if (!coverres)
                 {
-                    
-                    if (File.Exists(sourceIMGFileName))
-                    {
-                        File.Move(sourceIMGFileName, targetIMGFileName);
-                    }
-                    else
-                    {
-                        // 查询、保存封面
-                        StorageCover storageCover = new StorageCover();
-                        string cover = storageCover.GetCover(DownloadBase.Avid, DownloadBase.Bvid, DownloadBase.Cid, DownloadBase.CoverUrl);
-                        if (cover == null)
-                        {
-                            // 本地不存在且下载失败
-                        }
-                        using (Bitmap bitmap = new Bitmap(cover))
-                        {
-                            bitmap.Save(targetIMGFileName);
-                        }
-                    }
-                }
-                else
-                {
-                    // 查询、保存封面
                     StorageCover storageCover = new StorageCover();
                     string cover = storageCover.GetCover(DownloadBase.Avid, DownloadBase.Bvid, DownloadBase.Cid, DownloadBase.CoverUrl);
                     if (cover == null)
-                    {
-                        // 本地不存在且下载失败
-                    }
+                        PublishTip?.Invoke(DictionaryResource.GetString("CreateUpupFailedTip3"));
                     using (Bitmap bitmap = new Bitmap(cover))
                     {
-                        bitmap.Save(targetIMGFileName);
+                        bitmap.Save(upupUtils.TargetIMGFileName);
                     }
                 }
-                #endregion
-                string themeupup = JsonConvert.SerializeObject(upupModel, Formatting.Indented);
-                File.WriteAllText(Path.Combine(targetDirectory, "theme.upup"), themeupup);
-                PublishTip?.Invoke("成功生成了upup资源");
-
+                // 配置文件处理
+                upupUtils.UpupWriteupupJsonFile();
+                PublishTip?.Invoke(DictionaryResource.GetString("CreateUpupSucceedTip"));
             }
             else
             {
                 // 没有下载视频
-                PublishTip?.Invoke("该完成项没有下载视频");
+                PublishTip?.Invoke(DictionaryResource.GetString("CreateUpupFailedTip1"));
             }
         }
         #endregion
