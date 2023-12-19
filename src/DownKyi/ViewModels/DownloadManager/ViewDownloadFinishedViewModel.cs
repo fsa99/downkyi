@@ -102,6 +102,17 @@ namespace DownKyi.ViewModels.DownloadManager
         }
 
         #region 命令申明
+        private DelegateCommand refreshDownloadFinishedList;
+        /// <summary>
+        /// 刷新下载完成列表
+        /// </summary>
+        public DelegateCommand RefreDownloadFinishedList => refreshDownloadFinishedList ?? (refreshDownloadFinishedList = new DelegateCommand(ExecuteRefreshDownloadFinishedList));
+        private void ExecuteRefreshDownloadFinishedList()
+        {
+            App.RefreshDownloadedList();
+            ExecuteFinishedSortCommand(lastTimeSortSelected);
+        }
+
         // 两次选则相同的排序 则逆序
         private DelegateCommand<object> reverseSortCommand;
         public DelegateCommand<object> ReverseSortCommand => reverseSortCommand ?? (reverseSortCommand = new DelegateCommand<object>(ExecuteReverseSortCommand));
