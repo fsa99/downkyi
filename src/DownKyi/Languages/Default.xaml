@@ -280,8 +280,16 @@
     <system:String x:Key="IsMoveVideoUpDirectory">将视频复制到生成目录</system:String>
     <system:String x:Key="DefaultUpVer">默认版本号  </system:String>
     <system:String x:Key="UpupCreate">生成</system:String>
+    <system:String x:Key="UpupCreatesuffix">个upupWallpaper资源</system:String>
+    <system:String x:Key="DropNoVideoFileTip">仅支持视频文件</system:String>
     <system:String x:Key="ButtonUpFileSelect">选择...</system:String>
     <system:String x:Key="DefaultUpupDirectoryTip">默认将upup资源生成到该文件夹中</system:String>
+    <system:String x:Key="DropVideoFileToFrameCreateUpup">请拖入一个或多个视频文件到框中</system:String>
+    <system:String x:Key="CreateUpupSucceedTip">成功生成了upup资源</system:String>
+    <system:String x:Key="CreateUpupFailedTip1">该完成项没有下载视频</system:String>
+    <system:String x:Key="CreateUpupFailedTip2">视频找不到了</system:String>
+    <system:String x:Key="CreateUpupFailedTip3">封面找不到了</system:String>
+
 
     <system:String x:Key="About">关于</system:String>
     <system:String x:Key="GotoHomepage">访问主页</system:String>
