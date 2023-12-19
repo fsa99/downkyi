@@ -7,16 +7,21 @@
     prism:ViewModelLocator.AutoWireViewModel="True">
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="50,0" Orientation="Vertical">
-            <!--标题 UPUP资源-->
-            <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
-                <TextBlock
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel  x:Name="stackPanel1" Grid.Row="0" Margin="50,0" Orientation="Vertical">
+                <!--标题 UPUP资源-->
+                <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
+                    <TextBlock
                     FontSize="18"
                     Foreground="{DynamicResource BrushTextDark}"
                     Text="{DynamicResource SettingUpup}" />
-            </StackPanel>
-            <!--是否使用默认目录选择框-->
-            <CheckBox
+                </StackPanel>
+                <!--是否使用默认目录选择框-->
+                <CheckBox
                 Name="nameIsUseDefaultUpDirectory"
                 Margin="0,20,0,0"
                 HorizontalAlignment="Left"
@@ -27,53 +32,53 @@
                 Foreground="{DynamicResource BrushTextDark}"
                 IsChecked="{Binding IsUseDefaultUpDirectory, Mode=TwoWay}"
                 Style="{StaticResource CheckBoxStyle}" />
-            <StackPanel Margin="0,20,0,0" Orientation="Vertical">
-                <StackPanel.Style>
-                    <Style TargetType="{x:Type StackPanel}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding ElementName=nameIsUseDefaultUpDirectory, Path=IsChecked}" Value="false">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding ElementName=nameIsUseDefaultUpDirectory, Path=IsChecked}" Value="true">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </StackPanel.Style>
+                <StackPanel Margin="0,20,0,0" Orientation="Vertical">
+                    <StackPanel.Style>
+                        <Style TargetType="{x:Type StackPanel}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=nameIsUseDefaultUpDirectory, Path=IsChecked}" Value="false">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ElementName=nameIsUseDefaultUpDirectory, Path=IsChecked}" Value="true">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
 
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
                         VerticalAlignment="Center"
                         FontSize="12"
                         Foreground="{DynamicResource BrushTextDark}"
                         Text="{DynamicResource DefaultUpDirectory}" />
-                    <TextBlock
+                        <TextBlock
                         Margin="10,0,0,0"
                         VerticalAlignment="Center"
                         FontSize="12"
                         Foreground="{DynamicResource BrushTextGrey}"
                         Text="{DynamicResource DefaultUpupDirectoryTip}" />
-                </StackPanel>
+                    </StackPanel>
 
-                <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
-                    <TextBlock
+                    <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                        <TextBlock
                         MaxWidth="600"
                         VerticalAlignment="Center"
                         FontSize="12"
                         Foreground="{DynamicResource BrushTextDark}"
                         Text="{Binding DefaultUpDirectory}"
                         TextTrimming="CharacterEllipsis" />
-                    <Button
+                        <Button
                         Width="75"
                         Margin="30,0,0,0"
                         Command="{Binding ChangeSaveUpupDirectoryCommand}"
                         Content="{DynamicResource ChangeDirectory}"
                         FontSize="12"
                         Style="{StaticResource BtnBorderStyle}" />
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
-            <!--是否将视频移动到目标目录-->
-            <CheckBox
+                <!--是否将视频移动到目标目录-->
+                <CheckBox
                 Name="nameIsMoveVideoUpDirectory"
                 Margin="0,20,0,0"
                 HorizontalAlignment="Left"
@@ -84,52 +89,72 @@
                 Foreground="{DynamicResource BrushTextDark}"
                 IsChecked="{Binding IsMoveVideoUpDirectory, Mode=TwoWay}"
                 Style="{StaticResource CheckBoxStyle}" />
-            <!--默认使用者名称-->
-            <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
-                <TextBlock
+                <!--默认使用者名称-->
+                <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
+                    <TextBlock
                     VerticalAlignment="Center"
                     FontSize="12"
                     Foreground="{DynamicResource BrushTextDark}"
                     Text="{DynamicResource DefaultUserName}" />
-                <TextBox
+                    <TextBox
                     Name="nameDefaultUseName"
                     Width="200"
                     Height="20"
                     VerticalContentAlignment="Center"
                     Text="{Binding DefaultUseName}">
-                    <TextBox.InputBindings>
-                        <KeyBinding
+                        <TextBox.InputBindings>
+                            <KeyBinding
                             Key="Enter"
                             Command="{Binding ChangeDefaultUseNameCommand}"
                             CommandParameter="{Binding ElementName=nameDefaultUseName, Path=Text}" />
-                    </TextBox.InputBindings>
-                </TextBox>
-            </StackPanel>
-            <!--默认版本号-->
-            <StackPanel
+                        </TextBox.InputBindings>
+                    </TextBox>
+                </StackPanel>
+                <!--默认版本号-->
+                <StackPanel
                 Margin="0,20,0,0"
                 Orientation="Horizontal">
-                <TextBlock
+                    <TextBlock
                     VerticalAlignment="Center"
                     FontSize="12"
                     Foreground="{DynamicResource BrushTextDark}"
                     Text="{DynamicResource DefaultUpVer}" />
-                <TextBox
+                    <TextBox
                     Name="nameVer"
                     Width="200"
                     Height="20"
                     Margin="13 0 0 0"
                     VerticalContentAlignment="Center"
                     Text="{Binding Ver}">
-                    <TextBox.InputBindings>
-                        <KeyBinding
+                        <TextBox.InputBindings>
+                            <KeyBinding
                             Key="Enter"
                             Command="{Binding ChangeVerCommand}"
                             CommandParameter="{Binding ElementName=nameVer, Path=Text}" />
-                    </TextBox.InputBindings>
-                </TextBox>
+                        </TextBox.InputBindings>
+                    </TextBox>
+                </StackPanel>
+                <StackPanel Margin="10" />
             </StackPanel>
-            <StackPanel Margin="10" />
-        </StackPanel>
+            <StackPanel Grid.Row="1"  Margin="50,0" Orientation="Vertical">
+                <Border BorderBrush="{DynamicResource BrushForegroundGrey}" BorderThickness="2" AllowDrop="True" Height="120" Width="{Binding ElementName=stackPanel1, Path=Width}" Padding="2">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Drop">
+                            <prism:InvokeCommandAction Command="{Binding DropFileCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <Button 
+                        HorizontalAlignment="Stretch" 
+                        VerticalAlignment="Stretch" 
+                        BorderThickness="1" 
+                        BorderBrush="{DynamicResource BrushForegroundGrey}" 
+                        Background="{DynamicResource BrushBackgroundGreyTranslucent3}"
+                        Command="{Binding SelectMultiVideoFileAndCreate}">
+                        <TextBlock VerticalAlignment="Center" FontSize="12" Foreground="{DynamicResource BrushMask}" Text="{DynamicResource DropVideoFileToFrameCreateUpup}" />
+                    </Button>
+                </Border>
+            </StackPanel>
+        </Grid>
+        
     </ScrollViewer>
 </UserControl>
