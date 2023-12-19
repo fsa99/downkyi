@@ -1,9 +1,15 @@
 using DownKyi.Core.Settings;
+using DownKyi.Core.UpupTheme;
+using DownKyi.Core.Utils;
 using DownKyi.Events;
 using DownKyi.Utils;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace DownKyi.ViewModels.Settings
 {
@@ -176,7 +182,42 @@ namespace DownKyi.ViewModels.Settings
                 PublishTip(isSucceed);
             }
         }
+        
+        private DelegateCommand<DragEventArgs> dropFileCommand;
+        /// <summary>
+        /// 拖放文件生成upup资源
+        /// </summary>
+        public DelegateCommand<DragEventArgs> DropFileCommand => dropFileCommand ?? (dropFileCommand = new DelegateCommand<DragEventArgs>(ExcuteDropFileCommand));
 
+        private void ExcuteDropFileCommand(DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop); // 获取拖放的文件路径数组
+            CommonCreateBLL(files);
+        }
+
+        private DelegateCommand selectMultiVideoFileAndCreate;
+        public DelegateCommand SelectMultiVideoFileAndCreate => selectMultiVideoFileAndCreate ?? (selectMultiVideoFileAndCreate = new DelegateCommand(ExcuteSelectMultiVideoFileAndCreate));
+        /// <summary>
+        /// 选择视频生成upup资源
+        /// </summary>
+        private void ExcuteSelectMultiVideoFileAndCreate()
+        {
+            string[] files = DialogUtils.SelectMultiVideoFile();
+            CommonCreateBLL(files);
+        }
+
+        private void CommonCreateBLL(string[] files)
+        {
+            if (files == null) { eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("DropNoVideoFileTip")); return; }
+            var validVideoFiles = files.Where(file => FileHelper.IsVideoFile(file)).ToList();
+            string targetDirectory = DefaultUpDirectory;
+            Parallel.ForEach(validVideoFiles, (videoFile, state, index) =>
+            {
+                UpupUtils upupUtil = new UpupUtils(videoFile, targetDirectory, (int)index);
+                upupUtil.UpupCreate_AllFromLocal();
+            });
+            eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("UpupCreate") + validVideoFiles.Count.ToString() + DictionaryResource.GetString("UpupCreatesuffix"));
+        }
         #endregion
 
         /// <summary>
