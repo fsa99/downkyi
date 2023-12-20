@@ -297,11 +297,17 @@ namespace DownKyi
             DownloadStorageService downloadStorageService = new DownloadStorageService();
 
             // 从数据库读取
-            //List<DownloadedItem> downloadedItems = downloadStorageService.GetDownloaded();
-            //IEnumerable<DownloadedItem> newItems = downloadedItems.Except(DownloadedList);
-            //DownloadedList.AddRange(newItems.ToList());
-            DownloadedList.Clear();
-            DownloadedList.AddRange(downloadStorageService.GetDownloaded());
+            List<DownloadedItem> downloadedItems = downloadStorageService.GetDownloaded();
+            foreach (var downloadeditem in downloadedItems)
+            {
+                if(!DownloadedList.Any(i => i.DownloadBase.Uuid == downloadeditem.DownloadBase.Uuid))
+                {
+                    PropertyChangeAsync(new Action(() =>
+                    {
+                        DownloadedList.Add(downloadeditem);
+                    }));
+                }
+            }
         }
     }
 }
