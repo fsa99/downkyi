@@ -180,6 +180,8 @@
     <system:String x:Key="DownloadedSortByZoneID">按视频分区排序</system:String>
     <system:String x:Key="DownloadedSortByOrder">按序号排序</system:String>
     <system:String x:Key="ClearAllDownloaded">清空所有记录</system:String>
+    <system:String x:Key="RefreshCompletedTip">刷新完成</system:String>
+    <system:String x:Key="RefreshDoubleClickTip">双击此处刷新</system:String>
 
     <system:String x:Key="StartDownload">开始</system:String>
     <system:String x:Key="PauseDownload">暂停</system:String>
