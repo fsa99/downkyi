@@ -55,6 +55,9 @@
     <Reference Include="Google.Protobuf, Version=3.21.12.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Protobuf.3.21.12\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
+    <Reference Include="MediaToolkit, Version=1.1.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MediaToolkit.1.1.0.1\lib\net40\MediaToolkit.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -344,11 +347,13 @@
     <Compile Include="Storage\StorageManager.cs" />
     <Compile Include="Storage\StorageUtils.cs" />
     <Compile Include="UpupTheme\UpupModel.cs" />
+    <Compile Include="UpupTheme\UpupUtils.cs" />
     <Compile Include="UpupTheme\UpupWallpaper.cs" />
     <Compile Include="Utils\Debugging\Console.cs" />
     <Compile Include="Utils\Encryptor\Encryptor.File.cs" />
     <Compile Include="Utils\Encryptor\Encryptor.String.cs" />
     <Compile Include="Utils\Encryptor\Hash.cs" />
+    <Compile Include="Utils\FileHelper.cs" />
     <Compile Include="Utils\Format.cs" />
     <Compile Include="Utils\HardDisk.cs" />
     <Compile Include="Utils\ListHelper.cs" />
@@ -357,6 +362,7 @@
     <Compile Include="Utils\QRCode.cs" />
     <Compile Include="Utils\StringLogicalComparer.cs" />
     <Compile Include="Utils\Validator\Number.cs" />
+    <Compile Include="Utils\VideoThumbnailGenerator.cs" />
     <Compile Include="Utils\Web.cs" />
   </ItemGroup>
   <ItemGroup>

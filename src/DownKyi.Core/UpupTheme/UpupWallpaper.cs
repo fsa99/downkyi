@@ -8,7 +8,7 @@ namespace DownKyi.Core.UpupTheme
 {
     public class UpupWallpaper
     {
-        private static readonly string defaultFileName = "upWallpaper.json";
+        private static readonly string defaultFileName = "wallpaper.json";
         [JsonIgnore]
         private string JsonFilePath { get; set; }
 
