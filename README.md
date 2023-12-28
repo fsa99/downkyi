@@ -16,10 +16,12 @@
 </p>
 
 ![image](https://github.com/fsa99/downkyi/assets/96764100/08333867-7212-41a1-a305-7ccf495bbe24)
-在原作者的基础上重构了下载完成界面的展示，近似于移动端收藏夹中的列表形式;
-![image](https://github.com/fsa99/downkyi/assets/96764100/6694d4c3-391c-4707-8b60-0f0da054a80b)
+在原作者的基础上重构了下载完成界面的展示，近似于移动端收藏夹中的列表形式;添加了多种排序方式以及分页展示(可自主设置单页条数);
+![image](https://github.com/fsa99/downkyi/assets/96764100/059f63cc-c9c5-44d7-9968-35f32882bfc7)
+
 同时增加了一键生成upup资源(使用于老版单机的upupoo)······从此收藏夹里的视频便是你的桌面视频壁纸
 备注:使用视频的avid作为upupoo资源的文件夹名称，即themeno。 以及在设置中可以修改目标路径等，最重要最重要最重要：UPUP设置中下方有拖入框，可以将任意位置(非本软件下载的视频)的视频拖入其中在目标文件夹生成upup资源及其相关配置文件；相当方便
+
 ![image](https://github.com/fsa99/downkyi/assets/96764100/e1655555-7ced-4764-a452-8b6fcd260fb3)
 ![image](https://github.com/fsa99/downkyi/assets/96764100/7d3d7aaa-2197-468c-9f55-216145042a83)![image](https://github.com/fsa99/downkyi/assets/96764100/fdc702a5-dda2-4a24-ba0d-315fb80704a8)
 
@@ -55,6 +57,7 @@
 ## 赞助
 
 如果这个项目对您有很大帮助，并且您希望支持该项目的开发和维护，请随时扫描一下二维码进行捐赠。非常感谢您的捐款，谢谢！
+如果该二次开发对您有较大的帮助，并且希望添加更多功能，请随时扫描下方二维码进行捐赠，也可定制开发功能。上图为原作者的捐赠方式，下图为本人的赞赏码
 
 ![Alipay.png](https://s2.loli.net/2022/06/04/6LpfinSa5FoZmNB.png)![WeChat.png](https://s2.loli.net/2022/06/04/2yotOSvwmahPdXU.png)
 
