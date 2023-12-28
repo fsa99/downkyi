@@ -1,0 +1,483 @@
+<UserControl
+    x:Class="DownKyi.CustomControl.CustomSimplePager"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:converter="clr-namespace:DownKyi.Converter"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:DownKyi.CustomControl"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <converter:MultiValueConverter x:Key="MultiValueConverter" />
+        <!--回到第一页的图标-->
+        <DrawingImage x:Key="ToFirstPageDrawingImage">
+            <DrawingImage.Drawing>
+                <DrawingGroup ClipGeometry="M0,0 V1024 H1024 V0 H0 Z">
+                    <DrawingGroup.Transform>
+                        <TranslateTransform X="0" Y="1.7763568394002505E-15" />
+                    </DrawingGroup.Transform>
+                    <GeometryDrawing Brush="#FF666666" Geometry="F1 m872.6528,107.7248l-46.2848,-46.2848l-404.2752,404.2752l-18.2272,18.2272l-28.0576,28.0576l450.56,450.56l46.2848,-46.2848l-404.2752,-404.2752l404.2752,-404.2752zm-721.41824,854.75738l0,-901.12l65.536,0l0,901.12l-65.536,0z" />
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+        <DrawingImage x:Key="ToFirstPageHoverDrawingImage">
+            <DrawingImage.Drawing>
+                <DrawingGroup ClipGeometry="M0,0 V1024 H1024 V0 H0 Z">
+                    <DrawingGroup.Transform>
+                        <TranslateTransform X="0" Y="1.7763568394002505E-15" />
+                    </DrawingGroup.Transform>
+                    <GeometryDrawing Brush="#FF00A1D6" Geometry="F1 m872.6528,107.7248l-46.2848,-46.2848l-404.2752,404.2752l-18.2272,18.2272l-28.0576,28.0576l450.56,450.56l46.2848,-46.2848l-404.2752,-404.2752l404.2752,-404.2752zm-721.41824,854.75738l0,-901.12l65.536,0l0,901.12l-65.536,0z" />
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+        
+        <!--上一页的图标-->
+        <DrawingImage x:Key="ToLeftDrawingImage">
+            <DrawingImage.Drawing>
+                <DrawingGroup ClipGeometry="M0,0 V1024 H1024 V0 H0 Z">
+                    <DrawingGroup.Transform>
+                        <TranslateTransform X="0" Y="1.7763568394002505E-15" />
+                    </DrawingGroup.Transform>
+                    <GeometryDrawing Brush="#FF666666" Geometry="F1 M1024,1024z M0,0z M345.49,512L778.27,80.69Q791.47,66.02 791.47,46.95 791.47,27.88 777.54,13.94 763.6,-1.77635683940025E-15 744.53,-1.77635683940025E-15 725.46,-1.77635683940025E-15 710.79,14.67L247.2,478.26Q232.53,492.93 232.53,512 232.53,531.07 247.2,545.74L710.79,1009.33Q725.46,1024 744.53,1024 763.6,1024 777.54,1010.07 791.47,996.13 791.47,977.06 791.47,957.98 778.27,943.31L345.49,512z" />
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+        <DrawingImage x:Key="ToLeftHoverDrawingImage">
+            <DrawingImage.Drawing>
+                <DrawingGroup ClipGeometry="M0,0 V1024 H1024 V0 H0 Z">
+                    <DrawingGroup.Transform>
+                        <TranslateTransform X="0" Y="1.7763568394002505E-15" />
+                    </DrawingGroup.Transform>
+                    <GeometryDrawing Brush="#FF00A1D6" Geometry="F1 M1024,1024z M0,0z M345.49,512L778.27,80.69Q791.47,66.02 791.47,46.95 791.47,27.88 777.54,13.94 763.6,-1.77635683940025E-15 744.53,-1.77635683940025E-15 725.46,-1.77635683940025E-15 710.79,14.67L247.2,478.26Q232.53,492.93 232.53,512 232.53,531.07 247.2,545.74L710.79,1009.33Q725.46,1024 744.53,1024 763.6,1024 777.54,1010.07 791.47,996.13 791.47,977.06 791.47,957.98 778.27,943.31L345.49,512z" />
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+
+        <!--下一页的图标-->
+        <DrawingImage x:Key="ToRightDrawingImage">
+            <DrawingImage.Drawing>
+                <DrawingGroup ClipGeometry="M0,0 V1024 H1024 V0 H0 Z">
+                    <DrawingGroup.Transform>
+                        <TranslateTransform X="0" Y="1.7763568394002505E-15" />
+                    </DrawingGroup.Transform>
+                    <GeometryDrawing Brush="#FF666666" Geometry="F1 M1024,1024z M0,0z M678.51,512L245.73,80.69Q232.53,66.02 232.53,46.95 232.53,27.88 246.46,13.94 260.4,-1.77635683940025E-15 279.47,-1.77635683940025E-15 298.54,-1.77635683940025E-15 313.21,14.67L776.8,478.26Q791.47,492.93 791.47,512 791.47,531.07 776.8,545.74L313.21,1009.33Q298.54,1024 279.47,1024 260.4,1024 246.46,1010.07 232.53,996.13 232.53,977.06 232.53,957.98 245.73,943.31L678.51,512z" />
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+        <DrawingImage x:Key="ToRightHoverDrawingImage">
+            <DrawingImage.Drawing>
+                <DrawingGroup ClipGeometry="M0,0 V1024 H1024 V0 H0 Z">
+                    <DrawingGroup.Transform>
+                        <TranslateTransform X="0" Y="1.7763568394002505E-15" />
+                    </DrawingGroup.Transform>
+                    <GeometryDrawing Brush="#FF00A1D6" Geometry="F1 M1024,1024z M0,0z M678.51,512L245.73,80.69Q232.53,66.02 232.53,46.95 232.53,27.88 246.46,13.94 260.4,-1.77635683940025E-15 279.47,-1.77635683940025E-15 298.54,-1.77635683940025E-15 313.21,14.67L776.8,478.26Q791.47,492.93 791.47,512 791.47,531.07 776.8,545.74L313.21,1009.33Q298.54,1024 279.47,1024 260.4,1024 246.46,1010.07 232.53,996.13 232.53,977.06 232.53,957.98 245.73,943.31L678.51,512z" />
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+
+        <!--最后一页的图标-->
+        <DrawingImage x:Key="ToLastPageDrawingImage">
+            <DrawingImage.Drawing>
+                <DrawingGroup ClipGeometry="M0,0 V1024 H1024 V0 H0 Z">
+                    <DrawingGroup.Transform>
+                        <TranslateTransform X="0" Y="1.7763568394002505E-15" />
+                    </DrawingGroup.Transform>
+                    <GeometryDrawing Brush="#FF666666" Geometry="F1 m151.3472,107.7248l46.2848,-46.2848l404.2752,404.2752l18.2272,18.2272l28.0576,28.0576l-450.56,450.56l-46.2848,-46.2848l404.2752,-404.2752l-404.2752,-404.2752zm655.84742,854.94784l0,-901.12l65.536,0l0,901.12l-65.536,0z" />
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+        <DrawingImage x:Key="ToLastPageHoverDrawingImage">
+            <DrawingImage.Drawing>
+                <DrawingGroup ClipGeometry="M0,0 V1024 H1024 V0 H0 Z">
+                    <DrawingGroup.Transform>
+                        <TranslateTransform X="0" Y="1.7763568394002505E-15" />
+                    </DrawingGroup.Transform>
+                    <GeometryDrawing Brush="#FF00A1D6" Geometry="F1 m151.3472,107.7248l46.2848,-46.2848l404.2752,404.2752l18.2272,18.2272l28.0576,28.0576l-450.56,450.56l-46.2848,-46.2848l404.2752,-404.2752l-404.2752,-404.2752zm655.84742,854.94784l0,-901.12l65.536,0l0,901.12l-65.536,0z" />
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+
+        <!--设置的图标-->
+        <DrawingImage x:Key="ToSettingLimitDrawingImage">
+            <DrawingImage.Drawing>
+                <DrawingGroup ClipGeometry="M0,0 V1024 H1024 V0 H0 Z">
+                    <DrawingGroup.Transform>
+                        <TranslateTransform X="0" Y="1.7763568394002505E-15" />
+                    </DrawingGroup.Transform>
+                    <GeometryDrawing Brush="#FF666666" Geometry="m943.32121,577.16364c12.41212,18.61818 31.0303,31.0303 55.85455,37.23636c6.20606,0 12.41212,6.20606 12.41212,6.20606c6.20606,6.20606 18.61818,18.61818 18.61818,31.0303l0,24.82425c-6.20606,24.82424 -12.41212,43.44242 
+                                     -24.82424,62.0606l-6.20606,12.41212c-6.20606,12.41212 -12.41212,18.61818 -24.82425,24.82425c-6.20606,6.20606 -18.61818,6.20606 -24.82424,6.20606c-6.20606,0 -12.41212,0 -18.61818,-6.20606c-18.61818,-6.20607 -37.23636,-6.20607 
+                                     -55.85455,-6.20607l6.20607,0l-12.41213,0c-18.61818,0 -31.0303,6.20607 -43.44242,12.41213c0,0 -12.41212,6.20606 -24.82424,18.61818c-12.41212,12.41212 -24.82424,37.23636 -24.82424,62.0606c0,18.61819 0,37.23637 12.41212,62.06061c6.20606,12.41212 6.20606,31.0303 
+                                     -6.20606,43.44242c-12.41213,12.41213 -24.82425,18.61819 -37.23637,24.82425c-6.20606,6.20606 -37.23636,18.61818 -68.26666,24.82424c37.23636,-6.20606 12.41212,0 -12.41213,0l-6.20606,0c-6.20606,0 -12.41212,0 -18.61818,-6.20606c-6.20606,-6.20606 -12.41212,-12.41212 
+                                     -12.41212,-24.82424l0,6.20606c-12.41212,-31.03031 -31.0303,-55.85455 -55.85454,-68.26667c0,-6.20606 -24.82425,-12.41212 -49.64849,-12.41212s-49.64848,6.20606 -68.26667,24.82424c-24.82424,18.61818 -43.44242,43.44243 -49.64848,74.47273c0,-6.20606 -6.20606,0 -12.41212,0c0,0 
+                                     -12.41212,6.20606 -18.61818,6.20606c-12.41213,0 -18.61819,0 -37.23637,-6.20606c-12.41212,-6.20606 -24.82424,-6.20606 -37.23636,-12.41212l-37.23637,-18.61818c-12.41212,-6.20606 -18.61818,-12.41212 -24.82424,-24.82425c-6.20606,-6.20606 -6.20606,-12.41212 
+                                     -6.20606,-18.61818c0,-6.20606 0,-18.61818 6.20606,-31.0303c6.20606,-6.20606 12.41212,-24.82424 12.41212,-49.64849s-12.41212,-43.44242 -31.0303,-62.0606c-12.41212,-12.41212 -24.82424,-18.61818 -43.44242,-24.82425l-24.82425,0l-6.20606,0c-12.41212,0 -31.0303,6.20607 
+                                     -49.64848,6.20607l-12.41212,0c-6.20606,0 -12.41212,0 -18.61818,-6.20607c-6.20607,0 -12.41213,-12.41212 -24.82425,-18.61818c-18.61818,-31.0303 -31.0303,-68.26666 -37.23636,-105.50303l0,-6.20606c0,-18.61818 12.41212,-24.82424 24.82424,-31.0303c24.82424,-6.20606 
+                                     43.44243,-24.82424 62.06061,-43.44243c18.61818,-6.20606 24.82424,-31.0303 24.82424,-55.85454s-6.20606,-49.64849 -24.82424,-68.26667c-24.82424,-24.82424 -55.85455,-43.44242 -86.88485,-49.64848c18.61818,6.20606 12.41212,0 12.41212,-6.20606c-6.20606,-6.20606 
+                                     -6.20606,-18.61818 -6.20606,-24.82425c0,-6.20606 0,-18.61818 6.20606,-31.0303c6.20606,-24.82424 18.61818,-49.64848 31.0303,-68.26667c-12.41212,24.82425 -6.20606,12.41213 0,6.20607c0,-12.41213 6.20607,-18.61819 12.41213,-24.82425c6.20606,0 6.20606,-6.20606 
+                                     12.41212,-6.20606s12.41212,0 18.61818,6.20606c24.82424,6.20606 49.64848,12.41212 74.47273,6.20606c24.82424,0 43.44242,-12.41212 62.0606,-31.0303c12.41212,-12.41212 18.61818,-24.82424 18.61818,-43.44242c6.20606,0 6.20606,-12.41212 
+                                     6.20606,-24.82425l0,-18.61818l0,-18.61818c0,-18.61818 -6.20606,-43.44242 -12.41212,-62.06061c6.20606,31.03031 0,18.61819 0,6.20606l0,0c12.41212,-6.20606 18.61818,-12.41212 31.03031,-18.61818l37.23636,-18.61818c12.41212,-6.20606 
+                                     24.82424,-6.20606 37.23636,-12.41212c12.41212,-6.20606 24.82424,-6.20606 31.03031,-6.20606c12.41212,0 18.61818,0 24.82424,12.41212c6.20606,6.20606 12.41212,18.61818 12.41212,31.0303c6.20606,12.41212 18.61818,24.82425 37.23636,43.44243s37.23637,24.82424 
+                                     62.06061,24.82424s49.64848,-6.20606 68.26667,-18.61818c24.82424,-24.82424 37.23636,-43.44243 43.44242,-68.26667c0,-6.20606 6.20606,-12.41212 12.41212,-18.61818c6.20606,0 12.41212,-6.20606 18.61818,-6.20606c12.41212,0 18.61819,0 31.03031,6.20606c12.41212,0 
+                                     24.82424,6.20606 37.23636,12.41212c12.41212,6.20606 24.82424,12.41212 31.0303,18.61818c12.41212,6.20606 18.61818,18.61819 24.82425,24.82425c0,6.20606 6.20606,6.20606 6.20606,12.41212l0,6.20606c0,6.20606 -6.20607,18.61818 -6.20606,24.82424c0,6.20606 -6.20607,24.82424 
+                                     -6.20607,37.23636l0,18.61819c6.20607,24.82424 12.41213,43.44242 31.03031,62.0606c18.61818,18.61818 37.23636,24.82424 62.0606,31.0303c24.82425,0 49.64849,0 68.26667,-12.41212c6.20606,0 12.41212,-6.20606 18.61818,-6.20606l6.20606,0c6.20606,0 18.61819,6.20606 
+                                     24.82425,12.41212c12.41212,12.41212 18.61818,24.82425 31.0303,43.44243c6.20606,18.61818 12.41212,43.44242 18.61818,62.0606c0,12.41213 0,24.82425 -6.20606,31.03031c-6.20606,6.20606 -12.41212,12.41212 -24.82424,18.61818c-24.82424,6.20606 -49.64849,31.0303 
+                                     -62.06061,55.85454c-6.20606,6.20607 -12.41212,24.82425 -12.41212,49.64849c-6.20606,24.82424 0,49.64848 18.61818,68.26667zm-260.65454,-235.83031c-43.44243,-43.44242 -105.50303,-68.26666 -167.56364,-68.26666c-31.0303,0 
+                                     -62.06061,6.20606 -93.09091,18.61818c-43.44242,18.61818 -80.67879,49.64848 -105.50303,86.88485c-6.20606,-6.20606 -24.82424,37.23636 -37.23636,80.67879c0,-18.61819 -6.20606,12.41212 -6.20606,49.64848c0,31.0303 6.20606,62.06061 
+                                     18.61818,93.09091c12.41212,31.0303 31.0303,55.85454 49.64848,74.47273c18.61819,24.82424 49.64849,37.23636 74.47273,49.64848c31.0303,12.41212 62.06061,18.61818 93.09091,18.61818s62.06061,-6.20606 93.09091,-18.61818c43.44242,-18.61818 80.67879,-49.64848 
+                                     105.50303,-86.88485c-6.20606,12.41212 12.41212,-12.41212 24.82424,-43.44242c12.41212,-31.0303 18.61818,-62.06061 18.61818,-93.09091s-6.20606,-62.06061 -18.61818,-93.09091c-18.61818,-37.23636 -49.64848,-74.47273 -86.88485,-99.29697l37.23637,31.0303z" />
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+        <DrawingImage x:Key="ToSettingLimitHoverDrawingImage">
+            <DrawingImage.Drawing>
+                <DrawingGroup ClipGeometry="M0,0 V1024 H1024 V0 H0 Z">
+                    <DrawingGroup.Transform>
+                        <TranslateTransform X="0" Y="1.7763568394002505E-15" />
+                    </DrawingGroup.Transform>
+                    <GeometryDrawing Brush="#FF00A1D6" Geometry="m943.32121,577.16364c12.41212,18.61818 31.0303,31.0303 55.85455,37.23636c6.20606,0 12.41212,6.20606 12.41212,6.20606c6.20606,6.20606 18.61818,18.61818 18.61818,31.0303l0,24.82425c-6.20606,24.82424 -12.41212,43.44242 
+                                     -24.82424,62.0606l-6.20606,12.41212c-6.20606,12.41212 -12.41212,18.61818 -24.82425,24.82425c-6.20606,6.20606 -18.61818,6.20606 -24.82424,6.20606c-6.20606,0 -12.41212,0 -18.61818,-6.20606c-18.61818,-6.20607 -37.23636,-6.20607 
+                                     -55.85455,-6.20607l6.20607,0l-12.41213,0c-18.61818,0 -31.0303,6.20607 -43.44242,12.41213c0,0 -12.41212,6.20606 -24.82424,18.61818c-12.41212,12.41212 -24.82424,37.23636 -24.82424,62.0606c0,18.61819 0,37.23637 12.41212,62.06061c6.20606,12.41212 6.20606,31.0303 
+                                     -6.20606,43.44242c-12.41213,12.41213 -24.82425,18.61819 -37.23637,24.82425c-6.20606,6.20606 -37.23636,18.61818 -68.26666,24.82424c37.23636,-6.20606 12.41212,0 -12.41213,0l-6.20606,0c-6.20606,0 -12.41212,0 -18.61818,-6.20606c-6.20606,-6.20606 -12.41212,-12.41212 
+                                     -12.41212,-24.82424l0,6.20606c-12.41212,-31.03031 -31.0303,-55.85455 -55.85454,-68.26667c0,-6.20606 -24.82425,-12.41212 -49.64849,-12.41212s-49.64848,6.20606 -68.26667,24.82424c-24.82424,18.61818 -43.44242,43.44243 -49.64848,74.47273c0,-6.20606 -6.20606,0 -12.41212,0c0,0 
+                                     -12.41212,6.20606 -18.61818,6.20606c-12.41213,0 -18.61819,0 -37.23637,-6.20606c-12.41212,-6.20606 -24.82424,-6.20606 -37.23636,-12.41212l-37.23637,-18.61818c-12.41212,-6.20606 -18.61818,-12.41212 -24.82424,-24.82425c-6.20606,-6.20606 -6.20606,-12.41212 
+                                     -6.20606,-18.61818c0,-6.20606 0,-18.61818 6.20606,-31.0303c6.20606,-6.20606 12.41212,-24.82424 12.41212,-49.64849s-12.41212,-43.44242 -31.0303,-62.0606c-12.41212,-12.41212 -24.82424,-18.61818 -43.44242,-24.82425l-24.82425,0l-6.20606,0c-12.41212,0 -31.0303,6.20607 
+                                     -49.64848,6.20607l-12.41212,0c-6.20606,0 -12.41212,0 -18.61818,-6.20607c-6.20607,0 -12.41213,-12.41212 -24.82425,-18.61818c-18.61818,-31.0303 -31.0303,-68.26666 -37.23636,-105.50303l0,-6.20606c0,-18.61818 12.41212,-24.82424 24.82424,-31.0303c24.82424,-6.20606 
+                                     43.44243,-24.82424 62.06061,-43.44243c18.61818,-6.20606 24.82424,-31.0303 24.82424,-55.85454s-6.20606,-49.64849 -24.82424,-68.26667c-24.82424,-24.82424 -55.85455,-43.44242 -86.88485,-49.64848c18.61818,6.20606 12.41212,0 12.41212,-6.20606c-6.20606,-6.20606 
+                                     -6.20606,-18.61818 -6.20606,-24.82425c0,-6.20606 0,-18.61818 6.20606,-31.0303c6.20606,-24.82424 18.61818,-49.64848 31.0303,-68.26667c-12.41212,24.82425 -6.20606,12.41213 0,6.20607c0,-12.41213 6.20607,-18.61819 12.41213,-24.82425c6.20606,0 6.20606,-6.20606 
+                                     12.41212,-6.20606s12.41212,0 18.61818,6.20606c24.82424,6.20606 49.64848,12.41212 74.47273,6.20606c24.82424,0 43.44242,-12.41212 62.0606,-31.0303c12.41212,-12.41212 18.61818,-24.82424 18.61818,-43.44242c6.20606,0 6.20606,-12.41212 
+                                     6.20606,-24.82425l0,-18.61818l0,-18.61818c0,-18.61818 -6.20606,-43.44242 -12.41212,-62.06061c6.20606,31.03031 0,18.61819 0,6.20606l0,0c12.41212,-6.20606 18.61818,-12.41212 31.03031,-18.61818l37.23636,-18.61818c12.41212,-6.20606 
+                                     24.82424,-6.20606 37.23636,-12.41212c12.41212,-6.20606 24.82424,-6.20606 31.03031,-6.20606c12.41212,0 18.61818,0 24.82424,12.41212c6.20606,6.20606 12.41212,18.61818 12.41212,31.0303c6.20606,12.41212 18.61818,24.82425 37.23636,43.44243s37.23637,24.82424 
+                                     62.06061,24.82424s49.64848,-6.20606 68.26667,-18.61818c24.82424,-24.82424 37.23636,-43.44243 43.44242,-68.26667c0,-6.20606 6.20606,-12.41212 12.41212,-18.61818c6.20606,0 12.41212,-6.20606 18.61818,-6.20606c12.41212,0 18.61819,0 31.03031,6.20606c12.41212,0 
+                                     24.82424,6.20606 37.23636,12.41212c12.41212,6.20606 24.82424,12.41212 31.0303,18.61818c12.41212,6.20606 18.61818,18.61819 24.82425,24.82425c0,6.20606 6.20606,6.20606 6.20606,12.41212l0,6.20606c0,6.20606 -6.20607,18.61818 -6.20606,24.82424c0,6.20606 -6.20607,24.82424 
+                                     -6.20607,37.23636l0,18.61819c6.20607,24.82424 12.41213,43.44242 31.03031,62.0606c18.61818,18.61818 37.23636,24.82424 62.0606,31.0303c24.82425,0 49.64849,0 68.26667,-12.41212c6.20606,0 12.41212,-6.20606 18.61818,-6.20606l6.20606,0c6.20606,0 18.61819,6.20606 
+                                     24.82425,12.41212c12.41212,12.41212 18.61818,24.82425 31.0303,43.44243c6.20606,18.61818 12.41212,43.44242 18.61818,62.0606c0,12.41213 0,24.82425 -6.20606,31.03031c-6.20606,6.20606 -12.41212,12.41212 -24.82424,18.61818c-24.82424,6.20606 -49.64849,31.0303 
+                                     -62.06061,55.85454c-6.20606,6.20607 -12.41212,24.82425 -12.41212,49.64849c-6.20606,24.82424 0,49.64848 18.61818,68.26667zm-260.65454,-235.83031c-43.44243,-43.44242 -105.50303,-68.26666 -167.56364,-68.26666c-31.0303,0 
+                                     -62.06061,6.20606 -93.09091,18.61818c-43.44242,18.61818 -80.67879,49.64848 -105.50303,86.88485c-6.20606,-6.20606 -24.82424,37.23636 -37.23636,80.67879c0,-18.61819 -6.20606,12.41212 -6.20606,49.64848c0,31.0303 6.20606,62.06061 
+                                     18.61818,93.09091c12.41212,31.0303 31.0303,55.85454 49.64848,74.47273c18.61819,24.82424 49.64849,37.23636 74.47273,49.64848c31.0303,12.41212 62.06061,18.61818 93.09091,18.61818s62.06061,-6.20606 93.09091,-18.61818c43.44242,-18.61818 80.67879,-49.64848 
+                                     105.50303,-86.88485c-6.20606,12.41212 12.41212,-12.41212 24.82424,-43.44242c12.41212,-31.0303 18.61818,-62.06061 18.61818,-93.09091s-6.20606,-62.06061 -18.61818,-93.09091c-18.61818,-37.23636 -49.64848,-74.47273 -86.88485,-99.29697l37.23637,31.0303z" />
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+
+        <Style x:Key="pagerBorder" TargetType="{x:Type Border}">
+            <Setter Property="Background" Value="#FFFFFFFF" />
+            <Setter Property="BorderBrush" Value="#FFD7DDE4" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Width" Value="27" />
+            <Setter Property="Height" Value="23" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="BorderBrush" Value="#FF00A1D6" />
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="false">
+                    <Setter Property="BorderBrush" Value="#FFD7DDE4" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+       
+        <!--按钮的样式-->
+        <Style x:Key="pagerButton" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="#FFFFFFFF" />
+            <Setter Property="BorderBrush" Value="#FFD7DDE4" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="MinWidth" Value="25" />
+            <Setter Property="Height" Value="23" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="4">
+                            <ContentPresenter
+                                Name="content"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="BorderBrush" Value="#FF00A1D6" />
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="false">
+                    <Setter Property="BorderBrush" Value="#FFD7DDE4" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Horizontal" Visibility="{Binding Visibility}">
+        <!--第一页-->
+        <Button
+            x:Name="nameFirstPage"
+            Margin="0,0,8,0"
+            ToolTip="{StaticResource FirstPageText}"
+            Command="{Binding FirstCommand}"
+            IsEnabled="{Binding IsFirstEnabled}"
+            Style="{StaticResource pagerButton}"
+            Visibility="{Binding FirstVisibility}">
+            <Image
+                Width="16"
+                Height="16"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=nameFirstPage}" Value="True">
+                                <Setter Property="Source" Value="{StaticResource ToFirstPageHoverDrawingImage}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=nameFirstPage}" Value="False">
+                                <Setter Property="Source" Value="{StaticResource ToFirstPageDrawingImage}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+        </Button>
+        <!--上一页-->
+        <Button
+            x:Name="namePrevious"
+            Margin="0,0,8,0"
+            ToolTip="{StaticResource PreviousPageText}"
+            Command="{Binding PreviousCommand}"
+            IsEnabled="{Binding IsPreviousEnabled}"
+            Style="{StaticResource pagerButton}"
+            Visibility="{Binding PreviousVisibility}">
+            <Image
+                Width="16"
+                Height="16"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=namePrevious}" Value="True">
+                                <Setter Property="Source" Value="{StaticResource ToLeftHoverDrawingImage}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=namePrevious}" Value="False">
+                                <Setter Property="Source" Value="{StaticResource ToLeftDrawingImage}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+        </Button>
+
+        <!--<TextBox
+            MinWidth="30"
+            Height="30"
+                Padding="10,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="14"
+                BorderThickness="1"
+                Text="{Binding First, Mode=TwoWay}">
+            <TextBox.Style>
+                <Style TargetType="TextBox">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=nameFirst}" Value="True">
+                            <Setter Property="Foreground" Value="#FF00A1D6" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=nameFirst}" Value="False">
+                            <Setter Property="Foreground" Value="#FF657180" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>-->
+
+        <!--当前页-->
+        <Border
+            Margin="0,0,4,0"
+            Background="#FF00A1D6"
+            BorderThickness="0"
+            Style="{StaticResource pagerBorder}">
+            <Border.ToolTip>
+                <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                    <Binding Path="PageTipText" />
+                    <Binding Path="CurrentPage" />
+                    <Binding Path="PageCount" />
+                </MultiBinding>
+            </Border.ToolTip>
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="14"
+                Foreground="#FFFFFFFF"
+                Text="{Binding CurrentPage,Mode=TwoWay}" />
+        </Border>
+        <!--下一页-->
+        <Button
+            x:Name="nameNext"
+            Margin="4,0,4,0"
+            ToolTip="{StaticResource NextPageText}"
+            Command="{Binding NextCommand}"
+            IsEnabled="{Binding IsNextEnabled}"
+            Style="{StaticResource pagerButton}"
+            Visibility="{Binding NextVisibility}">
+            <Image
+                Width="16"
+                Height="16"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=nameNext}" Value="True">
+                                <Setter Property="Source" Value="{StaticResource ToRightHoverDrawingImage}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=nameNext}" Value="False">
+                                <Setter Property="Source" Value="{StaticResource ToRightDrawingImage}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+        </Button>
+        <!--最后一页-->
+        <Button
+            x:Name="nameLastPage"
+            Margin="4,0,4,0"
+            ToolTip="{StaticResource LastPageText}"
+            Command="{Binding LastCommand}"
+            IsEnabled="{Binding IsLastEnabled}"
+            Style="{StaticResource pagerButton}"
+            Visibility="{Binding LastVisibility}">
+            <Image
+                Width="16"
+                Height="16"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=nameLastPage}" Value="True">
+                                <Setter Property="Source" Value="{StaticResource ToLastPageHoverDrawingImage}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=nameLastPage}" Value="False">
+                                <Setter Property="Source" Value="{StaticResource ToLastPageDrawingImage}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+        </Button>
+        <!--每页显示的条数 的设置-->
+        <Border
+            x:Name="nameCurPageLimits"
+            ToolTip="{StaticResource SetTheNumberOfSinglePages}"
+            Margin="2,0,4,0"
+            Cursor="Hand"
+            Width="20"
+            Height="20">
+            <Button
+                Background="Transparent"
+                BorderThickness="0"
+                Command="{Binding ShowCurPageLimitCommand}">
+                <Image
+                    Width="16"
+                    Height="16"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=nameCurPageLimits}" Value="True">
+                                    <Setter Property="Source" Value="{StaticResource ToSettingLimitHoverDrawingImage}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=IsMouseOver, ElementName=nameCurPageLimits}" Value="False">
+                                    <Setter Property="Source" Value="{StaticResource ToSettingLimitDrawingImage}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+            </Button>
+        </Border>
+       
+        <Border
+            x:Name="nameSettingLimit"
+            Background="#FFFFFFFF" 
+            BorderBrush="#FFD7DDE4"
+            BorderThickness="1"
+            CornerRadius ="4"
+            Visibility="{Binding CurPageLimitsVisibility}">
+            <StackPanel
+                Orientation="Horizontal"
+                Margin="2,0,2,0">
+                <TextBox
+                    HorizontalAlignment="Center"
+                    Text="{Binding ItemsPerPage, Mode=TwoWay}"
+                    VerticalAlignment="Center" 
+                    Width="30"
+                    FontSize="14"
+                    BorderThickness="0"
+                    TextAlignment="Center">
+                    <TextBox.InputBindings>
+                        <KeyBinding
+                                Key="Enter"
+                                Command="{Binding HideCurPageLimitCommand}">
+                        </KeyBinding>
+                    </TextBox.InputBindings>
+                    <!--<i:Interaction.Triggers>
+                        <i:EventTrigger EventName="LostFocus">
+                            <i:InvokeCommandAction Command="{Binding HideCurPageLimitCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>-->
+                </TextBox>
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="13"
+                    Text="{StaticResource LimitUnit}"
+                    Width="32">
+                </TextBlock>
+            </StackPanel>
+        </Border>
+        <!--总的条数文本-->
+        <StackPanel
+            Grid.Column="0"
+            Margin="10,0,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Orientation="Horizontal">
+            <StackPanel.Style>
+                <Style TargetType="StackPanel">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=nameSettingLimit, Path=Visibility}" Value="Collapsed">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=nameSettingLimit, Path=Visibility}" Value="Visible">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Style>
+            <TextBlock
+                VerticalAlignment="Center"
+                FontSize="14"
+                Text="{StaticResource TotalText}" >
+            </TextBlock>
+            <TextBlock
+                Margin="3,0"
+                VerticalAlignment="Center"
+                FontSize="14"
+                Foreground="{DynamicResource BrushPrimary}"
+                Text="{Binding RecordCount}" >
+            </TextBlock>
+            <TextBlock
+                VerticalAlignment="Center"
+                FontSize="14"
+                Text="{StaticResource ItemText}" >
+            </TextBlock>
+        </StackPanel>
+    </StackPanel>
+</UserControl>
