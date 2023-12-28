@@ -15,7 +15,11 @@
     </a>
 </p>
 
-![index.png](https://s2.loli.net/2022/06/04/dOsqtfBXceRgrj2.png)
+![image](https://github.com/fsa99/downkyi/assets/96764100/08333867-7212-41a1-a305-7ccf495bbe24)
+在原作者的基础上重构了下载完成界面的展示，
+![image](https://github.com/fsa99/downkyi/assets/96764100/6694d4c3-391c-4707-8b60-0f0da054a80b)
+
+
 
 哔哩下载姬（DownKyi）是一个简单易用的哔哩哔哩视频下载工具，具有简洁的界面，流畅的操作逻辑。哔哩下载姬可以下载几乎所有的B站视频，并输出mp4格式的文件；采用Aria下载器多线程下载，采用FFmpeg对视频进行混流、提取音视频等操作。
 
