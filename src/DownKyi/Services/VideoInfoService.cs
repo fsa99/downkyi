@@ -82,7 +82,8 @@ namespace DownKyi.Services
                     FirstFrame = page.FirstFrame,
                     Order = order,
                     Name = name,
-                    Duration = "N/A"
+                    Duration = "N/A",
+                    Dimension = page.Dimension
                 };
 
                 // UP主信息
