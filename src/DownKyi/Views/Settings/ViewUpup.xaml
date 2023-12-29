@@ -22,61 +22,61 @@
                 </StackPanel>
                 <!--是否使用默认目录选择框-->
                 <CheckBox
-                Name="nameIsUseDefaultUpDirectory"
-                Margin="0,20,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                Command="{Binding IsUseDefaultUpDirectoryCommand}"
-                Content="{DynamicResource IsUseDefaultUpDirectory}"
-                FontSize="12"
-                Foreground="{DynamicResource BrushTextDark}"
-                IsChecked="{Binding IsUseDefaultUpDirectory, Mode=TwoWay}"
-                Style="{StaticResource CheckBoxStyle}" />
-                <StackPanel Margin="0,20,0,0" Orientation="Vertical">
-                    <StackPanel.Style>
-                        <Style TargetType="{x:Type StackPanel}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding ElementName=nameIsUseDefaultUpDirectory, Path=IsChecked}" Value="false">
-                                    <Setter Property="Visibility" Value="Collapsed" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding ElementName=nameIsUseDefaultUpDirectory, Path=IsChecked}" Value="true">
-                                    <Setter Property="Visibility" Value="Visible" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </StackPanel.Style>
+                    Name="nameIsUseDefaultUpDirectory"
+                    Margin="0,20,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Command="{Binding IsUseDefaultUpDirectoryCommand}"
+                    Content="{DynamicResource IsUseDefaultUpDirectory}"
+                    FontSize="12"
+                    Foreground="{DynamicResource BrushTextDark}"
+                    IsChecked="{Binding IsUseDefaultUpDirectory, Mode=TwoWay}"
+                    Style="{StaticResource CheckBoxStyle}" />
+                    <StackPanel Margin="0,20,0,0" Orientation="Vertical">
+                        <StackPanel.Style>
+                            <Style TargetType="{x:Type StackPanel}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=nameIsUseDefaultUpDirectory, Path=IsChecked}" Value="false">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=nameIsUseDefaultUpDirectory, Path=IsChecked}" Value="true">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
 
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock
-                        VerticalAlignment="Center"
-                        FontSize="12"
-                        Foreground="{DynamicResource BrushTextDark}"
-                        Text="{DynamicResource DefaultUpDirectory}" />
-                        <TextBlock
-                        Margin="10,0,0,0"
-                        VerticalAlignment="Center"
-                        FontSize="12"
-                        Foreground="{DynamicResource BrushTextGrey}"
-                        Text="{DynamicResource DefaultUpupDirectoryTip}" />
-                    </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="12"
+                                Foreground="{DynamicResource BrushTextDark}"
+                                Text="{DynamicResource DefaultUpDirectory}" />
+                            <TextBlock
+                                Margin="10,0,0,0"
+                                VerticalAlignment="Center"
+                                FontSize="12"
+                                Foreground="{DynamicResource BrushTextGrey}"
+                                Text="{DynamicResource DefaultUpupDirectoryTip}" />
+                        </StackPanel>
 
-                    <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
-                        <TextBlock
-                        MaxWidth="600"
-                        VerticalAlignment="Center"
-                        FontSize="12"
-                        Foreground="{DynamicResource BrushTextDark}"
-                        Text="{Binding DefaultUpDirectory}"
-                        TextTrimming="CharacterEllipsis" />
-                        <Button
-                        Width="75"
-                        Margin="30,0,0,0"
-                        Command="{Binding ChangeSaveUpupDirectoryCommand}"
-                        Content="{DynamicResource ChangeDirectory}"
-                        FontSize="12"
-                        Style="{StaticResource BtnBorderStyle}" />
+                        <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                            <TextBlock
+                                MaxWidth="600"
+                                VerticalAlignment="Center"
+                                FontSize="12"
+                                Foreground="{DynamicResource BrushTextDark}"
+                                Text="{Binding DefaultUpDirectory}"
+                                TextTrimming="CharacterEllipsis" />
+                            <Button
+                                Width="75"
+                                Margin="30,0,0,0"
+                                Command="{Binding ChangeSaveUpupDirectoryCommand}"
+                                Content="{DynamicResource ChangeDirectory}"
+                                FontSize="12"
+                                Style="{StaticResource BtnBorderStyle}" />
+                        </StackPanel>
                     </StackPanel>
-                </StackPanel>
                 <!--是否将视频移动到目标目录-->
                 <CheckBox
                 Name="nameIsMoveVideoUpDirectory"
