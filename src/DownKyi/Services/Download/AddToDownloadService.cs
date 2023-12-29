@@ -250,6 +250,7 @@ namespace DownKyi.Services.Download
                         videoInfoService.GetVideoStream(page);
                         retry++;
                     }
+                    //if (page.VideoQuality == null) { new Hardcodet.Wpf.TaskbarNotification.TaskbarIcon().ShowBalloonTip("解析失败", page.Name, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Error); continue; }
                     if (page.VideoQuality == null) { continue; }
 
                     // 判断是否同一个视频，需要cid、画质、音质、视频编码都相同
@@ -414,6 +415,7 @@ namespace DownKyi.Services.Download
                             MainTitle = videoInfoView.Title,
                             Name = page.Name,
                             Duration = page.Duration,
+                            Dimension = page.Dimension,
                             VideoCodecName = page.VideoQuality.SelectedVideoCodec,
                             Resolution = new Quality { Name = page.VideoQuality.QualityFormat, Id = page.VideoQuality.Quality },
                             AudioCodec = Constant.GetAudioQualities().FirstOrDefault(t => { return t.Name == page.AudioQualityFormat; }),
