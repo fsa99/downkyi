@@ -79,6 +79,10 @@ namespace DownKyi.Models
         public string Duration { get; set; }
 
         /// <summary>
+        /// 视频的宽度 高度 旋转角度
+        /// </summary>
+        public Dimension Dimension { get; set; }
+        /// <summary>
         /// 视频编码名称，AVC、HEVC
         /// </summary>
         public string VideoCodecName { get; set; }
