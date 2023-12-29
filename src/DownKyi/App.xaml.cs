@@ -244,14 +244,6 @@ namespace DownKyi
         /// <param name="finishedSort"></param>
         public static void SortDownloadedList(DownloadFinishedSort finishedSort)
         {
-            //bool reverseOrder = false;
-
-            //// 判断是否是相同的排序方式，如果是则取反
-            //if (lastSort == finishedSort)
-            //{
-            //    reverseOrder = true;
-            //}
-
             switch (finishedSort)
             {
                 case DownloadFinishedSort.DOWNLOAD:
@@ -275,13 +267,7 @@ namespace DownKyi
                 default:
                     break;
             }
-
-            //// 更新最后一次的排序方式
-            //lastSort = finishedSort;
         }
-
-        // 上一次的排序方式
-        private static DownloadFinishedSort? lastSort = null;
 
         // 获取排序后的项目
         private static IOrderedEnumerable<DownloadedItem> GetOrderedItems<TKey>(Func<DownloadedItem, TKey> keySelector, bool reverseOrder)
