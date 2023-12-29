@@ -8,7 +8,6 @@ using DownKyi.Models;
 using DownKyi.Utils;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -95,6 +94,15 @@ namespace DownKyi.ViewModels.DownloadManager
         {
             get => zoneImage;
             set => SetProperty(ref zoneImage, value);
+        }
+        private VectorImage verticalOrHorizontalIcon;
+        /// <summary>
+        /// 横屏或竖屏  图标
+        /// </summary>
+        public VectorImage VerticalOrHorizontalIcon
+        {
+            get => verticalOrHorizontalIcon;
+            set => SetProperty(ref verticalOrHorizontalIcon, value);
         }
         private VectorImage coinIcon;
         /// <summary>
@@ -214,7 +222,7 @@ namespace DownKyi.ViewModels.DownloadManager
         /// </summary>
         public Quality Resolution
         {
-            get => DownloadBase == null ? null : DownloadBase.Resolution;
+            get => DownloadBase?.Resolution;
             set
             {
                 DownloadBase.Resolution = value;
@@ -258,6 +266,38 @@ namespace DownKyi.ViewModels.DownloadManager
             {
                 DownloadBase.CreateTime = value;
                 RaisePropertyChanged("CreateTime");
+            }
+        }
+        /// <summary>
+        /// 视屏宽度 高度 角度
+        /// </summary>
+        public Dimension Dimension
+        {
+            get
+            {
+                if (DownloadBase == null)
+                {
+                    return new Dimension();
+                }
+                else
+                {
+                    if (DownloadBase.Dimension == null)
+                    {
+                        int width = 0;
+                        int height = 0;
+                        int rotate = 0;
+                        //(width, height) = Core.Utils.VideoSizeGet.GetVideoWidthAndHeightAsync(DownloadBase.FilePath + ".mp4");
+                    }
+                    if (DownloadBase.Dimension.Height > DownloadBase.Dimension.Width) { VerticalOrHorizontalIcon = NormalIcon.Instance().VerticalScreen; }
+                    else { VerticalOrHorizontalIcon = NormalIcon.Instance().HorizontalScreen; }
+                    VerticalOrHorizontalIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
+                    return DownloadBase.Dimension;
+                }
+            }
+            set
+            {
+                DownloadBase.Dimension = value;
+                RaisePropertyChanged("Dimension");
             }
         }
         #endregion
