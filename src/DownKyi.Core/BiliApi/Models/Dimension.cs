@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 
 namespace DownKyi.Core.BiliApi.Models
 {
+    [System.Serializable]
     public class Dimension : BaseModel
     {
         /// <summary>
