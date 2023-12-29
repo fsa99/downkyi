@@ -12,7 +12,6 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DownKyi.ViewModels.DownloadManager
 {
@@ -151,7 +150,11 @@ namespace DownKyi.ViewModels.DownloadManager
         /// </summary>
         private void ExecuteOpenVideoCommand()
         {
-            if (DownloadBase == null) { return; }
+            if (DownloadBase == null)
+            {
+                Core.Utils.VideoSizeGet.GetVideoWidthAndHeightAsync(DownloadBase.FilePath + ".mp4");
+                return;
+            }
 
             string videoPath = $"{DownloadBase.FilePath}.mp4";
             var fileInfo = new FileInfo(videoPath);
@@ -191,61 +194,60 @@ namespace DownKyi.ViewModels.DownloadManager
 
         private void ExecuteCreateUpupThemeCommand()
         {
-            Task.Run(()=> 
+            if (DownloadBase == null) { return; }
+            // 选择文件夹
+            string directory = SetDirectory(DialogService);
+            if (string.IsNullOrEmpty(directory)){ return; }
+
+            // 构造upup类
+            UpupModel upupModel = new UpupModel()
             {
-                if (DownloadBase == null) { return; }
-                // 选择文件夹
-                string directory = SetDirectory(DialogService);
-                if (string.IsNullOrEmpty(directory)) { return; }
+                UserName = SettingsManager.GetInstance().GetDefaultUseName(),
+                Author = DownloadBase.UpOwner.Name,
+                Name = DownloadBase.Name,
+                Src = DownloadBase.FilePath + ".mp4",
+                Tag = DownloadBase.ZoneId.ToString(),
+                Description = DownloadBase.Description
+            };
+            upupModel.SetReprintUrl(DownloadBase.Bvid);
+            upupModel.SetThemeno((int)DownloadBase.Avid);
+            UpupUtils upupUtils = new UpupUtils(directory, DownloadBase.FilePath, ref upupModel);
 
-                // 构造upup类
-                UpupModel upupModel = new UpupModel()
-                {
-                    UserName = SettingsManager.GetInstance().GetDefaultUseName(),
-                    Author = DownloadBase.UpOwner.Name,
-                    Name = DownloadBase.Name,
-                    Src = DownloadBase.FilePath + ".mp4",
-                    Tag = DownloadBase.ZoneId.ToString(),
-                    Description = DownloadBase.Description
-                };
-                upupModel.SetReprintUrl(DownloadBase.Bvid);
-                upupModel.SetThemeno((int)DownloadBase.Avid);
-                UpupUtils upupUtils = new UpupUtils(directory, DownloadBase.FilePath, ref upupModel);
+            upupUtils.DetectingVideoAspectRatio();
 
-                // 判断是否下载了视频
-                if (DownloadBase.NeedDownloadContent.ContainsKey("downloadVideo") && DownloadBase.NeedDownloadContent["downloadVideo"])
+            // 判断是否下载了视频
+            if (DownloadBase.NeedDownloadContent.ContainsKey("downloadVideo") && DownloadBase.NeedDownloadContent["downloadVideo"])
+            {
+                // 视频的处理
+                if (SettingsManager.GetInstance().GetIsMoveVideoUpDirectory() == AllowStatus.YES)
                 {
-                    // 视频的处理
-                    if (SettingsManager.GetInstance().GetIsMoveVideoUpDirectory() == AllowStatus.YES)
-                    {
-                        var videores = upupUtils.UpupCreate_Video();
-                        if (!videores) { PublishTip?.Invoke(DictionaryResource.GetString("CreateUpupFailedTip2")); }
-                    }
-                    // 封面的处理
-                    bool coverres = true;
-                    if (DownloadBase.NeedDownloadContent.ContainsKey("downloadCover") && DownloadBase.NeedDownloadContent["downloadCover"])
-                        coverres = upupUtils.UpupCreate_CoverCopy();
-                    if (!coverres)
-                    {
-                        StorageCover storageCover = new StorageCover();
-                        string cover = storageCover.GetCover(DownloadBase.Avid, DownloadBase.Bvid, DownloadBase.Cid, DownloadBase.CoverUrl);
-                        if (cover == null)
-                            PublishTip?.Invoke(DictionaryResource.GetString("CreateUpupFailedTip3"));
-                        using (Bitmap bitmap = new Bitmap(cover))
-                        {
-                            bitmap.Save(upupUtils.TargetIMGFileName);
-                        }
-                    }
-                    // 配置文件处理
-                    upupUtils.UpupWriteupupJsonFile();
-                    PublishTip?.Invoke(DictionaryResource.GetString("CreateUpupSucceedTip"));
+                    var videores = upupUtils.UpupCreate_Video();
+                    if (!videores) { PublishTip?.Invoke(DictionaryResource.GetString("CreateUpupFailedTip2")); }
                 }
-                else
+                // 封面的处理
+                bool coverres = true;
+                if (DownloadBase.NeedDownloadContent.ContainsKey("downloadCover") && DownloadBase.NeedDownloadContent["downloadCover"])
+                    coverres = upupUtils.UpupCreate_CoverCopy();
+                if (!coverres)
                 {
-                    // 没有下载视频
-                    PublishTip?.Invoke(DictionaryResource.GetString("CreateUpupFailedTip1"));
+                    StorageCover storageCover = new StorageCover();
+                    string cover = storageCover.GetCover(DownloadBase.Avid, DownloadBase.Bvid, DownloadBase.Cid, DownloadBase.CoverUrl);
+                    if (cover == null)
+                        PublishTip?.Invoke(DictionaryResource.GetString("CreateUpupFailedTip3"));
+                    using (Bitmap bitmap = new Bitmap(cover))
+                    {
+                        bitmap.Save(upupUtils.TargetIMGFileName);
+                    }
                 }
-            });
+                // 配置文件处理
+                upupUtils.UpupWriteupupJsonFile();
+                PublishTip?.Invoke(DictionaryResource.GetString("CreateUpupSucceedTip"));
+            }
+            else
+            {
+                // 没有下载视频
+                PublishTip?.Invoke(DictionaryResource.GetString("CreateUpupFailedTip1"));
+            }
         }
         #endregion
         /// <summary>
