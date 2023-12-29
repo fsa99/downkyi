@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace DownKyi.Core.FFmpeg
 {
@@ -206,6 +207,56 @@ namespace DownKyi.Core.FFmpeg
             // 提取帧
             // ffmpeg -i caiyilin.wmv -vframes 1 wm.bmp
             string param = $"-i \"{video}\" -y -vframes {number} \"{image}\"";
+            ExcuteProcess(exec, param, null, (s, e) => Console.WriteLine(e.Data));
+        }
+
+        /// <summary>
+        /// 获取视频的帧宽度和高度
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static void GetVideoDimensions(string filePath, Action<string> action)
+        {
+            string param = $"ffmpeg -i \"{filePath}\" -f null - ";
+            ExcuteProcess(exec, param, null, (s, e) =>
+            {
+                Console.WriteLine(e.Data);
+                if (!string.IsNullOrEmpty(e.Data))
+                {
+                    // 使用正则表达式提取包含视频分辨率的行
+                    Match match = Regex.Match(e.Data, @"Stream #\d:\d\[0x[0-9A-Fa-f]+\]\(und\): Video: .+ (\d+)x(\d+)(?: \[SAR \d+:\d+ DAR \d+:\d+\])?");
+
+                    if (match.Success)
+                    {
+                        int width = int.Parse(match.Groups[1].Value);
+                        int height = int.Parse(match.Groups[2].Value);
+                        action.Invoke($"{width}x{height}");
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// 计算 宽高比
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns></returns>
+        public static double CalculateAspectRatio(int width, int height)
+        {
+            return (double)width / height;
+        }
+
+        /// <summary>
+        /// 剪切视频
+        /// </summary>
+        /// <param name="inputFilePath"></param>
+        /// <param name="outputFilePath"></param>
+        /// <param name="targetWidth"></param>
+        /// <param name="targetHeight"></param>
+        public static void CropVideo(string inputFilePath, string outputFilePath, int targetWidth, int targetHeight)
+        {
+            string param = $"ffmpeg -i {inputFilePath} -vf \"crop={targetWidth}:{targetHeight}\" {outputFilePath}";
             ExcuteProcess(exec, param, null, (s, e) => Console.WriteLine(e.Data));
         }
 
