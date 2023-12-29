@@ -1,6 +1,8 @@
+using DownKyi.Core.FFmpeg;
 using DownKyi.Core.Utils;
 using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DownKyi.Core.UpupTheme
@@ -108,7 +110,7 @@ namespace DownKyi.Core.UpupTheme
         {
             if (File.Exists(SourceIMGFileName))
             {
-                File.Move(SourceIMGFileName, TargetIMGFileName);
+                File.Copy(SourceIMGFileName, TargetIMGFileName, true);
                 return true;
             }
             else
@@ -133,6 +135,35 @@ namespace DownKyi.Core.UpupTheme
             {
                 return false;
             }
+        }
+
+        public async Task<bool> DetectingVideoAspectRatio()
+        {
+            int width = 0;
+            int height = 0;
+
+            await Task.Run(() =>
+            {
+                FFmpegHelper.GetVideoDimensions(SourceVideoFileName, new Action<string>((output) =>
+                {
+                    if (output != null)
+                    {
+                        var match = System.Text.RegularExpressions.Regex.Match(output, @"(\d+)x(\d+)");
+                        if (match.Success)
+                        {
+                            width = int.Parse(match.Groups[1].Value);
+                            height = int.Parse(match.Groups[2].Value);
+                        }
+                    }
+                }));
+            });
+
+            // 在这里进行根据视频分辨率的后续处理
+
+            // 示例：判断宽高比是否为16:9
+            bool isAspectRatio169 = FFmpegHelper.CalculateAspectRatio(width, height) == 16.0 / 9.0;
+
+            return isAspectRatio169;
         }
     }
 }
