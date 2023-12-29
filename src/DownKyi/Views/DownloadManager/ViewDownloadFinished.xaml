@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converter="clr-namespace:DownKyi.Converter"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:custom="clr-namespace:DownKyi.CustomControl"
     xmlns:prism="http://prismlibrary.com/"
     prism:ViewModelLocator.AutoWireViewModel="True">
     <UserControl.Resources>
@@ -56,36 +57,38 @@
                                         </Grid.RowDefinitions>
                                         <!--详细信息第一行-->
                                         <StackPanel 
-                                        Grid.Row="0" 
-                                        Orientation="Horizontal"
-                                        HorizontalAlignment="Left">
+                                            Grid.Row="0" 
+                                            Orientation="Horizontal"
+                                            HorizontalAlignment="Left">
                                             <!--分区图片-->
                                             <Border 
-                                            Width="23"
-                                            Height="23" 
-                                            Margin="5 0 5 0" 
-                                            BorderBrush="White" 
-                                            BorderThickness="1" 
-                                            CornerRadius="16"
-                                            ToolTip="{Binding ZoneAndParent}">
+                                                Width="23"
+                                                Height="23" 
+                                                Margin="5 0 5 0" 
+                                                BorderBrush="White" 
+                                                BorderThickness="1" 
+                                                CornerRadius="16"
+                                                ToolTip="{Binding ZoneAndParent}">
                                                 <Border.Clip>
                                                     <EllipseGeometry Center="11.5, 11.5" RadiusX="11.5" RadiusY="11.5" />
                                                 </Border.Clip>
                                                 <Image Width="23" Height="23" Source="{Binding ZoneImage}" />
                                             </Border>
+                                            <!--视频标题-->
                                             <TextBlock
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            FontSize="14"
-                                            Foreground="{DynamicResource BrushTextDark}"
-                                            TextTrimming="CharacterEllipsis"
-                                            Text="{Binding MainTitle}">
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                FontSize="14"
+                                                Foreground="{DynamicResource BrushTextDark}"
+                                                TextTrimming="CharacterEllipsis"
+                                                Text="{Binding MainTitle}">
 
                                                 <TextBlock.ToolTip>
                                                     <TextBlock>
                                                         <TextBlock.Text>
-                                                            <MultiBinding StringFormat="{}{0}-{1}">
+                                                            <MultiBinding StringFormat="{}{0}-{1}-{2}">
                                                                 <Binding Path="MainTitle" />
+                                                                <Binding Path="Name" />
                                                                 <Binding Path="Resolution.Name" />
                                                             </MultiBinding>
                                                         </TextBlock.Text>
@@ -102,6 +105,7 @@
                                                 <ColumnDefinition Width="60" />
                                                 <ColumnDefinition Width="60" />
                                                 <ColumnDefinition Width="60" />
+                                                <ColumnDefinition Width="40" />
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
                                             <!--头像-->
@@ -132,20 +136,20 @@
                                             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                                                 <ContentControl Width="20" Height="20">
                                                     <Path
-                                                Width="{Binding UpzhuIconIcon.Width}"
-                                                Height="{Binding UpzhuIconIcon.Height}"
-                                                Data="{Binding UpzhuIconIcon.Data}"
-                                                Fill="{Binding UpzhuIconIcon.Fill}"
-                                                Stretch="Uniform" />
+                                                        Width="{Binding UpzhuIconIcon.Width}"
+                                                        Height="{Binding UpzhuIconIcon.Height}"
+                                                        Data="{Binding UpzhuIconIcon.Data}"
+                                                        Fill="{Binding UpzhuIconIcon.Fill}"
+                                                        Stretch="Uniform" />
                                                 </ContentControl>
                                                 <TextBlock
-                                            Margin="0,0,2,0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            FontSize="12"
-                                            Foreground="{DynamicResource BrushTextGrey2}"
-                                            Text="{Binding UpOwner.Name}" />
-                                            </StackPanel>
+                                                    Margin="0,0,2,0"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="12"
+                                                    Foreground="{DynamicResource BrushTextGrey2}"
+                                                    Text="{Binding UpOwner.Name}" />
+                                             </StackPanel>
                                             <!--播放数图标和 值-->
                                             <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                                                 <ContentControl Width="15" Height="20" Grid.Column="1">
@@ -157,12 +161,12 @@
                                                 Stretch="Uniform" />
                                                 </ContentControl>
                                                 <TextBlock
-                                            Margin="0,0,2,0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            FontSize="12"
-                                            Foreground="{DynamicResource BrushTextGrey2}"
-                                            Text="{Binding PlayNumber}" />
+                                                Margin="0,0,2,0"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                FontSize="12"
+                                                Foreground="{DynamicResource BrushTextGrey2}"
+                                                Text="{Binding PlayNumber}" />
                                             </StackPanel>
                                             <!--收藏数图标和 值-->
                                             <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
@@ -186,151 +190,39 @@
                                             <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                                                 <ContentControl Width="20" Height="20" Grid.Column="3">
                                                     <Path
-                                                Width="{Binding LikeIcon.Width}"
-                                                Height="{Binding LikeIcon.Height}"
-                                                Data="{Binding LikeIcon.Data}"
-                                                Fill="{Binding LikeIcon.Fill}"
-                                                Stretch="Uniform" />
+                                                    Width="{Binding LikeIcon.Width}"
+                                                    Height="{Binding LikeIcon.Height}"
+                                                    Data="{Binding LikeIcon.Data}"
+                                                    Fill="{Binding LikeIcon.Fill}"
+                                                    Stretch="Uniform" />
                                                 </ContentControl>
                                                 <TextBlock
-                                            Margin="0,0,2,0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            FontSize="12"
-                                            Foreground="{DynamicResource BrushTextGrey2}"
-                                            Text="{Binding LikeNumber}" />
+                                                    Margin="0,0,2,0"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="12"
+                                                    Foreground="{DynamicResource BrushTextGrey2}"
+                                                    Text="{Binding LikeNumber}" />
+                                            </StackPanel>
+                                            <!--横竖屏标志  以及视频宽高 角度数值-->
+                                            <StackPanel Grid.Column="5" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                                <ContentControl Width="20" Height="20" Grid.Column="3">
+                                                <Path
+                                                    Width="{Binding LikeIcon.Width}"
+                                                    Height="{Binding LikeIcon.Height}"
+                                                    Data="{Binding LikeIcon.Data}"
+                                                    Fill="{Binding LikeIcon.Fill}"
+                                                    Stretch="Uniform" />
+                                                </ContentControl>
+                                                <TextBlock
+                                                    Margin="0,0,2,0"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="12"
+                                                    Foreground="{DynamicResource BrushTextGrey2}"
+                                                    Text="{Binding LikeNumber}" />
                                             </StackPanel>
                                         </Grid>
-
-                                        <!--<StackPanel
-                                        Grid.Row="1"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Center"
-                                        Orientation="Horizontal">
-                                        -->
-                                        <!--头像-->
-                                        <!--
-                                        <Border 
-                                            Width="32"
-                                            Height="32" 
-                                            Margin="5 0 5 0" 
-                                            BorderBrush="White" 
-                                            BorderThickness="1" 
-                                            CornerRadius="16">
-                                            <Border.ToolTip>
-                                                <TextBlock>
-                                                    <TextBlock.Text>
-                                                        <MultiBinding StringFormat="{}{0}/Mid:{1}">
-                                                            <Binding Path="UpOwner.Name" />
-                                                            <Binding Path="UpOwner.Mid" />
-                                                        </MultiBinding>
-                                                    </TextBlock.Text>
-                                                </TextBlock>
-                                            </Border.ToolTip>
-                                            <Border.Clip>
-                                                <EllipseGeometry Center="16, 16" RadiusX="14.5" RadiusY="14.5" />
-                                            </Border.Clip>
-                                            <Image Width="33" Height="33" Source="{Binding UPHeaderFaceImage}" />
-                                        </Border>
-
-                                        -->
-                                        <!--<Ellipse Width="33" Height="33" Stroke="Transparent" StrokeThickness="0">
-                                            <Ellipse.Fill>
-                                                <ImageBrush ImageSource="{Binding UPHeaderFaceImage}" />
-                                            </Ellipse.Fill>
-                                        </Ellipse>-->
-
-                                        <!--UP主图标和 名字-->
-                                        <!--
-                                        <ContentControl Width="20" Height="20">
-                                            <Path
-                                                Width="{Binding UpzhuIconIcon.Width}"
-                                                Height="{Binding UpzhuIconIcon.Height}"
-                                                Data="{Binding UpzhuIconIcon.Data}"
-                                                Fill="{Binding UpzhuIconIcon.Fill}"
-                                                Stretch="Uniform" />
-                                         </ContentControl>
-                                        <TextBlock
-                                            Margin="0,0,2,0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            FontSize="12"
-                                            Foreground="{DynamicResource BrushTextGrey2}"
-                                            Text="{Binding UpOwner.Name}" />
-                                        -->
-                                        <!--播放数图标和 值-->
-                                        <!--
-                                        <ContentControl Width="15" Height="20">
-                                            <Path
-                                                Width="{Binding PlayIcon.Width}"
-                                                Height="{Binding PlayIcon.Height}"
-                                                Data="{Binding PlayIcon.Data}"
-                                                Fill="{Binding PlayIcon.Fill}"
-                                                Stretch="Uniform" />
-                                        </ContentControl>
-                                        <TextBlock
-                                            Margin="0,0,2,0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            FontSize="12"
-                                            Foreground="{DynamicResource BrushTextGrey2}"
-                                            Text="{Binding PlayNumber}" />
-                                        -->
-                                        <!--收藏数图标和 值-->
-                                        <!--
-                                        <ContentControl Width="20" Height="20">
-                                            <Path
-                                                Width="{Binding FavoriteIcon.Width}"
-                                                Height="{Binding FavoriteIcon.Height}"
-                                                Data="{Binding FavoriteIcon.Data}"
-                                                Fill="{Binding FavoriteIcon.Fill}"
-                                                Stretch="Uniform" />
-                                        </ContentControl>
-                                        <TextBlock
-                                            Margin="0,0,2,0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            FontSize="12"
-                                            Foreground="{DynamicResource BrushTextGrey2}"
-                                            Text="{Binding FavoriteNumber}" />
-                                        -->
-                                        <!--点赞数图标和 值-->
-                                        <!--
-                                        <ContentControl Width="20" Height="20">
-                                            <Path
-                                                Width="{Binding LikeIcon.Width}"
-                                                Height="{Binding LikeIcon.Height}"
-                                                Data="{Binding LikeIcon.Data}"
-                                                Fill="{Binding LikeIcon.Fill}"
-                                                Stretch="Uniform" />
-                                        </ContentControl>
-                                        <TextBlock
-                                            Margin="0,0,2,0"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            FontSize="12"
-                                            Foreground="{DynamicResource BrushTextGrey2}"
-                                            Text="{Binding LikeNumber}" />
-                                        -->
-                                        <!--<TextBlock
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            FontSize="12"
-                                            Foreground="{DynamicResource BrushTextGrey2}">
-                                            <TextBlock.Text>
-                                                <MultiBinding StringFormat="{}{0} · {1} · {2} · {3} · {4} · {5}">
-                                                    <Binding Path="UpOwner.Name" />
-                                                    <Binding Path="FavoriteNumber" />
-                                                    <Binding Path="PlayNumber" />
-                                                    <Binding Path="Resolution.Name" />
-                                                    <Binding Path="VideoCodecName" />
-                                                    <Binding Path="AudioCodec.Name" />
-                                                </MultiBinding>
-                                            </TextBlock.Text>
-                                        </TextBlock>-->
-                                        <!--
-                                    </StackPanel>-->
-
                                     </Grid>
                                     <!--文件大小下载时间展示-->
                                     <Grid
@@ -526,7 +418,7 @@
                     <ColumnDefinition Width="110" />
                 </Grid.ColumnDefinitions>
                 <!--下载总数 双击刷新-->
-                <StackPanel
+                <!--<StackPanel
                     Grid.Column="0"
                     Margin="10,0,0,0"
                     HorizontalAlignment="Left"
@@ -562,8 +454,18 @@
                             <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RefreDownloadFinishedList}" />
                         </TextBlock.InputBindings>
                     </TextBlock>
-                </StackPanel>
+                    
+                </StackPanel>-->
                 <!--下拉选择排序方式  两次选同样的会逆序-->
+                <StackPanel
+                    Grid.Column="0"
+                    Margin="10,0,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <custom:CustomSimplePager
+                        DataContext="{Binding Pager}" />
+                </StackPanel>
                 <ComboBox
                     Name="nameFinishedSort"
                     Grid.Column="1"
