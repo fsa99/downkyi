@@ -1,4 +1,4 @@
-﻿using DownKyi.Core.Logging;
+using DownKyi.Core.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -143,7 +143,7 @@ namespace DownKyi.Core.Storage.Database.Download
             if (query.ContainsKey(uuid))
             {
                 query.TryGetValue(uuid, out object obj);
-                LogManager.Info("SQLite执行记录", nameof(QueryById), $"执行语句：{sql}\t 返回行数：{obj.ToString()}");
+                //LogManager.Info("SQLite执行记录", nameof(QueryById), $"执行语句：{sql}\t 返回行数：{obj.ToString()}");
                 return obj;
             }
             else
