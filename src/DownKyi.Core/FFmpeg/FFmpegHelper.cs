@@ -237,17 +237,6 @@ namespace DownKyi.Core.FFmpeg
         }
 
         /// <summary>
-        /// 计算 宽高比
-        /// </summary>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <returns></returns>
-        public static double CalculateAspectRatio(int width, int height)
-        {
-            return (double)width / height;
-        }
-
-        /// <summary>
         /// 剪切视频
         /// </summary>
         /// <param name="inputFilePath"></param>
