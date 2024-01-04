@@ -188,6 +188,7 @@
     <system:String x:Key="RetryDownload">重试</system:String>
     <system:String x:Key="DeleteDownload">移除</system:String>
     <system:String x:Key="OpenFolder">打开文件夹</system:String>
+    <system:String x:Key="FileDoesNotExistTip">文件被清理或删除！</system:String>
     <system:String x:Key="OpenVideo">播放</system:String>
     <system:String x:Key="CreateUpupTheme">生成Upup资源</system:String>
 
@@ -291,6 +292,7 @@
     <system:String x:Key="CreateUpupFailedTip1">该完成项没有下载视频</system:String>
     <system:String x:Key="CreateUpupFailedTip2">视频找不到了</system:String>
     <system:String x:Key="CreateUpupFailedTip3">封面找不到了</system:String>
+    <system:String x:Key="CreateUpupFailedTip4">不是16:9,请确认是否继续生成</system:String>
 
 
     <system:String x:Key="About">关于</system:String>
