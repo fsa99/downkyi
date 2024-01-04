@@ -1,6 +1,7 @@
 using DownKyi.Core.Settings;
 using DownKyi.Core.Storage;
 using DownKyi.Core.UpupTheme;
+using DownKyi.Core.Utils;
 using DownKyi.Images;
 using DownKyi.Models;
 using DownKyi.Services;
@@ -137,7 +138,7 @@ namespace DownKyi.ViewModels.DownloadManager
             }
             else
             {
-                //eventAggregator.GetEvent<MessageEvent>().Publish("没有找到视频文件，可能被删除或移动！");
+                PublishTip?.Invoke(DictionaryResource.GetString("FileDoesNotExistTip"));
             }
         }
 
@@ -152,7 +153,6 @@ namespace DownKyi.ViewModels.DownloadManager
         {
             if (DownloadBase == null)
             {
-                Core.Utils.VideoSizeGet.GetVideoWidthAndHeightAsync(DownloadBase.FilePath + ".mp4");
                 return;
             }
 
@@ -164,8 +164,7 @@ namespace DownKyi.ViewModels.DownloadManager
             }
             else
             {
-                //eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipAddDownloadingZero"));
-                //eventAggregator.GetEvent<MessageEvent>().Publish("没有找到视频文件，可能被删除或移动！");
+                PublishTip?.Invoke(DictionaryResource.GetString("FileDoesNotExistTip"));
             }
         }
 
@@ -213,7 +212,34 @@ namespace DownKyi.ViewModels.DownloadManager
             upupModel.SetThemeno((int)DownloadBase.Avid);
             UpupUtils upupUtils = new UpupUtils(directory, DownloadBase.FilePath, ref upupModel);
 
-            upupUtils.DetectingVideoAspectRatio();
+            AlertService alertService = new AlertService(DialogService);
+            // 判断视频的 宽高比是否为 16:9
+            if (DownloadBase.Dimension != null && DownloadBase.Dimension.Width * DownloadBase.Dimension.Height > 1)
+            {
+                if (!VideoSizeGet.DetectingVideoAspectRatio(DownloadBase.Dimension.Width, DownloadBase.Dimension.Height))
+                {
+                    // 不是16:9 的操作
+                    ButtonResult result = alertService.ShowInfo(DictionaryResource.GetString("CreateUpupFailedTip4"));
+                    if (result != ButtonResult.OK)
+                    {
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                (int width, int height) = System.Threading.Tasks.Task.Run(async () => await upupUtils.GetVideoAspectRatio()).Result;
+                if (!VideoSizeGet.DetectingVideoAspectRatio(width, height))
+                {
+                    // 不是16:9 的操作
+                    ButtonResult result = alertService.ShowInfo("不是16:9");
+                    if (result != ButtonResult.OK)
+                    {
+                        return;
+                    }
+                }
+            }
+            
 
             // 判断是否下载了视频
             if (DownloadBase.NeedDownloadContent.ContainsKey("downloadVideo") && DownloadBase.NeedDownloadContent["downloadVideo"])
