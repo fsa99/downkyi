@@ -190,6 +190,7 @@ namespace DownKyi.Services.Download
                     };
 
                     if (downloadedItem.DownloadBase == null) { continue; }
+
                     list.Add(downloadedItem);
                 }
             }
@@ -264,6 +265,16 @@ namespace DownKyi.Services.Download
             DownloadBaseDb downloadBaseDb = new DownloadBaseDb();
             object obj = downloadBaseDb.QueryById(uuid);
             //downloadBaseDb.Close();
+            if (obj is DownloadBase downloadObj)
+            {
+                if (downloadObj.Dimension == null || (downloadObj.Dimension != null && downloadObj.Dimension.Width * downloadObj.Dimension.Height <2))
+                {
+                    (int width, int height) = System.Threading.Tasks.Task.Run(async () => await Core.Utils.VideoSizeGet.GetVideoWidthAndHeightAsync(downloadObj.FilePath + ".mp4")).Result;
+                    downloadObj.Dimension = new Core.BiliApi.Models.Dimension() { Height = height, Width = width, Rotate = 0 };
+                    UpdateDownloadBase(downloadObj);
+                    return downloadObj;
+                }
+            }
 
             return obj is DownloadBase downloadBase ? downloadBase : null;
         }
