@@ -29,5 +29,11 @@ namespace DownKyi.Core.Settings.Models
         /// 下载完成后排序
         /// </summary>
         public DownloadFinishedSort DownloadFinishedSort { get; set; } = DownloadFinishedSort.NOT_SET;
+
+        /// <summary>
+        /// 记录上次修改的单页显示条数
+        /// </summary>
+        public int LastItemsPerPage { get; set; }
+
     }
 }
