@@ -17,7 +17,7 @@ namespace DownKyi.CustomControl
 
         public CustomSimplePagerViewModel(int recordsCount)
         {
-            ItemsPerPage = 1;
+            ItemsPerPage = Core.Settings.SettingsManager.GetInstance().GetLastItemsPerPage();
             RecordCount = recordsCount;
             CurrentPage = 1;
             
@@ -94,7 +94,7 @@ namespace DownKyi.CustomControl
                 if (value > 200) { tempValue = 200; }
                 if (itemsPerPage != tempValue) { itemsPerPage = tempValue; PageCount = CalculatePageCount(); }
                 itemsPerPage = tempValue;
-
+                Core.Settings.SettingsManager.GetInstance().SetLastItemsPerPage(tempValue);
                 OnItemsPerPageChanged(CurrentPage, itemsPerPage);
 
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ItemsPerPage"));
