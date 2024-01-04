@@ -57,6 +57,17 @@ namespace DownKyi.Core.Utils
             return isAspectRatio169;
         }
 
+        public static bool DetectingVideoAspectRatio(int width,  int height)
+        {
+            bool isAspectRatio169 = false;
+            if (width * height > 1)
+            {
+                isAspectRatio169 = CalculateAspectRatio(width, height) == 16.0 / 9.0;
+            }
+
+            return isAspectRatio169;
+        }
+
         /// <summary>
         /// 计算 宽高比
         /// </summary>
