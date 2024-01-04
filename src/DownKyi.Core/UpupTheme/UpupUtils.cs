@@ -137,33 +137,29 @@ namespace DownKyi.Core.UpupTheme
             }
         }
 
+        /// <summary>
+        /// 视频宽高比检测
+        /// </summary>
+        /// <returns></returns>
         public async Task<bool> DetectingVideoAspectRatio()
         {
             int width = 0;
             int height = 0;
 
-            await Task.Run(() =>
-            {
-                FFmpegHelper.GetVideoDimensions(SourceVideoFileName, new Action<string>((output) =>
-                {
-                    if (output != null)
-                    {
-                        var match = System.Text.RegularExpressions.Regex.Match(output, @"(\d+)x(\d+)");
-                        if (match.Success)
-                        {
-                            width = int.Parse(match.Groups[1].Value);
-                            height = int.Parse(match.Groups[2].Value);
-                        }
-                    }
-                }));
-            });
+            (width, height) = await VideoSizeGet.GetVideoWidthAndHeightAsync(SourceVideoFileName);
 
-            // 在这里进行根据视频分辨率的后续处理
-
-            // 示例：判断宽高比是否为16:9
-            bool isAspectRatio169 = FFmpegHelper.CalculateAspectRatio(width, height) == 16.0 / 9.0;
+            bool isAspectRatio169 = VideoSizeGet.CalculateAspectRatio(width, height) == 16.0 / 9.0;
 
             return isAspectRatio169;
+        }
+
+        /// <summary>
+        /// 视频宽高比检测
+        /// </summary>
+        /// <returns></returns>
+        public async Task<(int width, int height)> GetVideoAspectRatio()
+        {
+            return await VideoSizeGet.GetVideoWidthAndHeightAsync(SourceVideoFileName).ConfigureAwait(false);
         }
     }
 }
