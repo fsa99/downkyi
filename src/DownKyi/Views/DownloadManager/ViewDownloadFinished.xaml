@@ -26,10 +26,10 @@
                                     <!--视频封面图-->
                                     <Border ToolTip="{Binding Description}">
                                         <Image
-                                    Grid.Column="0"
-                                    Width="112"
-                                    Height="70"
-                                    Source="{Binding VideoCoverImage}" />
+                                            Grid.Column="0"
+                                            Width="112"
+                                            Height="70"
+                                            Source="{Binding VideoCoverImage}" />
                                     </Border>
                                     <!--视频截图上的时长-->
                                     <Canvas Grid.Column="0" Width="112" Height="70">
@@ -48,9 +48,9 @@
                                     </Canvas>
                                     <!--视频信息展示-->
                                     <Grid
-                                    Grid.Column="1"
-                                    Margin="0,0,10,0"
-                                    HorizontalAlignment="Left">
+                                        Grid.Column="1"
+                                        Margin="0,0,10,0"
+                                        HorizontalAlignment="Left">
                                         <Grid.RowDefinitions>
                                             <RowDefinition />
                                             <RowDefinition />
@@ -110,13 +110,13 @@
                                             </Grid.ColumnDefinitions>
                                             <!--头像-->
                                             <Border 
-                                            Grid.Column="0"
-                                            Width="32"
-                                            Height="32" 
-                                            Margin="5 0 5 0" 
-                                            BorderBrush="White" 
-                                            BorderThickness="1" 
-                                            CornerRadius="16">
+                                                Grid.Column="0"
+                                                Width="32"
+                                                Height="32" 
+                                                Margin="5 0 5 0" 
+                                                BorderBrush="White" 
+                                                BorderThickness="1" 
+                                                CornerRadius="16">
                                                 <Border.ToolTip>
                                                     <TextBlock>
                                                         <TextBlock.Text>
@@ -205,24 +205,34 @@
                                                     Text="{Binding LikeNumber}" />
                                             </StackPanel>
                                             <!--横竖屏标志  以及视频宽高 角度数值-->
-                                            <StackPanel Grid.Column="5" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                                <ContentControl Width="20" Height="20" Grid.Column="3">
-                                                <Path
-                                                    Width="{Binding LikeIcon.Width}"
-                                                    Height="{Binding LikeIcon.Height}"
-                                                    Data="{Binding LikeIcon.Data}"
-                                                    Fill="{Binding LikeIcon.Fill}"
-                                                    Stretch="Uniform" />
+                                            <Border
+                                                Grid.Column="5"
+                                                Width="20"
+                                                Height="20" 
+                                                Margin="5 0 5 0" 
+                                                BorderBrush="Transparent" 
+                                                BorderThickness="0" >
+                                            <Border.ToolTip>
+                                                <TextBlock>
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="{}宽:{0} 长:{1} 旋转度数:{2}">
+                                                            <Binding Path="Dimension.Width" />
+                                                            <Binding Path="Dimension.Height" />
+                                                            <Binding Path="Dimension.Rotate" />
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </Border.ToolTip>
+                                            <ContentControl Width="20" Height="20">
+                                                    <Path
+                                                        Width="{Binding VerticalOrHorizontalIcon.Width}"
+                                                        Height="{Binding VerticalOrHorizontalIcon.Height}"
+                                                        Data="{Binding VerticalOrHorizontalIcon.Data}"
+                                                        Fill="{Binding VerticalOrHorizontalIcon.Fill}"
+                                                        Stretch="Uniform" />
                                                 </ContentControl>
-                                                <TextBlock
-                                                    Margin="0,0,2,0"
-                                                    HorizontalAlignment="Left"
-                                                    VerticalAlignment="Center"
-                                                    FontSize="12"
-                                                    Foreground="{DynamicResource BrushTextGrey2}"
-                                                    Text="{Binding LikeNumber}" />
-                                            </StackPanel>
-                                        </Grid>
+                                            </Border>
+                                    </Grid>
                                     </Grid>
                                     <!--文件大小下载时间展示-->
                                     <Grid
