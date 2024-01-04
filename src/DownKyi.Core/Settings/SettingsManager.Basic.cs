@@ -1,4 +1,4 @@
-﻿namespace DownKyi.Core.Settings
+namespace DownKyi.Core.Settings
 {
     public partial class SettingsManager
     {
@@ -19,6 +19,9 @@
 
         // 下载完成列表排序
         private readonly DownloadFinishedSort finishedSort = DownloadFinishedSort.DOWNLOAD;
+
+        // 记录上次修改的单页显示条数
+        private readonly int lastItemsPerPage = 20;
 
         /// <summary>
         /// 获取下载完成后的操作
@@ -182,5 +185,30 @@
             return SetSettings();
         }
 
+
+        /// <summary>
+        /// 获取单页显示条数
+        /// </summary>
+        /// <returns></returns>
+        public int GetLastItemsPerPage()
+        {
+            appSettings = GetSettings();
+            if (appSettings.Basic.LastItemsPerPage == 0)
+            {
+                SetLastItemsPerPage(lastItemsPerPage);
+            }
+            return appSettings.Basic.LastItemsPerPage;
+        }
+
+        /// <summary>
+        /// 设置单页显示条数
+        /// </summary>
+        /// <param name="finishedSort"></param>
+        /// <returns></returns>
+        public bool SetLastItemsPerPage(int _lastItemsPerPage)
+        {
+            appSettings.Basic.LastItemsPerPage = _lastItemsPerPage;
+            return SetSettings();
+        }
     }
 }
