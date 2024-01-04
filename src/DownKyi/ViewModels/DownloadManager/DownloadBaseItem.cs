@@ -61,6 +61,13 @@ namespace DownKyi.ViewModels.DownloadManager
                         StorageHeader storageHeader = new StorageHeader();
                         UPHeaderFaceImage = storageHeader.GetHeaderThumbnail(DownloadBase.UpOwner.Mid, DownloadBase.UpOwner.Name, DownloadBase.UpOwner.Face, 33, 33);
                     }
+                    if (DownloadBase.Dimension != null)
+                    {
+                        if (DownloadBase.Dimension.Height > DownloadBase.Dimension.Width) { VerticalOrHorizontalIcon = NormalIcon.Instance().VerticalScreen; }
+                        else { VerticalOrHorizontalIcon = NormalIcon.Instance().HorizontalScreen; }
+                    }
+                    else { VerticalOrHorizontalIcon = NormalIcon.Instance().UnKnownIcon; }
+                    VerticalOrHorizontalIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
                 }
             }
         }
@@ -170,7 +177,24 @@ namespace DownKyi.ViewModels.DownloadManager
         /// </summary>
         public string MainTitle
         {
-            get => DownloadBase == null ? "" : DownloadBase.MainTitle;
+            get
+            {
+                if (DownloadBase == null)
+                {
+                    return string.Empty;
+                }
+                else
+                {
+                    if (DownloadBase.MainTitle == DownloadBase.Name)
+                    {
+                        return DownloadBase.MainTitle;
+                    }
+                    else
+                    {
+                        return DownloadBase.MainTitle + DownloadBase.Name;
+                    }
+                }
+            }
             set
             {
                 DownloadBase.MainTitle = value;
@@ -273,27 +297,7 @@ namespace DownKyi.ViewModels.DownloadManager
         /// </summary>
         public Dimension Dimension
         {
-            get
-            {
-                if (DownloadBase == null)
-                {
-                    return new Dimension();
-                }
-                else
-                {
-                    if (DownloadBase.Dimension == null)
-                    {
-                        int width = 0;
-                        int height = 0;
-                        int rotate = 0;
-                        //(width, height) = Core.Utils.VideoSizeGet.GetVideoWidthAndHeightAsync(DownloadBase.FilePath + ".mp4");
-                    }
-                    if (DownloadBase.Dimension.Height > DownloadBase.Dimension.Width) { VerticalOrHorizontalIcon = NormalIcon.Instance().VerticalScreen; }
-                    else { VerticalOrHorizontalIcon = NormalIcon.Instance().HorizontalScreen; }
-                    VerticalOrHorizontalIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
-                    return DownloadBase.Dimension;
-                }
-            }
+            get => DownloadBase == null ? new Dimension() : DownloadBase.Dimension;
             set
             {
                 DownloadBase.Dimension = value;
