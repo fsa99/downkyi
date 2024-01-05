@@ -28,6 +28,20 @@ namespace DownKyi.ViewModels.DownloadManager
         {
             DialogService = dialogService;
         }
+        static DownloadBaseItem()
+        {
+            // B站 投币的图标
+            CoinIcon = NormalIcon.Instance().CoinIcon;
+            CoinIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
+            PlayIcon = NormalIcon.Instance().Play;
+            PlayIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
+            LikeIcon = NormalIcon.Instance().Like;
+            LikeIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
+            FavoriteIcon = NormalIcon.Instance().Favorite;
+            FavoriteIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
+            UpzhuIconIcon = NormalIcon.Instance().UpzhuIcon;
+            UpzhuIconIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
+        }
 
         private DownloadBase downloadBase;
         /// <summary>
@@ -42,17 +56,6 @@ namespace DownKyi.ViewModels.DownloadManager
 
                 if (value != null)
                 {
-                    // B站 投币的图标
-                    CoinIcon = NormalIcon.Instance().CoinIcon;
-                    CoinIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
-                    PlayIcon = NormalIcon.Instance().Play;
-                    PlayIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
-                    LikeIcon = NormalIcon.Instance().Like;
-                    LikeIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
-                    FavoriteIcon = NormalIcon.Instance().Favorite;
-                    FavoriteIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
-                    UpzhuIconIcon = NormalIcon.Instance().UpzhuIcon;
-                    UpzhuIconIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
                     ZoneImage = (DrawingImage)Application.Current.Resources[VideoZoneIcon.Instance().GetZoneImageKey(DownloadBase.ZoneId)];
                     StorageCover storageCover = new StorageCover();
                     VideoCoverImage = storageCover.GetCoverThumbnail(DownloadBase.Avid, DownloadBase.Bvid, DownloadBase.Cid, DownloadBase.CoverUrl, 112, 70);
@@ -111,51 +114,26 @@ namespace DownKyi.ViewModels.DownloadManager
             get => verticalOrHorizontalIcon;
             set => SetProperty(ref verticalOrHorizontalIcon, value);
         }
-        private VectorImage coinIcon;
         /// <summary>
         /// 投币 币 图
         /// </summary>
-        public VectorImage CoinIcon
-        {
-            get => coinIcon;
-            set => SetProperty(ref coinIcon, value);
-        }
-        private VectorImage playIcon;
+        public static VectorImage CoinIcon { get; private set; }
         /// <summary>
         /// 播放 图标
         /// </summary>
-        public VectorImage PlayIcon
-        {
-            get => playIcon;
-            set => SetProperty(ref playIcon, value);
-        }
-        private VectorImage likeIcon;
+        public static VectorImage PlayIcon { get; private set; }
         /// <summary>
         /// 点赞 图标
         /// </summary>
-        public VectorImage LikeIcon
-        {
-            get => likeIcon;
-            set => SetProperty(ref likeIcon, value);
-        }
-        private VectorImage favoriteIcon;
+        public static VectorImage LikeIcon { get; private set; }
         /// <summary>
         /// 收藏 图标
         /// </summary>
-        public VectorImage FavoriteIcon
-        {
-            get => favoriteIcon;
-            set => SetProperty(ref favoriteIcon, value);
-        }
-        private VectorImage upzhuIconIcon;
+        public static VectorImage FavoriteIcon { get; private set; }
         /// <summary>
         /// UP 图标
         /// </summary>
-        public VectorImage UpzhuIconIcon
-        {
-            get => upzhuIconIcon;
-            set => SetProperty(ref upzhuIconIcon, value);
-        }
+        public static VectorImage UpzhuIconIcon { get; private set; }
         #endregion
 
         #region 视频 文件信息编码画质等
