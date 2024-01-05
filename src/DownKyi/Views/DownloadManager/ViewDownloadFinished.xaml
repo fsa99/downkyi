@@ -20,8 +20,8 @@
                                         <ColumnDefinition Width="112" />
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="auto" />
-                                        <ColumnDefinition Width="165" />
-                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="175" />
+                                        <ColumnDefinition Width="30" />
                                     </Grid.ColumnDefinitions>
                                     <!--视频封面图-->
                                     <Border ToolTip="{Binding Description}">
@@ -86,9 +86,8 @@
                                                 <TextBlock.ToolTip>
                                                     <TextBlock>
                                                         <TextBlock.Text>
-                                                            <MultiBinding StringFormat="{}{0}-{1}-{2}">
+                                                            <MultiBinding StringFormat="{}{0}--{1}">
                                                                 <Binding Path="MainTitle" />
-                                                                <Binding Path="Name" />
                                                                 <Binding Path="Resolution.Name" />
                                                             </MultiBinding>
                                                         </TextBlock.Text>
