@@ -669,10 +669,11 @@ namespace DownKyi.Services.Download
                         // 加入到下载完成list中，并从下载中list去除
                         downloadedList.Add(downloadedItem);
                         downloadingList.Remove(downloading);
+                        bool areSameInstance = ReferenceEquals(downloadedList, App.DownloadedList);
 
                         // 下载完成列表排序
                         DownloadFinishedSort finishedSort = SettingsManager.GetInstance().GetDownloadFinishedSort();
-                        App.SortDownloadedList(finishedSort);
+                        //App.SortDownloadedList(finishedSort);
                     }));
                     _notifyIcon.ShowBalloonTip(DictionaryResource.GetString("DownloadSuccess"), $"{downloadedItem.DownloadBase.Name}", BalloonIcon.Info);
                 }));
