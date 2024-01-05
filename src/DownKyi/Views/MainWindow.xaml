@@ -33,7 +33,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="2" CornerRadius="8"  Background="#00FFFFFF">
+    <Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="0" CornerRadius="0"  Background="#00FFFFFF">
         <Border.Style>
             <Style TargetType="{x:Type Border}">
                 <Style.Triggers>
