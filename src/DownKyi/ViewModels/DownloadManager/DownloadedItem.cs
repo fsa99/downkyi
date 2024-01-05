@@ -24,24 +24,7 @@ namespace DownKyi.ViewModels.DownloadManager
 
         public event Action<string> PublishTip;
 
-        public DownloadedItem(IDialogService dialogService) : base(dialogService)
-        {
-            // 打开文件夹按钮
-            OpenFolder = ButtonIcon.Instance().Folder;
-            OpenFolder.Fill = DictionaryResource.GetColor("ColorPrimary");
-
-            // 打开视频按钮
-            OpenVideo = ButtonIcon.Instance().Start;
-            OpenVideo.Fill = DictionaryResource.GetColor("ColorPrimary");
-
-            // UpUp资源按钮
-            UpupTheme = ButtonIcon.Instance().UpTheme;
-            UpupTheme.Fill = DictionaryResource.GetColor("ColorPrimary");
-
-            // 删除按钮
-            RemoveVideo = ButtonIcon.Instance().Trash;
-            RemoveVideo.Fill = DictionaryResource.GetColor("ColorWarning");
-        }
+        public DownloadedItem(IDialogService dialogService) : base(dialogService) { }
 
         // model数据
         public Downloaded Downloaded { get; set; }
@@ -69,36 +52,30 @@ namespace DownKyi.ViewModels.DownloadManager
         }
 
         #region 控制按钮 
+        public static VectorImage OpenFolder { get; private set; }
+        public static VectorImage OpenVideo { get; private set; }
+        public static VectorImage UpupTheme { get; private set; }
+        public static VectorImage RemoveVideo { get; private set; }
 
-        private VectorImage openFolder;
-        public VectorImage OpenFolder
+        // 静态构造函数
+        static DownloadedItem()
         {
-            get => openFolder;
-            set => SetProperty(ref openFolder, value);
+            // 打开文件夹按钮
+            OpenFolder = ButtonIcon.Instance().Folder;
+            OpenFolder.Fill = DictionaryResource.GetColor("ColorPrimary");
+
+            // 打开视频按钮
+            OpenVideo = ButtonIcon.Instance().Start;
+            OpenVideo.Fill = DictionaryResource.GetColor("ColorPrimary");
+
+            // UpUp资源按钮
+            UpupTheme = ButtonIcon.Instance().UpTheme;
+            UpupTheme.Fill = DictionaryResource.GetColor("ColorPrimary");
+
+            // 删除按钮
+            RemoveVideo = ButtonIcon.Instance().Trash;
+            RemoveVideo.Fill = DictionaryResource.GetColor("ColorWarning");
         }
-
-        private VectorImage openVideo;
-        public VectorImage OpenVideo
-        {
-            get => openVideo;
-            set => SetProperty(ref openVideo, value);
-        }
-
-        private VectorImage upupTheme;
-
-        public VectorImage UpupTheme
-        {
-            get => upupTheme;
-            set => SetProperty(ref upupTheme, value);
-        }
-
-        private VectorImage removeVideo;
-        public VectorImage RemoveVideo
-        {
-            get => removeVideo;
-            set => SetProperty(ref removeVideo, value);
-        }
-
         #endregion
 
         #region 命令申明
