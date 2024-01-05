@@ -61,7 +61,7 @@ namespace DownKyi
 
             // 从数据库读取
             List<DownloadingItem> downloadingItems = downloadStorageService.GetDownloading();
-            List<DownloadedItem> downloadedItems = downloadStorageService.GetDownloaded();
+            List<DownloadedItem> downloadedItems = downloadStorageService.GetSortPageDownloaded();
             DownloadingList.AddRange(downloadingItems);
             DownloadedList.AddRange(downloadedItems);
 
@@ -244,28 +244,35 @@ namespace DownKyi
         /// <param name="finishedSort"></param>
         public static void SortDownloadedList(DownloadFinishedSort finishedSort)
         {
+            ObservableCollection<DownloadedItem> list = new ObservableCollection<DownloadedItem>();
             switch (finishedSort)
             {
                 case DownloadFinishedSort.DOWNLOAD:
-                    DownloadedList = new ObservableCollection<DownloadedItem>(DownloadedList.OrderBy(item => item.Downloaded.FinishedTimestamp));
+                    list = new ObservableCollection<DownloadedItem>(DownloadedList.OrderBy(item => item.Downloaded.FinishedTimestamp));
                     break;
                 case DownloadFinishedSort.NUMBER:
-                    DownloadedList = new ObservableCollection<DownloadedItem>(DownloadedList.OrderBy(item => item.MainTitle).ThenBy(item => item.Order));
+                    list = new ObservableCollection<DownloadedItem>(DownloadedList.OrderBy(item => item.MainTitle).ThenBy(item => item.Order));
                     break;
                 case DownloadFinishedSort.UPZHUID:
-                    DownloadedList = new ObservableCollection<DownloadedItem>(DownloadedList.OrderBy(item => item.DownloadBase.UpOwner.Mid).ThenBy(item => item.MainTitle).ThenBy(item => item.Order));
+                    list = new ObservableCollection<DownloadedItem>(DownloadedList.OrderBy(item => item.DownloadBase.UpOwner.Mid).ThenBy(item => item.MainTitle).ThenBy(item => item.Order));
                     break;
                 case DownloadFinishedSort.FILESIZE:
-                    DownloadedList = new ObservableCollection<DownloadedItem>(DownloadedList.OrderBy(item => Format.ParseFileSize(item.FileSize)).ThenBy(item => item.Order));
+                    list = new ObservableCollection<DownloadedItem>(DownloadedList.OrderBy(item => Format.ParseFileSize(item.FileSize)).ThenBy(item => item.Order));
                     break;
                 case DownloadFinishedSort.VIDEODURATION:
-                    DownloadedList = new ObservableCollection<DownloadedItem>(DownloadedList.OrderBy(item => Format.ConvertTimeToSeconds(item.Duration)).ThenBy(item => item.Order));
+                    list = new ObservableCollection<DownloadedItem>(DownloadedList.OrderBy(item => Format.ConvertTimeToSeconds(item.Duration)).ThenBy(item => item.Order));
                     break;
                 case DownloadFinishedSort.ZONEID:
-                    DownloadedList = new ObservableCollection<DownloadedItem>(DownloadedList.OrderBy(item => item.DownloadBase.ZoneId).ThenBy(item => item.DownloadBase.UpOwner.Mid).ThenBy(item => item.MainTitle).ThenBy(item => item.Order));
+                    list = new ObservableCollection<DownloadedItem>(DownloadedList.OrderBy(item => item.DownloadBase.ZoneId).ThenBy(item => item.DownloadBase.UpOwner.Mid).ThenBy(item => item.MainTitle).ThenBy(item => item.Order));
                     break;
                 default:
                     break;
+            }
+            
+            DownloadedList.Clear();
+            foreach (DownloadedItem item in list.ToList())
+            {
+                DownloadedList.Add(item);
             }
         }
 
