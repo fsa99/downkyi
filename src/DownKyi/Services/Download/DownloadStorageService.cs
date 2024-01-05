@@ -1,4 +1,5 @@
 using DownKyi.Core.Logging;
+using DownKyi.Core.Settings;
 using DownKyi.Core.Storage.Database.Download;
 using DownKyi.Models;
 using DownKyi.ViewModels.DownloadManager;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace DownKyi.Services.Download
 {
@@ -196,6 +198,53 @@ namespace DownKyi.Services.Download
             }
 
             return list;
+        }
+
+        /// <summary>
+        /// 获取下载完成数据  排序的分页的
+        /// </summary>
+        /// <returns></returns>
+        public List<DownloadedItem> GetSortPageDownloaded(int curPage = 1)
+        {
+            if (curPage < 1) { curPage = 1; }
+            int itemsPer = SettingsManager.GetInstance().GetLastItemsPerPage();
+            int startIndex = itemsPer * (curPage - 1);
+            DownloadFinishedSort finishedSort = SettingsManager.GetInstance().GetDownloadFinishedSort();
+            List <DownloadedItem> allDownloadedItems = GetDownloaded();
+            if (allDownloadedItems.Any())
+            {
+                switch (finishedSort)
+                {
+                    case DownloadFinishedSort.DOWNLOAD:
+                        allDownloadedItems = allDownloadedItems.OrderBy(item => item.Downloaded.FinishedTimestamp).Skip(startIndex).Take(itemsPer).ToList();
+                        break;
+                    case DownloadFinishedSort.NUMBER:
+                        allDownloadedItems = allDownloadedItems.OrderBy(item => item.MainTitle).ThenBy(item => item.Order).Skip(startIndex).Take(itemsPer).ToList();
+                        break;
+                    case DownloadFinishedSort.UPZHUID:
+                        allDownloadedItems = allDownloadedItems.OrderBy(item => item.DownloadBase.UpOwner.Mid).ThenBy(item => item.MainTitle).ThenBy(item => item.Order).Skip(startIndex).Take(itemsPer).ToList();
+                        break;
+                    case DownloadFinishedSort.FILESIZE:
+                        allDownloadedItems = allDownloadedItems.OrderBy(item => Core.Utils.Format.ParseFileSize(item.FileSize)).ThenBy(item => item.Order).Skip(startIndex).Take(itemsPer).ToList();
+                        break;
+                    case DownloadFinishedSort.VIDEODURATION:
+                        allDownloadedItems = allDownloadedItems.OrderBy(item => DownKyi.Core.Utils.Format.ConvertTimeToSeconds(item.Duration)).ThenBy(item => item.Order).Skip(startIndex).Take(itemsPer).ToList();
+                        break;
+                    case DownloadFinishedSort.ZONEID:
+                        allDownloadedItems = allDownloadedItems.OrderBy(item => item.DownloadBase.ZoneId).ThenBy(item => item.DownloadBase.UpOwner.Mid).ThenBy(item => item.MainTitle).ThenBy(item => item.Order).Skip(startIndex).Take(itemsPer).ToList();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return allDownloadedItems;
+        }
+
+        public List<DownloadedItem> GetFilterDownloaded(long upMid = -1,int zoneId = -1, int curpage = 1)
+        {
+            List<DownloadedItem> allDownloadedItems = GetDownloaded();
+            allDownloadedItems = allDownloadedItems.Where(x => x.UpOwner.Mid == upMid).ToList();
+            return allDownloadedItems;
         }
 
         /// <summary>
