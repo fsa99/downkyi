@@ -21,16 +21,70 @@ namespace DownKyi.ViewModels.DownloadManager
     public class ViewDownloadFinishedViewModel : BaseViewModel
     {
         public const string Tag = "PageDownloadManagerDownloadFinished";
+        public ViewDownloadFinishedViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(eventAggregator, dialogService)
+        {
+            DownloadFinishedSort finishedSort = SettingsManager.GetInstance().GetDownloadFinishedSort();
+            switch (finishedSort)
+            {
+                case DownloadFinishedSort.DOWNLOAD:
+                    FinishedSortBy = 0;
+                    break;
+                case DownloadFinishedSort.UPZHUID:
+                    FinishedSortBy = 1;
+                    break;
+                case DownloadFinishedSort.FILESIZE:
+                    FinishedSortBy = 2;
+                    break;
+                case DownloadFinishedSort.VIDEODURATION:
+                    FinishedSortBy = 3;
+                    break;
+                case DownloadFinishedSort.ZONEID:
+                    FinishedSortBy = 4;
+                    break;
+                case DownloadFinishedSort.NUMBER:
+                    FinishedSortBy = 5;
+                    break;
+                default:
+                    FinishedSortBy = 0;
+                    break;
+            }
+            // 初始化DownloadedList
+            allDownloadedList = App.DownloadedList;
+            bool areSameInstance = ReferenceEquals(App.DownloadedList, allDownloadedList);
 
+            lastTimeSortSelected = FinishedSortBy;
+            SortallDownloadedList(finishedSort);
+            Pager = new CustomSimplePagerViewModel(allDownloadedList.Count);
+            Pager.CurrentChanged += OnCurrentChanged_Pager;
+            Pager.ItemsPerPageChanged += OnItemsPerPageChanged_Pager;
+            Pager.CurrentPage = 1;
+
+            allDownloadedList.CollectionChanged += new NotifyCollectionChangedEventHandler((sender, e) =>
+            {
+                if (e.Action == NotifyCollectionChangedAction.Add)
+                {
+                    SetDialogService();
+                    Pager.RecordCount = allDownloadedList.Count;
+                    DownloadedList = GetPagedData(Pager.CurrentPage, Pager.ItemsPerPage);
+                }
+            });
+            bool areSameInstance1 = ReferenceEquals(App.DownloadedList, allDownloadedList);
+
+            SetDialogService();
+            DownloadedList = GetPagedData(Pager.CurrentPage, Pager.ItemsPerPage);
+        }
+        #region 页面属性申明
         /// <summary>
         /// 所有的下载项
         /// </summary>
         private ObservableCollection<DownloadedItem> allDownloadedList;
+
+        public ObservableCollection<DownloadedItem> AllDownloadedList { get; set; }
+
         /// <summary>
         /// 上次选择的排序方式
         /// </summary>
         private int lastTimeSortSelected;
-        #region 页面属性申明
 
         private ObservableCollection<DownloadedItem> downloadedList;
         /// <summary>
@@ -73,67 +127,6 @@ namespace DownKyi.ViewModels.DownloadManager
             }
         }
         #endregion
-
-        public ViewDownloadFinishedViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(eventAggregator, dialogService)
-        {
-            DownloadFinishedSort finishedSort = SettingsManager.GetInstance().GetDownloadFinishedSort();
-            switch (finishedSort)
-            {
-                case DownloadFinishedSort.DOWNLOAD:
-                    FinishedSortBy = 0;
-                    break;
-                case DownloadFinishedSort.UPZHUID:
-                    FinishedSortBy = 1;
-                    break;
-                case DownloadFinishedSort.FILESIZE:
-                    FinishedSortBy = 2;
-                    break;
-                case DownloadFinishedSort.VIDEODURATION:
-                    FinishedSortBy = 3;
-                    break;
-                case DownloadFinishedSort.ZONEID:
-                    FinishedSortBy = 4;
-                    break;
-                case DownloadFinishedSort.NUMBER:
-                    FinishedSortBy = 5;
-                    break;
-                default:
-                    FinishedSortBy = 0;
-                    break;
-            }
-            // 初始化DownloadedList
-            allDownloadedList = App.DownloadedList;
-            lastTimeSortSelected = FinishedSortBy;
-            SortallDownloadedList(finishedSort);
-            Pager = new CustomSimplePagerViewModel(allDownloadedList.Count);
-            Pager.CurrentChanged += OnCurrentChanged_Pager;
-            Pager.ItemsPerPageChanged += OnItemsPerPageChanged_Pager;
-            Pager.CurrentPage = 1;
-            
-            allDownloadedList.CollectionChanged += new NotifyCollectionChangedEventHandler((sender, e) =>
-            {
-                if (e.Action == NotifyCollectionChangedAction.Add)
-                {
-                    SetDialogService();
-                }
-            });
-            SetDialogService();
-            DownloadedList = GetPagedData(Pager.CurrentPage, Pager.ItemsPerPage);
-        }
-
-        private void OnItemsPerPageChanged_Pager(int current, int itemsPerPage)
-        {
-            DownloadedList = GetPagedData(current, itemsPerPage);
-        }
-
-        private bool OnCurrentChanged_Pager(int old, int current, int limitNum)
-        {
-            if (old != current)
-            {
-                DownloadedList = GetPagedData(current, limitNum);
-            }
-            return true;
-        }
 
         #region 命令申明
         private DelegateCommand refreshDownloadFinishedList;
@@ -292,6 +285,21 @@ namespace DownKyi.ViewModels.DownloadManager
 
         #endregion
 
+        #region 功能性函数
+        private void OnItemsPerPageChanged_Pager(int current, int itemsPerPage)
+        {
+            DownloadedList = GetPagedData(current, itemsPerPage);
+        }
+
+        private bool OnCurrentChanged_Pager(int old, int current, int limitNum)
+        {
+            if (old != current)
+            {
+                DownloadedList = GetPagedData(current, limitNum);
+            }
+            return true;
+        }
+
         private async void SetDialogService()
         {
             try
@@ -323,6 +331,8 @@ namespace DownKyi.ViewModels.DownloadManager
         /// <returns></returns>
         public ObservableCollection<DownloadedItem> GetPagedData(int pageNumber, int pageSize)
         {
+            bool areSameInstance = ReferenceEquals(App.DownloadedList, allDownloadedList);
+
             int startIndex = (pageNumber - 1) * pageSize;
             int endIndex = startIndex + pageSize;
             if (startIndex >= 0 && startIndex < allDownloadedList.Count)
@@ -381,5 +391,6 @@ namespace DownKyi.ViewModels.DownloadManager
                     break;
             }
         }
+        #endregion
     }
 }
