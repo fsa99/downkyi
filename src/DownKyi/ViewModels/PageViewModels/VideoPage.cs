@@ -1,4 +1,4 @@
-﻿using DownKyi.Core.BiliApi.BiliUtils;
+using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.Models;
 using DownKyi.Core.BiliApi.VideoStream.Models;
 using DownKyi.Core.Logging;
@@ -21,9 +21,8 @@ namespace DownKyi.ViewModels.PageViewModels
         public long EpisodeId { get; set; }
         public VideoOwner Owner { get; set; }
         public string PublishTime { get; set; }
-
         public string FirstFrame { get; set; }
-
+        public Dimension Dimension { get; set; }
         private bool isSelected;
         public bool IsSelected
         {
