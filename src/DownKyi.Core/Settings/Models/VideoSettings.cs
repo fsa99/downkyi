@@ -19,5 +19,7 @@ namespace DownKyi.Core.Settings.Models
         public List<FileNamePart> FileNameParts { get; set; } = null; // 文件命名格式
         public string FileNamePartTimeFormat { get; set; } = null; // 文件命名中的时间格式
         public OrderFormat OrderFormat { get; set; } = OrderFormat.NOT_SET; // 文件命名中的序号格式
+        public AllowStatus IsRedownloadPrompt { get; set; } = AllowStatus.NONE; // 是否弹出已下载视频再次下载否的窗口
+        public AllowStatus IsRedownloadAllowed { get; set; } = AllowStatus.NONE; // 是否下载已下载的视频标识
     }
 }
