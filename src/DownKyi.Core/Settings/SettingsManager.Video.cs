@@ -29,6 +29,11 @@ namespace DownKyi.Core.Settings
         // 是否使用默认下载目录，如果是，则每次点击下载选中项时不再询问生成目录
         private readonly AllowStatus isUseSaveVideoRootPath = AllowStatus.NO;
 
+        // 是否弹出已下载视频再次下载否的窗口
+        private readonly AllowStatus isRedownloadPrompt = AllowStatus.YES;
+
+        // 是否下载已下载的视频标识
+        private readonly AllowStatus isRedownloadAllowed = AllowStatus.NO;
         // 下载内容
         private readonly VideoContentSettings videoContent = new VideoContentSettings();
 
@@ -162,6 +167,59 @@ namespace DownKyi.Core.Settings
             return SetSettings();
         }
 
+        /// <summary>
+        /// 获取是否弹出已下载视频再次下载否的窗口
+        /// </summary>
+        /// <returns></returns>
+        public AllowStatus IsRedownloadPrompt()
+        {
+            appSettings = GetSettings();
+            if (appSettings.Video.IsRedownloadPrompt == AllowStatus.NONE)
+            {
+                // 第一次获取，先设置默认值
+                IsRedownloadPrompt(isRedownloadPrompt);
+                return isRedownloadPrompt;
+            }
+            return appSettings.Video.IsRedownloadPrompt;
+        }
+
+        /// <summary>
+        /// 设置是否弹出已下载视频再次下载否的窗口
+        /// </summary>
+        /// <param name="isRedownloadPrompt"></param>
+        /// <returns></returns>
+        public bool IsRedownloadPrompt(AllowStatus isRedownloadPrompt)
+        {
+            appSettings.Video.IsRedownloadPrompt = isRedownloadPrompt;
+            return SetSettings();
+        }
+
+        /// <summary>
+        /// 获取是否下载已下载的视频标识
+        /// </summary>
+        /// <returns></returns>
+        public AllowStatus IsRedownloadAllowed()
+        {
+            appSettings = GetSettings();
+            if (appSettings.Video.IsRedownloadAllowed == AllowStatus.NONE)
+            {
+                // 第一次获取，先设置默认值
+                IsRedownloadAllowed(isRedownloadAllowed);
+                return isRedownloadAllowed;
+            }
+            return appSettings.Video.IsRedownloadAllowed;
+        }
+
+        /// <summary>
+        /// 设置是否下载已下载的视频标识
+        /// </summary>
+        /// <param name="isRedownloadAllowed"></param>
+        /// <returns></returns>
+        public bool IsRedownloadAllowed(AllowStatus isRedownloadAllowed)
+        {
+            appSettings.Video.IsRedownloadAllowed = isRedownloadAllowed;
+            return SetSettings();
+        }
         /// <summary>
         /// 获取下载目录
         /// </summary>
