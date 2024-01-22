@@ -1,4 +1,4 @@
-﻿using DownKyi.Core.BiliApi.BiliUtils;
+using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.FileName;
 using DownKyi.Core.Settings;
 using DownKyi.Core.Settings.Models;
@@ -178,6 +178,25 @@ namespace DownKyi.ViewModels.Settings
             set => SetProperty(ref orderFormatDisplay, value);
         }
 
+        private bool isRedownloadPrompt;
+        /// <summary>
+        /// 已下载视频再次下载否的询问窗口
+        /// </summary>
+        public bool IsRedownloadPrompt
+        {
+            get => isRedownloadPrompt;
+            set => SetProperty(ref isRedownloadPrompt, value);
+        }
+
+        private bool isRedownloadAllowed;
+        /// <summary>
+        /// 再次下载已下载的视频标识
+        /// </summary>
+        public bool IsRedownloadAllowed
+        {
+            get => isRedownloadAllowed;
+            set => SetProperty(ref isRedownloadAllowed, value);
+        }
         #endregion
 
         public ViewVideoViewModel(IEventAggregator eventAggregator) : base(eventAggregator)
@@ -275,6 +294,14 @@ namespace DownKyi.ViewModels.Settings
             // 是否使用默认下载目录
             AllowStatus isUseSaveVideoRootPath = SettingsManager.GetInstance().IsUseSaveVideoRootPath();
             IsUseDefaultDirectory = isUseSaveVideoRootPath == AllowStatus.YES;
+
+            // 是否弹出已下载视频再次下载否的窗口
+            AllowStatus _isRedownloadPrompt = SettingsManager.GetInstance().IsRedownloadPrompt();
+            IsRedownloadPrompt = _isRedownloadPrompt == AllowStatus.YES;
+
+            // 是否下载已下载的视频标识
+            AllowStatus _isRedownloadAllowed = SettingsManager.GetInstance().IsRedownloadAllowed();
+            IsRedownloadAllowed = _isRedownloadAllowed == AllowStatus.YES;
 
             // 默认下载目录
             SaveVideoDirectory = SettingsManager.GetInstance().GetSaveVideoRootPath();
@@ -417,6 +444,36 @@ namespace DownKyi.ViewModels.Settings
             {
                 SaveVideoDirectory = directory;
             }
+        }
+
+        // 是否弹出已下载视频再次下载否的窗口
+        private DelegateCommand isRedownloadPromptCommand;
+        public DelegateCommand IsRedownloadPromptCommand => isRedownloadPromptCommand ?? (isRedownloadPromptCommand = new DelegateCommand(ExecuteIsRedownloadPromptCommand));
+
+        /// <summary>
+        /// 修改弹出已下载视频再次下载否的窗口事件
+        /// </summary>
+        private void ExecuteIsRedownloadPromptCommand()
+        {
+            AllowStatus _isRedownloadPrompt = IsRedownloadPrompt ? AllowStatus.YES : AllowStatus.NO;
+
+            bool isSucceed = SettingsManager.GetInstance().IsRedownloadPrompt(_isRedownloadPrompt);
+            PublishTip(isSucceed);
+        }
+
+        // 是否下载已下载的视频标识
+        private DelegateCommand isRedownloadAllowedCommand;
+        public DelegateCommand IsRedownloadAllowedCommand => isRedownloadAllowedCommand ?? (isRedownloadAllowedCommand = new DelegateCommand(ExecuteIsRedownloadAllowedCommand));
+
+        /// <summary>
+        /// 修改下载已下载的视频标识事件
+        /// </summary>
+        private void ExecuteIsRedownloadAllowedCommand()
+        {
+            AllowStatus _isRedownloadAllowed = IsRedownloadAllowed ? AllowStatus.YES : AllowStatus.NO;
+
+            bool isSucceed = SettingsManager.GetInstance().IsRedownloadAllowed(_isRedownloadAllowed);
+            PublishTip(isSucceed);
         }
 
         // 所有内容选择事件
@@ -675,6 +732,7 @@ namespace DownKyi.ViewModels.Settings
 
         #endregion
 
+        #region 其他函数
         /// <summary>
         /// 返回VideoCodecs的字符串
         /// </summary>
@@ -826,6 +884,6 @@ namespace DownKyi.ViewModels.Settings
                 eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipSettingFailed"));
             }
         }
-
+        #endregion
     }
 }
