@@ -238,6 +238,8 @@
     <system:String x:Key="DefaultDirectory">默认下载目录：</system:String>
     <system:String x:Key="DefaultDirectoryTip">默认将文件下载到该文件夹中</system:String>
     <system:String x:Key="ChangeDirectory">更改目录</system:String>
+    <system:String x:Key="IsRedownloadPrompt">已下载视频再次下载是否询问</system:String>
+    <system:String x:Key="IsRedownloadAllowed">默认再次下载</system:String>
     <system:String x:Key="FileNameParts">文件命名格式</system:String>
     <system:String x:Key="FileName">文件名：</system:String>
     <system:String x:Key="OptionalFields">可选字段：</system:String>
