@@ -272,23 +272,17 @@ namespace DownKyi.Services.Download
 
                     // 如果存在下载完成列表，弹出选择框是否再次下载
                     bool isDownloaded = false;
-                    foreach (DownloadedItem item in App.DownloadedList)
+                    DownloadStorageService downloadStorage = new DownloadStorageService();
+                    string isExistedUuid = downloadStorage.GetDownloadedUuid(page.Cid, page.VideoQuality.Quality, page.VideoQuality.SelectedVideoCodec, page.AudioQualityFormat);
+                    if (!string.IsNullOrEmpty(isExistedUuid))
                     {
-                        if (item.DownloadBase == null) { continue; }
-
-                        if (item.DownloadBase.Cid == page.Cid && item.Resolution.Id == page.VideoQuality.Quality && item.AudioCodec.Name == page.AudioQualityFormat && item.VideoCodecName == page.VideoQuality.SelectedVideoCodec)
+                        if (SettingsManager.GetInstance().IsRedownloadPrompt() == AllowStatus.YES)
                         {
-                            //eventAggregator.GetEvent<MessageEvent>().Publish($"{page.Name}{DictionaryResource.GetString("TipAlreadyToAddDownloaded")}");
-                            //isDownloaded = true;
-
                             AlertService alertService = new AlertService(dialogService);
                             ButtonResult result = alertService.ShowInfo(DictionaryResource.GetString("TipAlreadyToAddDownloaded2"));
                             if (result == ButtonResult.OK)
                             {
-                                App.PropertyChangeAsync(() =>
-                                {
-                                    App.DownloadedList.Remove(item);
-                                });
+                                downloadStorage.RemoveDownloaded(isExistedUuid);
 
                                 isDownloaded = false;
                             }
@@ -296,8 +290,15 @@ namespace DownKyi.Services.Download
                             {
                                 isDownloaded = true;
                             }
+                        }
+                        else
+                        {
+                            if (SettingsManager.GetInstance().IsRedownloadAllowed() == AllowStatus.YES)
+                            {
+                                downloadStorage.RemoveDownloaded(isExistedUuid);
 
-                            break;
+                                isDownloaded = false;
+                            }
                         }
                     }
                     if (isDownloaded) { continue; }
