@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace DownKyi.Core.Storage
 {
@@ -34,7 +34,7 @@ namespace DownKyi.Core.Storage
         public static string Login { get; } = $"{Config}/Login";
 
         // Bilibili
-        private static string Bilibili { get; } = $"{Root}/Bilibili";
+        public static string Bilibili { get; } = $"{Root}/Bilibili";
 
         // 弹幕
         public static string Danmaku { get; } = $"{Bilibili}/Danmakus";
