@@ -41,6 +41,19 @@ namespace DownKyi.ViewModels.DownloadManager
                 {
                     SetDialogService();
                 }
+                else if (e.Action == NotifyCollectionChangedAction.Remove)
+                {
+                    foreach (object item in e.OldItems)
+                    {
+                        if (item is DownloadingItem downloading)
+                        {
+                            var downloadFinishedEvent = new Events.DownloadFinishedEventArgs(new DownloadedItem() { DownloadBase = downloading.DownloadBase, Downloaded = new Downloaded()});
+
+                            // 发布 MessageEvent 事件
+                            eventAggregator.GetEvent<Events.DownloadFinishedEvent>().Publish(downloadFinishedEvent);
+                        }
+                    }
+                }
             });
             SetDialogService();
 
