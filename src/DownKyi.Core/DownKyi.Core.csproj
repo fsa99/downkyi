@@ -75,6 +75,12 @@
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.112.2\lib\net40\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management" />
     <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
@@ -336,6 +342,7 @@
     <Compile Include="Storage\Database\Download\DownloadBaseDb.cs" />
     <Compile Include="Storage\Database\Download\DownloadDb.cs" />
     <Compile Include="Storage\Database\Download\DownloadedDb.cs" />
+    <Compile Include="Storage\Database\Download\DownloadedSortModel.cs" />
     <Compile Include="Storage\Database\Download\DownloadingDb.cs" />
     <Compile Include="Storage\Database\Header.cs" />
     <Compile Include="Storage\Database\HeaderDb.cs" />
@@ -362,6 +369,7 @@
     <Compile Include="Utils\QRCode.cs" />
     <Compile Include="Utils\StringLogicalComparer.cs" />
     <Compile Include="Utils\Validator\Number.cs" />
+    <Compile Include="Utils\VideoSizeGet.cs" />
     <Compile Include="Utils\VideoThumbnailGenerator.cs" />
     <Compile Include="Utils\Web.cs" />
   </ItemGroup>

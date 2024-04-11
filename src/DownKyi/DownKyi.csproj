@@ -98,12 +98,19 @@
     </ApplicationDefinition>
     <Compile Include="AppConstant.cs" />
     <Compile Include="Converter\CountConverter.cs" />
+    <Compile Include="Converter\MultiValueConverter.cs" />
     <Compile Include="CustomControl\CustomPager.xaml.cs">
       <DependentUpon>CustomPager.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomControl\CustomPagerViewModel.cs" />
+    <Compile Include="CustomControl\CustomSimplePager.xaml.cs">
+      <DependentUpon>CustomSimplePager.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControl\CustomSimplePagerViewModel.cs" />
     <Compile Include="CustomControl\MyDelegateCommand.cs" />
     <Compile Include="CustomControl\GifImage.cs" />
+    <Compile Include="Events\DownloadFinishedEvent.cs" />
+    <Compile Include="Events\DownloadFinishedEventArgs.cs" />
     <Compile Include="Events\MessageEvent.cs" />
     <Compile Include="Events\NavigationEvent.cs" />
     <Compile Include="Events\NavigationParam.cs" />
@@ -317,6 +324,10 @@
     <Page Include="CustomControl\CustomPager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControl\CustomSimplePager.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Languages\en_US.xaml">
       <Generator>MSBuild:Compile</Generator>
