@@ -7,6 +7,7 @@ using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
 using DownKyi.Core.Storage;
 using DownKyi.Core.Utils;
+using DownKyi.Events;
 using DownKyi.Images;
 using DownKyi.Models;
 using DownKyi.Utils;
@@ -30,7 +31,7 @@ namespace DownKyi.Services.Download
         protected TaskbarIcon _notifyIcon;
         protected IDialogService dialogService;
         protected ObservableCollection<DownloadingItem> downloadingList;
-        protected ObservableCollection<DownloadedItem> downloadedList;
+        //protected ObservableCollection<DownloadedItem> downloadedList;
 
         protected Task workTask;
         protected CancellationTokenSource tokenSource;
@@ -46,11 +47,9 @@ namespace DownKyi.Services.Download
         /// <param name="downloading"></param>
         /// <returns></returns>
         public DownloadService(ObservableCollection<DownloadingItem> downloadingList,
-            ObservableCollection<DownloadedItem> downloadedList,
           IDialogService dialogService)
         {
             this.downloadingList = downloadingList;
-            this.downloadedList = downloadedList;
             this.dialogService = dialogService;
         }
 
@@ -411,7 +410,7 @@ namespace DownKyi.Services.Download
                 }
 
                 // 判断下载列表中的视频是否全部下载完成
-                if (lastDownloadingCount > 0 && downloadingList.Count == 0 && downloadedList.Count > 0)
+                if (lastDownloadingCount > 0 && downloadingList.Count == 0)
                 {
                     AfterDownload();
                 }
@@ -667,12 +666,12 @@ namespace DownKyi.Services.Download
                     App.PropertyChangeAsync(new Action(() =>
                     {
                         // 加入到下载完成list中，并从下载中list去除
-                        downloadedList.Add(downloadedItem);
+                        DownloadStorageService storageService = new DownloadStorageService();
+                        storageService.AddDownloaded(downloadedItem);
+                        //downloadedList.Add(downloadedItem);
                         downloadingList.Remove(downloading);
-                        bool areSameInstance = ReferenceEquals(downloadedList, App.DownloadedList);
-
                         // 下载完成列表排序
-                        DownloadFinishedSort finishedSort = SettingsManager.GetInstance().GetDownloadFinishedSort();
+                        //DownloadFinishedSort finishedSort = SettingsManager.GetInstance().GetDownloadFinishedSort();
                         //App.SortDownloadedList(finishedSort);
                     }));
                     _notifyIcon.ShowBalloonTip(DictionaryResource.GetString("DownloadSuccess"), $"{downloadedItem.DownloadBase.Name}", BalloonIcon.Info);
@@ -797,10 +796,10 @@ namespace DownKyi.Services.Download
 
                 downloadStorageService.UpdateDownloading(item);
             }
-            foreach (DownloadedItem item in downloadedList)
-            {
-                downloadStorageService.UpdateDownloaded(item);
-            }
+            //foreach (DownloadedItem item in downloadedList)
+            //{
+            //    downloadStorageService.UpdateDownloaded(item);
+            //}
         }
         /// <summary>
         /// 启动基本下载服务
