@@ -377,6 +377,16 @@ namespace DownKyi.CustomControl
         {
             CurPageLimitsVisibility = Visibility.Collapsed;
         }
+
+        private DelegateCommand goToPageCommand;
+        public DelegateCommand GoToPageCommand => goToPageCommand ?? (goToPageCommand = new DelegateCommand(GoToPageCommandExecuted));
+        /// <summary>
+        /// 跳转到指定页码
+        /// </summary>
+        public void GoToPageCommandExecuted()
+        {
+            CurrentPage++;
+        }
         #endregion
         /// <summary>
         /// 计算页数
