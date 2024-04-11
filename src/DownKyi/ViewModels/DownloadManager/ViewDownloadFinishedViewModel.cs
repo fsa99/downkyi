@@ -1,9 +1,12 @@
 using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
+using DownKyi.Core.Storage;
 using DownKyi.Core.Utils;
 using DownKyi.CustomControl;
 using DownKyi.Events;
+using DownKyi.Images;
 using DownKyi.Services;
+using DownKyi.Services.Download;
 using DownKyi.Utils;
 using Prism.Commands;
 using Prism.Events;
@@ -13,16 +16,118 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace DownKyi.ViewModels.DownloadManager
 {
     public class ViewDownloadFinishedViewModel : BaseViewModel
     {
+        #region 其他属性
         public const string Tag = "PageDownloadManagerDownloadFinished";
+        private CancellationTokenSource tokenSource2;
+        // 下载数据存储服务
+        private readonly DownloadStorageService downloadStorageService;
+
+        #endregion
+
+        #region 页面属性申明
+        /// <summary>
+        /// 所有的下载项 数量
+        /// </summary>
+        private int recordCountDownloaded;
+
+        public int RecordCountDownloaded { get; set; }
+
+        /// <summary>
+        /// 上次选择的排序方式
+        /// </summary>
+        private int lastTimeSortSelected;
+
+        private ObservableCollection<DownloadedItem> downloadedList;
+        /// <summary>
+        /// 页面上显示的  下载项
+        /// </summary>
+        public ObservableCollection<DownloadedItem> DownloadedList
+        {
+            get => downloadedList;
+            set
+            {
+                SetProperty(ref downloadedList, value);
+            }
+        }
+
+        private CustomSimplePagerViewModel pager;
+        public CustomSimplePagerViewModel Pager
+        {
+            get => pager;
+            set => SetProperty(ref pager, value);
+        }
+
+        private int finishedSortBy;
+        public int FinishedSortBy
+        {
+            get => finishedSortBy;
+            set => SetProperty(ref finishedSortBy, value);
+        }
+
+        private Visibility downloadedItemLoadingVisibility;
+        /// <summary>
+        /// 下载完成项加载中  元素的显示控制
+        /// </summary>
+        public Visibility DownloadedItemLoadingVisibility
+        {
+            get => downloadedItemLoadingVisibility;
+            set => SetProperty(ref downloadedItemLoadingVisibility, value);
+        }
+
+        private bool isEnabled = true;
+        public bool IsEnabled
+        {
+            get => isEnabled;
+            set => SetProperty(ref isEnabled, value);
+        }
+
+        private GifImage downloadedItemLoading;
+        public GifImage DownloadedItemLoading
+        {
+            get => downloadedItemLoading;
+            set => SetProperty(ref downloadedItemLoading, value);
+        }
+
+        /// <summary>
+        /// 查询 筛选 图标
+        /// </summary>
+        public VectorImage QueryIcon { get; private set; }
+
+        /// <summary>
+        /// 导入数据库 图标
+        /// </summary>
+        public VectorImage ImportDataIcon { get; private set; }
+
+        /// <summary>
+        /// 导出数据库 图标
+        /// </summary>
+        public VectorImage ExportDataIcon { get; private set; }
+
+        /// <summary>
+        /// 清空数据库 图标
+        /// </summary>
+        public VectorImage ClearDataIcon { get; private set; }
+
+        #endregion
+
+        #region 构造函数
         public ViewDownloadFinishedViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(eventAggregator, dialogService)
         {
+            downloadStorageService = new DownloadStorageService();
+            // 设置对下载中页面 下载完成消息的监听处理
+            eventAggregator.GetEvent<DownloadFinishedEvent>().Subscribe(DownloadFinishedHandler);
+
+            // 设置页面显示的排序方式
             DownloadFinishedSort finishedSort = SettingsManager.GetInstance().GetDownloadFinishedSort();
             switch (finishedSort)
             {
@@ -48,87 +153,80 @@ namespace DownKyi.ViewModels.DownloadManager
                     FinishedSortBy = 0;
                     break;
             }
-            // 初始化DownloadedList
-            allDownloadedList = App.DownloadedList;
-            bool areSameInstance = ReferenceEquals(App.DownloadedList, allDownloadedList);
 
+            #region 图标初始化
+            QueryIcon = ButtonIcon.Instance().GeneralSearch;
+            QueryIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
+            ImportDataIcon = ButtonIcon.Instance().ImportDataIcon;
+            ImportDataIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
+            ExportDataIcon = ButtonIcon.Instance().ExportDataIcon;
+            ExportDataIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
+            ClearDataIcon = ButtonIcon.Instance().ClearDataIcon;
+            ClearDataIcon.Fill = DictionaryResource.GetColor("ColorBackgroundGrey");
+            #endregion
+
+            DownloadedItemLoading = new GifImage(Properties.Resources.loading);
+            DownloadedItemLoading.StartAnimate();
+            DownloadedItemLoadingVisibility = Visibility.Collapsed;
+
+            // 初始化DownloadedList
+            recordCountDownloaded = downloadStorageService.GetRecordCount();
+            DownloadedList = new ObservableCollection<DownloadedItem>();
+            UpdateDownloadedItemList(1);
             lastTimeSortSelected = FinishedSortBy;
-            SortallDownloadedList(finishedSort);
-            Pager = new CustomSimplePagerViewModel(allDownloadedList.Count);
+            Pager = new CustomSimplePagerViewModel(recordCountDownloaded);
             Pager.CurrentChanged += OnCurrentChanged_Pager;
             Pager.ItemsPerPageChanged += OnItemsPerPageChanged_Pager;
             Pager.CurrentPage = 1;
 
-            allDownloadedList.CollectionChanged += new NotifyCollectionChangedEventHandler((sender, e) =>
+            DownloadedList.CollectionChanged += new NotifyCollectionChangedEventHandler((sender, e) =>
             {
                 if (e.Action == NotifyCollectionChangedAction.Add)
                 {
+                    UpdateEventListeners();
                     SetDialogService();
-                    Pager.RecordCount = allDownloadedList.Count;
-                    DownloadedList = GetPagedData(Pager.CurrentPage, Pager.ItemsPerPage);
+                }
+                else if (e.Action == NotifyCollectionChangedAction.Remove)
+                {
+                    SetRecordCountDownloaded();
                 }
             });
-            bool areSameInstance1 = ReferenceEquals(App.DownloadedList, allDownloadedList);
+
+            foreach (var downloadedItem in DownloadedList)
+            {
+                downloadedItem.DownloadedRemove += DownloadedList_DownloadedRemove;
+            }
 
             SetDialogService();
-            DownloadedList = GetPagedData(Pager.CurrentPage, Pager.ItemsPerPage);
-        }
-        #region 页面属性申明
-        /// <summary>
-        /// 所有的下载项
-        /// </summary>
-        private ObservableCollection<DownloadedItem> allDownloadedList;
-
-        public ObservableCollection<DownloadedItem> AllDownloadedList { get; set; }
-
-        /// <summary>
-        /// 上次选择的排序方式
-        /// </summary>
-        private int lastTimeSortSelected;
-
-        private ObservableCollection<DownloadedItem> downloadedList;
-        /// <summary>
-        /// 页面上显示的  下载项
-        /// </summary>
-        public ObservableCollection<DownloadedItem> DownloadedList
-        {
-            get => downloadedList;
-            set
-            {
-                SetProperty(ref downloadedList, value);
-                UpdateEventListeners();
-            }
-        }
-        private CustomSimplePagerViewModel pager;
-        public CustomSimplePagerViewModel Pager
-        {
-            get => pager;
-            set => SetProperty(ref pager, value);
         }
 
-        private int finishedSortBy;
-        public int FinishedSortBy
-        {
-            get => finishedSortBy;
-            set => SetProperty(ref finishedSortBy, value);
-        }
-        private void UpdateEventListeners()
-        {
-            // 移除之前的监听
-            foreach (var item in DownloadedList)    
-            {
-                item.PublishTip -= PublishTipHandler;
-            }
-
-            // 添加新的监听
-            foreach (var item in DownloadedList)
-            {
-                item.PublishTip += PublishTipHandler;
-            }
-        }
         #endregion
 
         #region 命令申明
+        /// <summary>
+        /// 视频下载完成后的处理    视频下载完成弹窗事件的处理函数
+        /// (只有当前页面的item数少于每页显示的条数时才会添加至DownloadedList中)
+        /// </summary>
+        /// <param name="e"></param>
+        private void DownloadFinishedHandler(DownloadFinishedEventArgs e)
+        {
+            // 处理下载完成事件
+            // 这里可以更新 ViewModel 中的数据或执行其他操作
+            if (e.DownloadedItem is DownloadedItem downloadedItem)
+            {
+                if (DownloadedList.Count < Pager.ItemsPerPage)
+                {
+                    downloadedItem.Downloaded = downloadStorageService.GetDownloaded(downloadedItem.DownloadBase.Uuid);
+                    downloadedItem.DownloadedRemove += DownloadedList_DownloadedRemove;
+                    DownloadedList.Add(downloadedItem);
+                }
+                recordCountDownloaded += 1;
+                Pager.RecordCount = recordCountDownloaded;
+            }
+        }
+
+        #region 弃用的刷新
+
         private DelegateCommand refreshDownloadFinishedList;
         /// <summary>
         /// 刷新下载完成列表
@@ -138,13 +236,12 @@ namespace DownKyi.ViewModels.DownloadManager
         {
             Task.Run(() =>
             {
-                App.RefreshDownloadedList();
                 ExecuteFinishedSortCommand(lastTimeSortSelected);
                 PublishTipHandler(DictionaryResource.GetString("RefreshCompletedTip"));
             }); 
         }
-
-        // 两次选则相同的排序 则逆序
+        #endregion
+        // 两次选则相同的排序 则逆序   目前为当页逆序，非整个数据库中的逆序
         private DelegateCommand<object> reverseSortCommand;
         public DelegateCommand<object> ReverseSortCommand => reverseSortCommand ?? (reverseSortCommand = new DelegateCommand<object>(ExecuteReverseSortCommand));
 
@@ -177,78 +274,66 @@ namespace DownKyi.ViewModels.DownloadManager
             //switch (index)
             //{
             //    case 1:
-            //        App.SortDownloadedList(DownloadFinishedSort.UPZHUID);
+            //        SortallDownloadedList(DownloadFinishedSort.UPZHUID);
             //        // 更新设置
             //        SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.UPZHUID);
             //        break;
             //    case 2:
-            //        App.SortDownloadedList(DownloadFinishedSort.FILESIZE);
+            //        SortallDownloadedList(DownloadFinishedSort.FILESIZE);
             //        // 更新设置
             //        SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.FILESIZE);
             //        break;
             //    case 3:
-            //        App.SortDownloadedList(DownloadFinishedSort.VIDEODURATION);
+            //        SortallDownloadedList(DownloadFinishedSort.VIDEODURATION);
             //        // 更新设置
             //        SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.VIDEODURATION);
             //        break;
             //    case 4:
-            //        App.SortDownloadedList(DownloadFinishedSort.ZONEID);
+            //        SortallDownloadedList(DownloadFinishedSort.ZONEID);
             //        // 更新设置
             //        SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.ZONEID);
             //        break;
             //    case 5:
-            //        App.SortDownloadedList(DownloadFinishedSort.NUMBER);
+            //        SortallDownloadedList(DownloadFinishedSort.NUMBER);
             //        // 更新设置
             //        SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.NUMBER);
             //        break;
             //    default:
-            //        App.SortDownloadedList(DownloadFinishedSort.DOWNLOAD);
+            //        SortallDownloadedList(DownloadFinishedSort.DOWNLOAD);
             //        // 更新设置
             //        SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.DOWNLOAD);
             //        break;
             //}
-            #endregion
-            switch (index)
-            {
-                case 1:
-                    SortallDownloadedList(DownloadFinishedSort.UPZHUID);
-                    // 更新设置
-                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.UPZHUID);
-                    break;
-                case 2:
-                    SortallDownloadedList(DownloadFinishedSort.FILESIZE);
-                    // 更新设置
-                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.FILESIZE);
-                    break;
-                case 3:
-                    SortallDownloadedList(DownloadFinishedSort.VIDEODURATION);
-                    // 更新设置
-                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.VIDEODURATION);
-                    break;
-                case 4:
-                    SortallDownloadedList(DownloadFinishedSort.ZONEID);
-                    // 更新设置
-                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.ZONEID);
-                    break;
-                case 5:
-                    SortallDownloadedList(DownloadFinishedSort.NUMBER);
-                    // 更新设置
-                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.NUMBER);
-                    break;
-                default:
-                    SortallDownloadedList(DownloadFinishedSort.DOWNLOAD);
-                    // 更新设置
-                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.DOWNLOAD);
-                    break;
-            }
             //Application.Current.Dispatcher.Invoke(() =>
             //{
             //    DownloadedList.Clear();
             //    DownloadedList.AddRange(newData);
             //});
+            #endregion
+            switch (index)
+            {
+                case 1:
+                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.UPZHUID);
+                    break;
+                case 2:
+                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.FILESIZE);
+                    break;
+                case 3:
+                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.VIDEODURATION);
+                    break;
+                case 4:
+                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.ZONEID);
+                    break;
+                case 5:
+                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.NUMBER);
+                    break;
+                default:
+                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.DOWNLOAD);
+                    break;
+            }
             lastTimeSortSelected = index;
-            //allDownloadedList = App.DownloadedList;
-            DownloadedList = GetPagedData(Pager.CurrentPage, Pager.ItemsPerPage);
+            DownloadedList = new ObservableCollection<DownloadedItem>();
+            UpdateDownloadedItemList(1);
         }
 
         // 清空下载完成列表事件
@@ -267,46 +352,211 @@ namespace DownKyi.ViewModels.DownloadManager
                 return;
             }
 
-            // 使用Clear()不能触发NotifyCollectionChangedAction.Remove事件
-            // 因此遍历删除
-            // DownloadingList中元素被删除后不能继续遍历
             await Task.Run(() =>
             {
-                List<DownloadedItem> list = DownloadedList.ToList();
-                foreach (DownloadedItem item in list)
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    App.PropertyChangeAsync(new Action(() =>
-                    {
-                        App.DownloadedList.Remove(item);
-                    }));
-                }
+                    DownloadedList.Clear();
+                });
+                downloadStorageService.ClearAll();
             });
         }
 
+        // 打包导出数据库及其配置文件
+        private DelegateCommand packageDatabaseAndConfigFilesCommand;
+
+        public DelegateCommand PackageDatabaseAndConfigFilesCommand => packageDatabaseAndConfigFilesCommand ?? (packageDatabaseAndConfigFilesCommand = new DelegateCommand(ExecutePackageDatabaseAndConfigFiles));
+
+        /// <summary>
+        /// 打包当前环境中的数据库及其配置文件
+        /// </summary>
+        private async void ExecutePackageDatabaseAndConfigFiles()
+        {
+            // 选择目标文件夹
+            string directory = DialogUtils.SetDownloadDirectory();
+            if (directory == "") { return; }
+
+            string[] sourceFolderPaths = new string[] { StorageManager.GetBilibili(), StorageManager.GetConfig(), StorageManager.GetStorage()};
+            Task.Run(() => 
+            {
+                FileHelper.CreateZipArchive(sourceFolderPaths, directory);
+            });
+        }
+
+        // 载入数据库及其配置文件
+        private DelegateCommand loadDatabaseAndConfigFilesCommand;
+
+        public DelegateCommand LoadDatabaseAndConfigFilesCommand => loadDatabaseAndConfigFilesCommand ?? (loadDatabaseAndConfigFilesCommand = new DelegateCommand(ExecuteLoadDatabaseAndConfigFiles));
+
+        /// <summary>
+        /// 打包当前环境中的数据库及其配置文件
+        /// </summary>
+        private async void ExecuteLoadDatabaseAndConfigFiles()
+        {
+            // 选择目标文件夹
+            string directory = DialogUtils.SetDownloadDirectory();
+            if (directory == "") { return; }
+
+        }
+
+        // 查询或筛选数据
+        private DelegateCommand queryingOrFilteringDataCommand;
+
+        public DelegateCommand QueryingOrFilteringDataCommand => queryingOrFilteringDataCommand ?? (queryingOrFilteringDataCommand = new DelegateCommand(ExecuteQueryingOrFilteringData));
+
+        /// <summary>
+        /// 查询或筛选数据
+        /// </summary>
+        private async void ExecuteQueryingOrFilteringData()
+        {
+            // 选择目标文件夹
+            string directory = DialogUtils.SetDownloadDirectory();
+            if (directory == "") { return; }
+
+        }
         #endregion
 
         #region 功能性函数
-        private void OnItemsPerPageChanged_Pager(int current, int itemsPerPage)
+        /// <summary>
+        /// 移除  下载完成项的监听  操作
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DownloadedList_DownloadedRemove(object sender, DownloadFinishedEventArgs e)
         {
-            DownloadedList = GetPagedData(current, itemsPerPage);
+            DownloadedList.Remove(e.DownloadedItem);
         }
 
+        /// <summary>
+        /// 设置记录总数
+        /// </summary>
+        private void SetRecordCountDownloaded()
+        {
+            recordCountDownloaded -= 1;
+            Pager.RecordCount = recordCountDownloaded;
+        }
+
+        /// <summary>
+        /// 单页显示条数改变   处理函数
+        /// </summary>
+        /// <param name="current"></param>
+        /// <param name="limitNum"></param>
+        private void OnItemsPerPageChanged_Pager(int current, int limitNum)
+        {
+            UpdateDownloadedItemList(current);
+        }
+
+        /// <summary>
+        /// 当前页数改变       处理函数
+        /// </summary>
+        /// <param name="old"></param>
+        /// <param name="current"></param>
+        /// <param name="limitNum"></param>
+        /// <returns></returns>
         private bool OnCurrentChanged_Pager(int old, int current, int limitNum)
         {
             if (old != current)
             {
-                DownloadedList = GetPagedData(current, limitNum);
+                UpdateDownloadedItemList(current);
             }
             return true;
         }
 
-        private async void SetDialogService()
+        private async Task UpdateDownloadedItemList(int current)
+        {
+            DownloadedList.Clear();
+
+            DownloadedItemLoadingVisibility = Visibility.Visible;
+
+            // 是否正在获取数据
+            // 在所有的退出分支中都需要设为true
+            //IsEnabled = false;
+
+            await Task.Run(new Action(() =>
+            {
+                CancellationToken cancellationToken = tokenSource2.Token;
+
+                //List<DownloadedItem> downloadedLists = downloadStorageService.GetSortPageDownloaded(current);
+                List<string> downloadedLists = downloadStorageService.GetSortPageDownloaded1(current);
+                if (downloadedLists == null || downloadedLists.Count == 0)
+                {
+                    return;
+                }
+                DownloadedItemLoadingVisibility = Visibility.Collapsed;
+                GetDownloadedList(downloadedLists, DownloadedList, cancellationToken);
+            }), (tokenSource2 = new CancellationTokenSource()).Token);
+
+            //IsEnabled = true;
+        }
+
+        public void GetDownloadedList(List<string> downloadedLists, ObservableCollection<DownloadedItem> result, CancellationToken cancellationToken)
+        {
+            int order = 0;
+            foreach (var uuid in downloadedLists)
+            {
+                order++;
+
+                App.PropertyChangeAsync(new Action(() =>
+                {
+                    if (!result.ToList().Exists(t => t.DownloadBase.Uuid == uuid))
+                    {
+                        result.Add(downloadStorageService.GetDownloadedItem(uuid));
+                        Thread.Sleep(10);
+                    }
+                }));
+
+                // 判断是否该结束线程，若为true，跳出循环
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    break;
+                }
+            }
+        }
+        public void GetDownloadedList(List<DownloadedItem> downloadedLists, ObservableCollection<DownloadedItem> result, CancellationToken cancellationToken)
+        {
+            int order = 0;
+            foreach (DownloadedItem downloaded in downloadedLists)
+            {
+                order++;
+
+                App.PropertyChangeAsync(new Action(() =>
+                {
+                    if (!result.ToList().Exists(t => t.DownloadBase.Uuid == downloaded.DownloadBase.Uuid))
+                    {
+                        result.Add(downloaded);
+                    }
+                }));
+
+                // 判断是否该结束线程，若为true，跳出循环
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 对 DownloadItem发布消息事件的监听
+        /// </summary>
+        private void UpdateEventListeners()
+        {
+            foreach (var item in DownloadedList)
+            {
+                item.PublishTip -= PublishTipHandler;
+                item.PublishTip += PublishTipHandler;
+            }
+        }
+
+        /// <summary>
+        /// 设置弹窗服务
+        /// </summary>
+        private async Task SetDialogService()
         {
             try
             {
                 await Task.Run(() =>
                 {
-                    List<DownloadedItem> list = allDownloadedList.ToList();
+                    List<DownloadedItem> list = DownloadedList.ToList();
                     foreach (var item in list)
                     {
                         if (item != null && item.DialogService == null)
@@ -323,35 +573,13 @@ namespace DownKyi.ViewModels.DownloadManager
             }
         }
 
-        /// <summary>
-        /// 获取分页的数据
-        /// </summary>
-        /// <param name="pageNumber"></param>
-        /// <param name="pageSize"></param>
-        /// <returns></returns>
-        public ObservableCollection<DownloadedItem> GetPagedData(int pageNumber, int pageSize)
-        {
-            bool areSameInstance = ReferenceEquals(App.DownloadedList, allDownloadedList);
-
-            int startIndex = (pageNumber - 1) * pageSize;
-            int endIndex = startIndex + pageSize;
-            if (startIndex >= 0 && startIndex < allDownloadedList.Count)
-            {
-                endIndex = Math.Min(endIndex, allDownloadedList.Count);
-
-                var pagedData = new ObservableCollection<DownloadedItem>(
-                    allDownloadedList.Skip(startIndex).Take(endIndex - startIndex));
-                return pagedData;
-            }
-            return new ObservableCollection<DownloadedItem>(); // Return empty if out of bounds
-        }
-
         public override void OnNavigatedFrom(NavigationContext navigationContext)
         {
             base.OnNavigatedFrom(navigationContext);
 
             SetDialogService();
         }
+
         /// <summary>
         /// 发送需要显示的tip
         /// </summary>
@@ -361,36 +589,6 @@ namespace DownKyi.ViewModels.DownloadManager
             eventAggregator.GetEvent<MessageEvent>().Publish(message);
         }
 
-        /// <summary>
-        /// 排序方法
-        /// </summary>
-        /// <param name="finishedSort"></param>
-        public void SortallDownloadedList(DownloadFinishedSort finishedSort)
-        {
-            switch (finishedSort)
-            {
-                case DownloadFinishedSort.DOWNLOAD:
-                    allDownloadedList = new ObservableCollection<DownloadedItem>(allDownloadedList.OrderBy(item => item.Downloaded.FinishedTimestamp));
-                    break;
-                case DownloadFinishedSort.NUMBER:
-                    allDownloadedList = new ObservableCollection<DownloadedItem>(allDownloadedList.OrderBy(item => item.MainTitle).ThenBy(item => item.Order));
-                    break;
-                case DownloadFinishedSort.UPZHUID:
-                    allDownloadedList = new ObservableCollection<DownloadedItem>(allDownloadedList.OrderBy(item => item.DownloadBase.UpOwner.Mid).ThenBy(item => item.MainTitle).ThenBy(item => item.Order));
-                    break;
-                case DownloadFinishedSort.FILESIZE:
-                    allDownloadedList = new ObservableCollection<DownloadedItem>(allDownloadedList.OrderBy(item => Format.ParseFileSize(item.FileSize)).ThenBy(item => item.Order));
-                    break;
-                case DownloadFinishedSort.VIDEODURATION:
-                    allDownloadedList = new ObservableCollection<DownloadedItem>(allDownloadedList.OrderBy(item => Format.ConvertTimeToSeconds(item.Duration)).ThenBy(item => item.Order));
-                    break;
-                case DownloadFinishedSort.ZONEID:
-                    allDownloadedList = new ObservableCollection<DownloadedItem>(allDownloadedList.OrderBy(item => item.DownloadBase.ZoneId).ThenBy(item => item.DownloadBase.UpOwner.Mid).ThenBy(item => item.MainTitle).ThenBy(item => item.Order));
-                    break;
-                default:
-                    break;
-            }
-        }
         #endregion
     }
 }
