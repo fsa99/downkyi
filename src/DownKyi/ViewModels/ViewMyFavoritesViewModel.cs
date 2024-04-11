@@ -1,4 +1,4 @@
-﻿using DownKyi.Core.BiliApi.Favorites;
+using DownKyi.Core.BiliApi.Favorites;
 using DownKyi.Core.BiliApi.VideoStream;
 using DownKyi.CustomControl;
 using DownKyi.Events;
@@ -413,7 +413,7 @@ namespace DownKyi.ViewModels
             return true;
         }
 
-        private async void UpdateFavoritesMediaList(int current)
+        private async Task UpdateFavoritesMediaList(int current)
         {
             Medias.Clear();
             IsSelectAll = false;
