@@ -2,9 +2,11 @@ using DownKyi.Core.Settings;
 using DownKyi.Core.Storage;
 using DownKyi.Core.UpupTheme;
 using DownKyi.Core.Utils;
+using DownKyi.Events;
 using DownKyi.Images;
 using DownKyi.Models;
 using DownKyi.Services;
+using DownKyi.Services.Download;
 using DownKyi.Utils;
 using DownKyi.ViewModels.Dialogs;
 using Prism.Commands;
@@ -18,14 +20,22 @@ namespace DownKyi.ViewModels.DownloadManager
 {
     public class DownloadedItem : DownloadBaseItem
     {
+        #region 构造函数
         public DownloadedItem() : this(null)
         {
         }
-
-        public event Action<string> PublishTip;
-
         public DownloadedItem(IDialogService dialogService) : base(dialogService) { }
 
+        #endregion
+
+        #region 其他属性
+        public event Action<string> PublishTip;
+
+        public event EventHandler<DownloadFinishedEventArgs> DownloadedRemove;
+
+        #endregion
+
+        #region 页面属性
         // model数据
         public Downloaded Downloaded { get; set; }
 
@@ -50,6 +60,8 @@ namespace DownKyi.ViewModels.DownloadManager
                 RaisePropertyChanged("FinishedTime");
             }
         }
+
+        #endregion
 
         #region 控制按钮 
         public static VectorImage OpenFolder { get; private set; }
@@ -160,8 +172,9 @@ namespace DownKyi.ViewModels.DownloadManager
             {
                 return;
             }
-
-            App.DownloadedList.Remove(this);
+            OnDownloadedRemove(new DownloadFinishedEventArgs(this));
+            DownloadStorageService storageService = new DownloadStorageService();
+            storageService.RemoveDownloaded(this);
         }
 
         // 生成UPUPoo资源事件
@@ -173,7 +186,7 @@ namespace DownKyi.ViewModels.DownloadManager
             if (DownloadBase == null) { return; }
             // 选择文件夹
             string directory = SetDirectory(DialogService);
-            if (string.IsNullOrEmpty(directory)){ return; }
+            if (string.IsNullOrEmpty(directory)) { return; }
 
             // 构造upup类
             UpupModel upupModel = new UpupModel()
@@ -216,7 +229,7 @@ namespace DownKyi.ViewModels.DownloadManager
                     }
                 }
             }
-            
+
 
             // 判断是否下载了视频
             if (DownloadBase.NeedDownloadContent.ContainsKey("downloadVideo") && DownloadBase.NeedDownloadContent["downloadVideo"])
@@ -253,6 +266,8 @@ namespace DownKyi.ViewModels.DownloadManager
             }
         }
         #endregion
+
+        #region 其他功能性函数
         /// <summary>
         /// 选择文件夹
         /// </summary>
@@ -304,5 +319,12 @@ namespace DownKyi.ViewModels.DownloadManager
 
             return directory;
         }
+
+        protected virtual void OnDownloadedRemove(DownloadFinishedEventArgs e)
+        {
+            DownloadedRemove?.Invoke(this, e);
+        }
+
+        #endregion
     }
 }
