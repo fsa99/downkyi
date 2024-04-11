@@ -21,7 +21,7 @@
         <WindowChrome
             CaptionHeight="0"
             CornerRadius="8"
-            GlassFrameThickness="0"
+            GlassFrameThickness="-1"
             NonClientFrameEdges="None"
             ResizeBorderThickness="4"
             UseAeroCaptionButtons="False" />
@@ -33,7 +33,10 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="0" CornerRadius="0"  Background="#00FFFFFF">
+    <Border BorderBrush="Transparent" Margin="0" BorderThickness="0" CornerRadius="8"  Background="#00FFFFFF">
+        <Border.Effect>
+            <DropShadowEffect ShadowDepth="3" BlurRadius="1" Opacity="0.7" Color="#AA6A0A"/>
+        </Border.Effect>
         <Border.Style>
             <Style TargetType="{x:Type Border}">
                 <Style.Triggers>
