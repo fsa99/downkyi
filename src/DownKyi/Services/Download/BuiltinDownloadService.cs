@@ -21,9 +21,8 @@ namespace DownKyi.Services.Download
     public class BuiltinDownloadService : DownloadService, IDownloadService
     {
         public BuiltinDownloadService(ObservableCollection<DownloadingItem> downloadingList, 
-            ObservableCollection<DownloadedItem> downloadedList,
             IDialogService dialogService
-            ) : base(downloadingList, downloadedList, dialogService)
+            ) : base(downloadingList, dialogService)
         {
             Tag = "BuiltinDownloadService";
         }
