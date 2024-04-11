@@ -1,19 +1,16 @@
-using DownKyi.Core.Logging;
-using DownKyi.Core.Settings;
 using DownKyi.Core.Storage.Database.Download;
+using DownKyi.Events;
 using DownKyi.Models;
 using DownKyi.ViewModels.DownloadManager;
-using Newtonsoft.Json;
-using System;
+using Prism.Events;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 
 namespace DownKyi.Services.Download
 {
     public class DownloadStorageService
     {
+        public DownloadStorageService() { }
+
         ~DownloadStorageService()
         {
             DownloadingDb downloadingDb = new DownloadingDb();
@@ -34,17 +31,6 @@ namespace DownKyi.Services.Download
         {
             if (downloadingItem == null || downloadingItem.DownloadBase == null) { return; }
 
-            //LogManager.Info("数据库交互记录", nameof(RemoveDownloading), $"添加下载中数据{downloadingItem.DownloadBase.Uuid}");
-            //string jsonContent = JsonConvert.SerializeObject(downloadingItem, Formatting.Indented);
-            //string fileName = $"{downloadingItem.DownloadBase.Uuid}_{Stopwatch.GetTimestamp()}.json";
-            //string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            //string filePath = Path.Combine(appDirectory, "jsonData", fileName);
-            //Directory.CreateDirectory(Path.Combine(appDirectory, "jsonData"));
-            //using (StreamWriter sw = new StreamWriter(filePath))
-            //{
-            //    sw.Write(jsonContent);
-            //}
-
             AddDownloadBase(downloadingItem.DownloadBase);
 
             DownloadingDb downloadingDb = new DownloadingDb();
@@ -53,7 +39,6 @@ namespace DownKyi.Services.Download
             {
                 downloadingDb.Insert(downloadingItem.DownloadBase.Uuid, downloadingItem.Downloading);
             }
-            //downloadingDb.Close();
         }
 
         /// <summary>
@@ -64,11 +49,8 @@ namespace DownKyi.Services.Download
         {
             if (downloadingItem == null || downloadingItem.DownloadBase == null) { return; }
 
-            // RemoveDownloadBase(downloadingItem.DownloadBase.Uuid);
-
             DownloadingDb downloadingDb = new DownloadingDb();
-            downloadingDb.Delete(downloadingItem.DownloadBase.Uuid);
-            //downloadingDb.Close();
+            downloadingDb.DeleteByid(downloadingItem.DownloadBase.Uuid);
         }
 
         /// <summary>
@@ -80,7 +62,6 @@ namespace DownKyi.Services.Download
             // 从数据库获取数据
             DownloadingDb downloadingDb = new DownloadingDb();
             Dictionary<string, object> dic = downloadingDb.QueryAll();
-            //downloadingDb.Close();
 
             // 遍历
             List<DownloadingItem> list = new List<DownloadingItem>();
@@ -114,13 +95,11 @@ namespace DownKyi.Services.Download
 
             DownloadingDb downloadingDb = new DownloadingDb();
             downloadingDb.Update(downloadingItem.DownloadBase.Uuid, downloadingItem.Downloading);
-            //downloadingDb.Close();
         }
 
         #endregion
 
         #region 下载完成数据
-
         /// <summary>
         /// 添加下载完成数据
         /// </summary>
@@ -135,9 +114,17 @@ namespace DownKyi.Services.Download
             object obj = downloadedDb.QueryById(downloadedItem.DownloadBase.Uuid);
             if (obj == null)
             {
-                downloadedDb.Insert(downloadedItem.DownloadBase.Uuid, downloadedItem.Downloaded);
+                downloadedDb.SaveDownloaded(downloadedItem.DownloadBase.Uuid, downloadedItem.Downloaded);
             }
-            //downloadedDb.Close();
+        }
+
+        /// <summary>
+        /// 清空所有下载完成记录
+        /// </summary>
+        public void ClearAll()
+        {
+            DownloadedDb downloadedDb = new DownloadedDb();
+            downloadedDb.ClearAll();
         }
 
         /// <summary>
@@ -148,24 +135,24 @@ namespace DownKyi.Services.Download
         {
             if (downloadedItem == null || downloadedItem.DownloadBase == null) { return; }
 
-            LogManager.Info("数据库交互记录", nameof(AddDownloaded), $"删除下载完成数据{downloadedItem.DownloadBase.Uuid}");
-
-            string jsonContent = JsonConvert.SerializeObject(downloadedItem, Formatting.Indented);
-            string fileName = $"{downloadedItem.DownloadBase.Uuid}_{Stopwatch.GetTimestamp()}.json";
-            string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            string filePath = Path.Combine(appDirectory, "jsonData", fileName);
-            Directory.CreateDirectory(Path.Combine(appDirectory, "jsonData"));
-            //File.WriteAllText(filePath, jsonContent);
-            using (StreamWriter sw = new StreamWriter(filePath))
-            {
-                sw.Write(jsonContent);
-            }
-
             RemoveDownloadBase(downloadedItem.DownloadBase.Uuid);
 
             DownloadedDb downloadedDb = new DownloadedDb();
             downloadedDb.Delete(downloadedItem.DownloadBase.Uuid);
-            //downloadedDb.Close();
+        }
+
+        /// <summary>
+        /// 删除下载完成数据
+        /// </summary>
+        /// <param name="uuid"></param>
+        public void RemoveDownloaded(string uuid)
+        {
+            if (string.IsNullOrEmpty(uuid)) { return; }
+
+            RemoveDownloadBase(uuid);
+
+            DownloadedDb downloadedDb = new DownloadedDb();
+            downloadedDb.Delete(uuid);
         }
 
         /// <summary>
@@ -175,29 +162,69 @@ namespace DownKyi.Services.Download
         public List<DownloadedItem> GetDownloaded()
         {
             // 从数据库获取数据
-            DownloadedDb downloadedDb = new DownloadedDb();
-            Dictionary<string, object> dic = downloadedDb.QueryAll();
-            //downloadedDb.Close();
-
-            // 遍历
             List<DownloadedItem> list = new List<DownloadedItem>();
-            foreach (KeyValuePair<string, object> item in dic)
+            DownloadedDb downloadedDb = new DownloadedDb();
+            //Dictionary<string, object> dic = downloadedDb.QueryAll();
+            //// 遍历downloadedDb
+            //foreach (KeyValuePair<string, object> item in dic)
+            //{
+            //    if (item.Value is Downloaded downloaded)
+            //    {
+            //        downloadedDb.SaveDownloaded(item.Key, item.Value);
+            //        DownloadedItem downloadedItem = new DownloadedItem
+            //        {
+            //            DownloadBase = GetDownloadBase(item.Key),
+            //            Downloaded = downloaded
+            //        };
+
+            //        if (downloadedItem.DownloadBase == null) { continue; }
+
+            //        list.Add(downloadedItem);
+            //    }
+            //}
+
+            List<dynamic> downloadeds = downloadedDb.QueryAll();
+            foreach (dynamic item in downloadeds)
             {
-                if (item.Value is Downloaded downloaded)
+                Downloaded downloaded = Downloaded.FromDynamic(item);
+                DownloadedItem downloadedItem = new DownloadedItem
                 {
-                    DownloadedItem downloadedItem = new DownloadedItem
-                    {
-                        DownloadBase = GetDownloadBase(item.Key),
-                        Downloaded = downloaded
-                    };
+                    DownloadBase = GetDownloadBase(item.Uuid),
+                    Downloaded = downloaded
+                };
 
-                    if (downloadedItem.DownloadBase == null) { continue; }
+                if (downloadedItem.DownloadBase == null) { continue; }
 
-                    list.Add(downloadedItem);
-                }
+                list.Add(downloadedItem);
             }
 
             return list;
+        }
+
+        /// <summary>
+        /// 获取所有的下载完成数据
+        /// </summary>
+        /// <returns></returns>
+        public DownloadedItem GetDownloadedItem(string uuid)
+        {
+            DownloadedDb downloadedDb = new DownloadedDb();
+
+            return new DownloadedItem()
+            {
+                Downloaded = GetDownloaded(uuid),
+                DownloadBase = GetDownloadBase(uuid)
+            };
+        }
+
+        /// <summary>
+        /// 获取Uuid对应的下载完成数据
+        /// </summary>
+        /// <returns></returns>
+        public Downloaded GetDownloaded(string Uuid)
+        {
+            DownloadedDb downloadedDb = new DownloadedDb();
+            dynamic downloaded = downloadedDb.QueryByUuid(Uuid);
+            return Downloaded.FromDynamic(downloaded);
         }
 
         /// <summary>
@@ -206,47 +233,45 @@ namespace DownKyi.Services.Download
         /// <returns></returns>
         public List<DownloadedItem> GetSortPageDownloaded(int curPage = 1)
         {
-            if (curPage < 1) { curPage = 1; }
-            int itemsPer = SettingsManager.GetInstance().GetLastItemsPerPage();
-            int startIndex = itemsPer * (curPage - 1);
-            DownloadFinishedSort finishedSort = SettingsManager.GetInstance().GetDownloadFinishedSort();
-            List <DownloadedItem> allDownloadedItems = GetDownloaded();
-            if (allDownloadedItems.Any())
+            List<DownloadedItem> list = new List<DownloadedItem>();
+            DownloadedDb downloadedDb = new DownloadedDb();
+            List<dynamic> downloadeds = downloadedDb.QueryPageData(curPage);
+            foreach (dynamic item in downloadeds)
             {
-                switch (finishedSort)
+                Downloaded downloaded = Downloaded.FromDynamic(item);
+                DownloadedItem downloadedItem = new DownloadedItem
                 {
-                    case DownloadFinishedSort.DOWNLOAD:
-                        allDownloadedItems = allDownloadedItems.OrderBy(item => item.Downloaded.FinishedTimestamp).Skip(startIndex).Take(itemsPer).ToList();
-                        break;
-                    case DownloadFinishedSort.NUMBER:
-                        allDownloadedItems = allDownloadedItems.OrderBy(item => item.MainTitle).ThenBy(item => item.Order).Skip(startIndex).Take(itemsPer).ToList();
-                        break;
-                    case DownloadFinishedSort.UPZHUID:
-                        allDownloadedItems = allDownloadedItems.OrderBy(item => item.DownloadBase.UpOwner.Mid).ThenBy(item => item.MainTitle).ThenBy(item => item.Order).Skip(startIndex).Take(itemsPer).ToList();
-                        break;
-                    case DownloadFinishedSort.FILESIZE:
-                        allDownloadedItems = allDownloadedItems.OrderBy(item => Core.Utils.Format.ParseFileSize(item.FileSize)).ThenBy(item => item.Order).Skip(startIndex).Take(itemsPer).ToList();
-                        break;
-                    case DownloadFinishedSort.VIDEODURATION:
-                        allDownloadedItems = allDownloadedItems.OrderBy(item => DownKyi.Core.Utils.Format.ConvertTimeToSeconds(item.Duration)).ThenBy(item => item.Order).Skip(startIndex).Take(itemsPer).ToList();
-                        break;
-                    case DownloadFinishedSort.ZONEID:
-                        allDownloadedItems = allDownloadedItems.OrderBy(item => item.DownloadBase.ZoneId).ThenBy(item => item.DownloadBase.UpOwner.Mid).ThenBy(item => item.MainTitle).ThenBy(item => item.Order).Skip(startIndex).Take(itemsPer).ToList();
-                        break;
-                    default:
-                        break;
-                }
+                    DownloadBase = GetDownloadBase(item.Uuid),
+                    Downloaded = downloaded
+                };
+
+                if (downloadedItem.DownloadBase == null) { continue; }
+
+                list.Add(downloadedItem);
             }
-            return allDownloadedItems;
-        }
 
-        public List<DownloadedItem> GetFilterDownloaded(long upMid = -1,int zoneId = -1, int curpage = 1)
+            return list;
+
+            // 测试
+
+            //DownloadBaseProDb downloadedBaseProDb = new DownloadBaseProDb();
+            //foreach (var item in allDownloadedItems)
+            //{
+            //    downloadedBaseProDb.InsertDownloadBase(item?.DownloadBase.Uuid, item?.DownloadBase);
+            //}
+
+            //var aaaaaaaaa = downloadedBaseProDb.QueryAll();
+            //return allDownloadedItems;
+        }
+        /// <summary>
+        /// 获取下载完成数据  排序的分页的
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetSortPageDownloaded1(int curPage = 1)
         {
-            List<DownloadedItem> allDownloadedItems = GetDownloaded();
-            allDownloadedItems = allDownloadedItems.Where(x => x.UpOwner.Mid == upMid).ToList();
-            return allDownloadedItems;
+            DownloadedDb downloadedDb = new DownloadedDb();
+            return downloadedDb.QueryUuidPageData(curPage);
         }
-
         /// <summary>
         /// 修改下载完成数据
         /// </summary>
@@ -258,10 +283,46 @@ namespace DownKyi.Services.Download
             UpdateDownloadBase(downloadedItem.DownloadBase);
 
             DownloadedDb downloadedDb = new DownloadedDb();
-            downloadedDb.Update(downloadedItem.DownloadBase.Uuid, downloadedItem.Downloaded);
-            //downloadedDb.Close();
+            downloadedDb.SaveDownloaded(downloadedItem.DownloadBase.Uuid, downloadedItem.Downloaded);
         }
 
+        /// <summary>
+        /// 获取下载完成项的总记录数
+        /// </summary>
+        /// <returns></returns>
+        public int GetRecordCount()
+        {
+            DownloadedDb downloadedDb = new DownloadedDb();
+            return downloadedDb.GetRecordCount();
+        }
+
+        /// <summary>
+        /// 查询是否存在下载完成列表中
+        /// </summary>
+        /// <param name="Cid"></param>
+        /// <param name="ResolutionId"></param>
+        /// <param name="AudioCodecName"></param>
+        /// <param name="VideoCodecName"></param>
+        /// <returns></returns>
+        public bool IsExistDownloaded(long Cid, int ResolutionId, string AudioCodecName, string VideoCodecName)
+        {
+            DownloadedDb downloadedDb = new DownloadedDb();
+            return downloadedDb.IsExistDownloaded(Cid, ResolutionId, AudioCodecName, VideoCodecName);
+        }
+
+        /// <summary>
+        /// 查询是否存在下载完成列表中
+        /// </summary>
+        /// <param name="Cid"></param>
+        /// <param name="ResolutionId"></param>
+        /// <param name="AudioCodecName"></param>
+        /// <param name="VideoCodecName"></param>
+        /// <returns></returns>
+        public string GetDownloadedUuid(long Cid, int ResolutionId, string AudioCodecName, string VideoCodecName)
+        {
+            DownloadedDb downloadedDb = new DownloadedDb();
+            return downloadedDb.GetDownloadedUuid(Cid, ResolutionId, AudioCodecName, VideoCodecName);
+        }
         #endregion
 
         #region DownloadBase
@@ -275,16 +336,15 @@ namespace DownKyi.Services.Download
             if (downloadBase == null) { return; }
 
             DownloadBaseDb downloadBaseDb = new DownloadBaseDb();
-            object obj = downloadBaseDb.QueryById(downloadBase.Uuid);
+            object obj = downloadBaseDb.QueryByUuid(downloadBase.Uuid);
             if (obj == null)
             {
-                downloadBaseDb.Insert(downloadBase.Uuid, downloadBase);
+                downloadBaseDb.InsertDownloadBase(downloadBase.Uuid, downloadBase);
             }
             else
             {
                 downloadBaseDb.Update(downloadBase.Uuid, downloadBase);
             }
-            //downloadBaseDb.Close();
         }
 
         /// <summary>
@@ -293,41 +353,42 @@ namespace DownKyi.Services.Download
         /// <param name="downloadBase"></param>
         private void RemoveDownloadBase(string uuid)
         {
-            DownloadedDb downloadedDb = new DownloadedDb();
-            object obj = downloadedDb.QueryById(uuid);
-            if (obj == null)
-            {
-                DownloadBaseDb downloadBaseDb = new DownloadBaseDb();
-                downloadBaseDb.Delete(uuid);
-            }
-            //DownloadBaseDb downloadBaseDb = new DownloadBaseDb();
-            //downloadBaseDb.Delete(uuid);
-            //downloadBaseDb.Close();
+            DownloadBaseDb downloadBaseDb = new DownloadBaseDb();
+            downloadBaseDb.Delete(uuid);
+        }
+
+        /// <summary>
+        /// 从数据库获取uuid 对应的DownloadBase
+        /// </summary>
+        /// <param name="uuid"></param>
+        /// <returns></returns>
+        private DownloadBase GetDownloadBase(string uuid)
+        {
+            DownloadBaseDb downloadBaseDb = new DownloadBaseDb();
+            dynamic dynamicobj = downloadBaseDb.QueryByUuid(uuid);
+            DownloadBase downloadBaseModel = DownloadBase.FromDynamic(dynamicobj);
+            return downloadBaseModel ?? null;
         }
 
         /// <summary>
         /// 从数据库获取所有的DownloadBase
         /// </summary>
         /// <returns></returns>
-        private DownloadBase GetDownloadBase(string uuid)
+        private List<DownloadBase> GetDownloadBase()
         {
+            List<DownloadBase> downloadBases = new List<DownloadBase>();
             DownloadBaseDb downloadBaseDb = new DownloadBaseDb();
-            object obj = downloadBaseDb.QueryById(uuid);
-            //downloadBaseDb.Close();
-            if (obj is DownloadBase downloadObj)
+            List<dynamic> dynamicObjs = downloadBaseDb.QueryAll();
+            if (dynamicObjs != null && dynamicObjs.Count > 0)
             {
-                if (downloadObj.Dimension == null || (downloadObj.Dimension != null && downloadObj.Dimension.Width * downloadObj.Dimension.Height <2))
+                foreach (var item in dynamicObjs)
                 {
-                    (int width, int height) = System.Threading.Tasks.Task.Run(async () => await Core.Utils.VideoSizeGet.GetVideoWidthAndHeightAsync(downloadObj.FilePath + ".mp4")).Result;
-                    downloadObj.Dimension = new Core.BiliApi.Models.Dimension() { Height = height, Width = width, Rotate = 0 };
-                    UpdateDownloadBase(downloadObj);
-                    return downloadObj;
+                    downloadBases.Add(DownloadBase.FromDynamic(item));
                 }
             }
-
-            return obj is DownloadBase downloadBase ? downloadBase : null;
+            
+            return downloadBases.Count == 0 ? null : downloadBases;
         }
-
         /// <summary>
         /// 从数据库修改DownloadBase
         /// </summary>
@@ -338,10 +399,8 @@ namespace DownKyi.Services.Download
 
             DownloadBaseDb downloadBaseDb = new DownloadBaseDb();
             downloadBaseDb.Update(downloadBase.Uuid, downloadBase);
-            //downloadBaseDb.Close();
         }
 
         #endregion
-
     }
 }
