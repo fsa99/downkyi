@@ -298,6 +298,8 @@
         <Border
             Margin="0,0,4,0"
             Background="#FF00A1D6"
+            Width="auto"
+            MinWidth="27"
             BorderThickness="0"
             Style="{StaticResource pagerBorder}">
             <Border.ToolTip>
@@ -307,12 +309,16 @@
                     <Binding Path="PageCount" />
                 </MultiBinding>
             </Border.ToolTip>
-            <TextBlock
+            <TextBox
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 FontSize="14"
-                Foreground="#FFFFFFFF"
-                Text="{Binding CurrentPage,Mode=TwoWay}" />
+                Width="auto"
+                BorderThickness="0"
+                Foreground="#ffffff"
+                Background="Transparent"
+                Text="{Binding CurrentPage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" >
+            </TextBox>
         </Border>
         <!--下一页-->
         <Button
