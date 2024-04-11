@@ -134,6 +134,7 @@ namespace DownKyi.ViewModels.DownloadManager
         /// UP 图标
         /// </summary>
         public static VectorImage UpzhuIconIcon { get; private set; }
+
         #endregion
 
         #region 视频 文件信息编码画质等
