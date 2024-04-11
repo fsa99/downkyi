@@ -1,5 +1,4 @@
 using DownKyi.Core.Settings;
-using DownKyi.Core.Utils;
 using DownKyi.Services.Download;
 using DownKyi.Utils;
 using DownKyi.ViewModels;
@@ -23,7 +22,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -37,7 +35,7 @@ namespace DownKyi
     {
         public static Dictionary<string, object> Dictionary = new Dictionary<string, object>();
         public static ObservableCollection<DownloadingItem> DownloadingList { get; set; }
-        public static ObservableCollection<DownloadedItem> DownloadedList { get; set; }
+        //public static ObservableCollection<DownloadedItem> DownloadedList { get; set; }
 
         // 下载服务
         private IDownloadService downloadService;
@@ -54,16 +52,16 @@ namespace DownKyi
 
             // 初始化数据
             DownloadingList = new ObservableCollection<DownloadingItem>();
-            DownloadedList = new ObservableCollection<DownloadedItem>();
+            //DownloadedList = new ObservableCollection<DownloadedItem>();
 
             // 下载数据存储服务
             DownloadStorageService downloadStorageService = new DownloadStorageService();
 
             // 从数据库读取
             List<DownloadingItem> downloadingItems = downloadStorageService.GetDownloading();
-            List<DownloadedItem> downloadedItems = downloadStorageService.GetSortPageDownloaded();
+            //List<DownloadedItem> downloadedItems = downloadStorageService.GetSortPageDownloaded();
             DownloadingList.AddRange(downloadingItems);
-            DownloadedList.AddRange(downloadedItems);
+            //DownloadedList.AddRange(downloadedItems);
 
             // 下载列表发生变化时执行的任务
             DownloadingList.CollectionChanged += new NotifyCollectionChangedEventHandler(async (object sender, NotifyCollectionChangedEventArgs e) =>
@@ -76,7 +74,6 @@ namespace DownKyi
                         {
                             if (item is DownloadingItem downloading)
                             {
-                                //Console.WriteLine("DownloadingList添加");
                                 downloadStorageService.AddDownloading(downloading);
                             }
                         }
@@ -87,7 +84,6 @@ namespace DownKyi
                         {
                             if (item is DownloadingItem downloading)
                             {
-                                //Console.WriteLine("DownloadingList移除");
                                 downloadStorageService.RemoveDownloading(downloading);
                             }
                         }
@@ -96,34 +92,34 @@ namespace DownKyi
             });
 
             // 下载完成列表发生变化时执行的任务
-            DownloadedList.CollectionChanged += new NotifyCollectionChangedEventHandler(async (object sender, NotifyCollectionChangedEventArgs e) =>
-            {
-                await Task.Run(() =>
-                {
-                    if (e.Action == NotifyCollectionChangedAction.Add)
-                    {
-                        foreach (object item in e.NewItems)
-                        {
-                            if (item is DownloadedItem downloaded)
-                            {
-                                //Console.WriteLine("DownloadedList添加");
-                                downloadStorageService.AddDownloaded(downloaded);
-                            }
-                        }
-                    }
-                    if (e.Action == NotifyCollectionChangedAction.Remove)
-                    {
-                        foreach (object item in e.OldItems)
-                        {
-                            if (item is DownloadedItem downloaded)
-                            {
-                                //Console.WriteLine("DownloadedList移除");
-                                downloadStorageService.RemoveDownloaded(downloaded);
-                            }
-                        }
-                    }
-                });
-            });
+            //DownloadedList.CollectionChanged += new NotifyCollectionChangedEventHandler(async (object sender, NotifyCollectionChangedEventArgs e) =>
+            //{
+            //    await Task.Run(() =>
+            //    {
+            //        if (e.Action == NotifyCollectionChangedAction.Add)
+            //        {
+            //            foreach (object item in e.NewItems)
+            //            {
+            //                if (item is DownloadedItem downloaded)
+            //                {
+            //                    //Console.WriteLine("DownloadedList添加");
+            //                    downloadStorageService.AddDownloaded(downloaded);
+            //                }
+            //            }
+            //        }
+            //        if (e.Action == NotifyCollectionChangedAction.Remove)
+            //        {
+            //            foreach (object item in e.OldItems)
+            //            {
+            //                if (item is DownloadedItem downloaded)
+            //                {
+            //                    //Console.WriteLine("DownloadedList移除");
+            //                    downloadStorageService.RemoveDownloaded(downloaded);
+            //                }
+            //            }
+            //        }
+            //    });
+            //});
 
             // 启动下载服务
             var download = SettingsManager.GetInstance().GetDownloader();
@@ -132,13 +128,13 @@ namespace DownKyi
                 case Downloader.NOT_SET:
                     break;
                 case Downloader.BUILT_IN:
-                    downloadService = new BuiltinDownloadService(DownloadingList, DownloadedList, (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));
+                    downloadService = new BuiltinDownloadService(DownloadingList, (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));
                     break;
                 case Downloader.ARIA:
-                    downloadService = new AriaDownloadService(DownloadingList, DownloadedList, (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));
+                    downloadService = new AriaDownloadService(DownloadingList, (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));
                     break;
                 case Downloader.CUSTOM_ARIA:
-                    downloadService = new CustomAriaDownloadService(DownloadingList, DownloadedList, (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));
+                    downloadService = new CustomAriaDownloadService(DownloadingList, (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));
                     break;
             }
             downloadService?.Start();
@@ -236,71 +232,6 @@ namespace DownKyi
             if (Current == null) { return; }
 
             Current.Dispatcher.Invoke(callback);
-        }
-
-        /// <summary>
-        /// 下载完成列表排序
-        /// </summary>
-        /// <param name="finishedSort"></param>
-        public static void SortDownloadedList(DownloadFinishedSort finishedSort)
-        {
-            ObservableCollection<DownloadedItem> list = new ObservableCollection<DownloadedItem>();
-            switch (finishedSort)
-            {
-                case DownloadFinishedSort.DOWNLOAD:
-                    list = new ObservableCollection<DownloadedItem>(DownloadedList.OrderBy(item => item.Downloaded.FinishedTimestamp));
-                    break;
-                case DownloadFinishedSort.NUMBER:
-                    list = new ObservableCollection<DownloadedItem>(DownloadedList.OrderBy(item => item.MainTitle).ThenBy(item => item.Order));
-                    break;
-                case DownloadFinishedSort.UPZHUID:
-                    list = new ObservableCollection<DownloadedItem>(DownloadedList.OrderBy(item => item.DownloadBase.UpOwner.Mid).ThenBy(item => item.MainTitle).ThenBy(item => item.Order));
-                    break;
-                case DownloadFinishedSort.FILESIZE:
-                    list = new ObservableCollection<DownloadedItem>(DownloadedList.OrderBy(item => Format.ParseFileSize(item.FileSize)).ThenBy(item => item.Order));
-                    break;
-                case DownloadFinishedSort.VIDEODURATION:
-                    list = new ObservableCollection<DownloadedItem>(DownloadedList.OrderBy(item => Format.ConvertTimeToSeconds(item.Duration)).ThenBy(item => item.Order));
-                    break;
-                case DownloadFinishedSort.ZONEID:
-                    list = new ObservableCollection<DownloadedItem>(DownloadedList.OrderBy(item => item.DownloadBase.ZoneId).ThenBy(item => item.DownloadBase.UpOwner.Mid).ThenBy(item => item.MainTitle).ThenBy(item => item.Order));
-                    break;
-                default:
-                    break;
-            }
-            
-            DownloadedList.Clear();
-            foreach (DownloadedItem item in list.ToList())
-            {
-                DownloadedList.Add(item);
-            }
-        }
-
-        // 获取排序后的项目
-        private static IOrderedEnumerable<DownloadedItem> GetOrderedItems<TKey>(Func<DownloadedItem, TKey> keySelector, bool reverseOrder)
-        {
-            return reverseOrder ? DownloadedList.OrderByDescending(keySelector) : DownloadedList.OrderBy(keySelector);
-        }
-
-        /// <summary>
-        /// 刷新下载完成列表
-        /// </summary>
-        public static void RefreshDownloadedList()
-        {
-            DownloadStorageService downloadStorageService = new DownloadStorageService();
-
-            // 从数据库读取
-            List<DownloadedItem> downloadedItems = downloadStorageService.GetDownloaded();
-            foreach (var downloadeditem in downloadedItems)
-            {
-                if(!DownloadedList.Any(i => i.DownloadBase.Uuid == downloadeditem.DownloadBase.Uuid))
-                {
-                    PropertyChangeAsync(new Action(() =>
-                    {
-                        DownloadedList.Add(downloadeditem);
-                    }));
-                }
-            }
         }
     }
 }
