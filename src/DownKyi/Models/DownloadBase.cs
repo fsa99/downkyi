@@ -1,6 +1,6 @@
 using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.Models;
-using DownKyi.Core.BiliApi.Video.Models;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 
@@ -26,9 +26,84 @@ namespace DownKyi.Models
         }
 
         /// <summary>
+        /// 静态方法，将 dynamic 转化为 DownloadBase 类型
+        /// </summary>
+        /// <param name="dynamicObj"></param>
+        /// <returns></returns>
+        public static DownloadBase FromDynamic(dynamic dynamicObj)
+        {
+            if (dynamicObj == null)
+            {
+                return null;
+            }
+            JObject jObject = JObject.Parse(dynamicObj.NeedDownloadContent);
+            Dictionary<string, bool> needDownloadContent = jObject.ToObject<Dictionary<string, bool>>();
+
+            DownloadBase downloadBase = new DownloadBase
+            {
+                Uuid = dynamicObj.Uuid as string,
+                NeedDownloadContent = needDownloadContent,
+
+                Bvid = dynamicObj.Bvid as string,
+                Avid = dynamicObj.Avid as long? ?? 0,
+                Cid = dynamicObj.Cid as long? ?? 0,
+                EpisodeId = dynamicObj.EpisodeId as long? ?? 0,
+
+                CoverUrl = dynamicObj.CoverUrl as string,
+                PageCoverUrl = dynamicObj.PageCoverUrl as string,
+
+                ZoneId = dynamicObj.ZoneId as int? ?? 0,
+                Order = dynamicObj.ORDER as int? ?? 0,
+
+                MainTitle = dynamicObj.MainTitle as string,
+                Name = dynamicObj.Name as string,
+                Duration = dynamicObj.Duration as string,
+
+                Dimension = new Dimension 
+                {
+                    Width = dynamicObj.Dimension_Width as int? ?? 0,
+                    Height = dynamicObj.Dimension_Height as int? ?? 0,
+                    Rotate = dynamicObj.Dimension_Rotate as int? ?? 0,
+                },
+                VideoCodecName = dynamicObj.VideoCodecName as string,
+
+                Resolution = new Quality
+                {
+                    Id = dynamicObj.Resolution_Id as int? ?? 0,
+                    Name = dynamicObj.Resolution_Name as string
+                },
+
+                AudioCodec = new Quality
+                {
+                    Id = dynamicObj.AudioCodec_Id as int? ?? 0,
+                    Name = dynamicObj.AudioCodec_Name as string
+                },
+
+                FilePath = dynamicObj.FilePath as string,
+                FileSize = dynamicObj.FileSize as string,
+                CreateTime = dynamicObj.CreateTime as string,
+                PlayNumber = dynamicObj.PlayNumber as string,
+                DanmakuNumber = dynamicObj.DanmakuNumber as string,
+                LikeNumber = dynamicObj.LikeNumber as string,
+                CoinNumber = dynamicObj.CoinNumber as string,
+                FavoriteNumber = dynamicObj.FavoriteNumber as string,
+                ShareNumber = dynamicObj.ShareNumber as string,
+                Description = dynamicObj.Description as string,
+
+                UpOwner = new VideoOwner
+                {
+                    Mid = dynamicObj.UpOwner_Mid as long? ?? 0,
+                    Name = dynamicObj.UpOwner_Name as string,
+                    Face = dynamicObj.UpOwner_Face as string
+                }
+            };
+
+            return downloadBase;
+        }
+        /// <summary>
         /// 此条下载项的id
         /// </summary>
-        public string Uuid { get; }
+        public string Uuid { get; set; }
 
         /// <summary>
         /// 需要下载的内容
