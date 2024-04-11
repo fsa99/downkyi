@@ -208,18 +208,15 @@ namespace DownKyi.ViewModels.Settings
 
         private void CommonCreateBLL(string[] files)
         {
-            Task.Run(()=> 
+            if (files == null) { eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("DropNoVideoFileTip")); return; }
+            var validVideoFiles = files.Where(file => FileHelper.IsVideoFile(file)).ToList();
+            string targetDirectory = DefaultUpDirectory;
+            Parallel.ForEach(validVideoFiles, (videoFile, state, index) =>
             {
-                if (files == null) { eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("DropNoVideoFileTip")); return; }
-                var validVideoFiles = files.Where(file => FileHelper.IsVideoFile(file)).ToList();
-                string targetDirectory = DefaultUpDirectory;
-                Parallel.ForEach(validVideoFiles, (videoFile, state, index) =>
-                {
-                    UpupUtils upupUtil = new UpupUtils(videoFile, targetDirectory, (int)index);
-                    upupUtil.UpupCreate_AllFromLocal();
-                });
-                eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("UpupCreate") + validVideoFiles.Count.ToString() + DictionaryResource.GetString("UpupCreatesuffix"));
+                UpupUtils upupUtil = new UpupUtils(videoFile, targetDirectory, (int)index);
+                upupUtil.UpupCreate_AllFromLocal();
             });
+            eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("UpupCreate") + validVideoFiles.Count.ToString() + DictionaryResource.GetString("UpupCreatesuffix"));
         }
         #endregion
 
