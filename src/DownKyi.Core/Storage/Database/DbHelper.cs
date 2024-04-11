@@ -121,7 +121,7 @@ namespace DownKyi.Core.Storage.Database
                         tr.Commit();
                     }
                 }
-                LogManager.Info("SQLite执行记录", nameof(ExecuteNonQuery), $"执行语句：{sql}\t 成功影响行数：{res}");
+                //LogManager.Info("SQLite执行记录", nameof(ExecuteNonQuery), $"执行语句：{sql}\t 成功影响行数：{res}");
             }
             catch (SQLiteException e)
             {
