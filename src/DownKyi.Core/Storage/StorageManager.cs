@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 
 namespace DownKyi.Core.Storage
 {
@@ -25,6 +25,15 @@ namespace DownKyi.Core.Storage
         }
 
         /// <summary>
+        /// 获取数据库的文件路径
+        /// </summary>
+        /// <returns></returns>
+        public static string GetStorage()
+        {
+            CreateDirectory(Constant.Database);
+            return Constant.Database;
+        }
+        /// <summary>
         /// 获取历史记录的文件路径
         /// </summary>
         /// <returns></returns>
@@ -33,7 +42,24 @@ namespace DownKyi.Core.Storage
             CreateDirectory(Constant.Database);
             return Constant.History;
         }
-
+        /// <summary>
+        /// 获取Bilibili的文件夹路径
+        /// </summary>
+        /// <returns></returns>
+        public static string GetBilibili()
+        {
+            CreateDirectory(Constant.Bilibili);
+            return Constant.Bilibili;
+        }
+        /// <summary>
+        /// 获取设置的文件夹路径
+        /// </summary>
+        /// <returns></returns>
+        public static string GetConfig()
+        {
+            CreateDirectory(Constant.Config);
+            return Constant.Config;
+        }
         /// <summary>
         /// 获取设置的文件路径
         /// </summary>
