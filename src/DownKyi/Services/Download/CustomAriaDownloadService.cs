@@ -25,9 +25,8 @@ namespace DownKyi.Services.Download
     public class CustomAriaDownloadService : DownloadService, IDownloadService
     {
         public CustomAriaDownloadService(ObservableCollection<DownloadingItem> downloadingList,
-            ObservableCollection<DownloadedItem> downloadedList,
             IDialogService dialogService
-            ) : base(downloadingList, downloadedList, dialogService)
+            ) : base(downloadingList, dialogService)
         {
             Tag = "AriaDownloadService";
         }
