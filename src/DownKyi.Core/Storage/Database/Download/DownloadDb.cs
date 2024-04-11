@@ -14,9 +14,9 @@ namespace DownKyi.Core.Storage.Database.Download
         protected string tableName = "download";
 
 #if DEBUG
-        private readonly DbHelper dbHelper = new DbHelper(StorageManager.GetDownload().Replace(".db", "_debug.db"));
+        protected readonly DbHelper dbHelper = new DbHelper(StorageManager.GetDownload().Replace(".db", "_debug.db"));
 #else
-        private readonly DbHelper dbHelper = new DbHelper(StorageManager.GetDownload(), key);
+        protected readonly DbHelper dbHelper = new DbHelper(StorageManager.GetDownload(), key);
 #endif
 
         /// <summary>
@@ -71,6 +71,24 @@ namespace DownKyi.Core.Storage.Database.Download
         /// </summary>
         /// <param name="uuid"></param>
         public void Delete(string uuid)
+        {
+            try
+            {
+                string sql = $"delete from {tableName} where Uuid glob '{uuid}'";
+                dbHelper.ExecuteNonQuery(sql);
+            }
+            catch (Exception e)
+            {
+                Utils.Debugging.Console.PrintLine("Delete()发生异常: {0}", e);
+                LogManager.Error($"{tableName}", e);
+            }
+        }
+
+        /// <summary>
+        /// 删除uuid对应的数据
+        /// </summary>
+        /// <param name="uuid"></param>
+        public void DeleteByid(string uuid)
         {
             try
             {
