@@ -13,22 +13,55 @@ namespace DownKyi.Core.Utils
         public static int ConvertTimeToSeconds(string input)
         {
             if (string.IsNullOrEmpty(input)) { return 0; }
+
+            string[] parts = input.Split(':');
             int hours = 0, minutes = 0, seconds = 0;
 
-            // 使用正则表达式匹配输入格式
-            Match match = Regex.Match(input, @"(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?");
-
-            if (match.Success)
+            if (parts.Length == 1)
             {
-                // 将匹配到的部分转换为整数
-                int.TryParse(match.Groups[1].Value, out hours);
-                int.TryParse(match.Groups[2].Value, out minutes);
-                int.TryParse(match.Groups[3].Value, out seconds);
+                // 只有秒
+                if (parts[0].EndsWith("s"))
+                {
+                    int.TryParse(parts[0].TrimEnd('s'), out seconds);
+                }
+                else
+                {
+                    int.TryParse(parts[0], out seconds);
+                }
+            }
+            else if (parts.Length == 2)
+            {
+                // 分钟和秒
+                int.TryParse(parts[0], out minutes);
+                if (parts[1].EndsWith("s"))
+                {
+                    int.TryParse(parts[1].TrimEnd('s'), out seconds);
+                }
+                else
+                {
+                    int.TryParse(parts[1], out seconds);
+                }
+            }
+            else if (parts.Length == 3)
+            {
+                // 小时、分钟和秒
+                int.TryParse(parts[0], out hours);
+                int.TryParse(parts[1], out minutes);
+                if (parts[2].EndsWith("s"))
+                {
+                    int.TryParse(parts[2].TrimEnd('s'), out seconds);
+                }
+                else
+                {
+                    int.TryParse(parts[2], out seconds);
+                }
             }
 
             // 计算总秒数
             return hours * 3600 + minutes * 60 + seconds;
         }
+
+
 
 
         /// <summary>
