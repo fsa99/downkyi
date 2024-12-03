@@ -207,12 +207,12 @@ namespace DownKyi.Core.Storage.Database.Download
         /// <param name="AudioCodecName"></param>
         /// <param name="VideoCodecName"></param>
         /// <returns></returns>
-        public string GetDownloadedUuid(long Cid, int ResolutionId, string AudioCodecName, string VideoCodecName)
+        public string GetDownloadedUuid(long Cid, long Avid, string Bvid, int ResolutionId, string Name, string VideoCodecName)
         {
             string sql = $@"SELECT t1.Uuid
                             FROM ""{tableName_base}"" t1
                             INNER JOIN {tableName} t2 on t1.Uuid = t2.Uuid
-                            WHERE Cid = {Cid} AND ResolutionId = {ResolutionId} AND VideoCodecName = '{VideoCodecName}' AND AudioCodecId = (SELECT Id from base_pro_quality WHERE NAME = '{AudioCodecName}') ;";
+                            WHERE Cid = {Cid} AND Bvid = '{Bvid}' AND Avid = '{Avid}' AND ResolutionId = {ResolutionId} AND VideoCodecName = '{VideoCodecName}' AND Name = '{Name}' ;";
 
             return QueryUuid(sql);
         }

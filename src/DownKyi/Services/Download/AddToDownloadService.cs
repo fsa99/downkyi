@@ -273,7 +273,7 @@ namespace DownKyi.Services.Download
                     // 如果存在下载完成列表，弹出选择框是否再次下载
                     bool isDownloaded = false;
                     DownloadStorageService downloadStorage = new DownloadStorageService();
-                    string isExistedUuid = downloadStorage.GetDownloadedUuid(page.Cid, page.VideoQuality.Quality, page.VideoQuality.SelectedVideoCodec, page.AudioQualityFormat);
+                    string isExistedUuid = downloadStorage.GetDownloadedUuid(page.Cid, page.Avid, page.Bvid, page.VideoQuality.Quality, page.Name, page.VideoQuality.SelectedVideoCodec);
                     if (!string.IsNullOrEmpty(isExistedUuid))
                     {
                         if (SettingsManager.GetInstance().IsRedownloadPrompt() == AllowStatus.YES)

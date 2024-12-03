@@ -1,3 +1,4 @@
+using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.Storage.Database.Download;
 using DownKyi.Events;
 using DownKyi.Models;
@@ -318,10 +319,10 @@ namespace DownKyi.Services.Download
         /// <param name="AudioCodecName"></param>
         /// <param name="VideoCodecName"></param>
         /// <returns></returns>
-        public string GetDownloadedUuid(long Cid, int ResolutionId, string AudioCodecName, string VideoCodecName)
+        public string GetDownloadedUuid(long Cid, long Avid, string Bvid, int ResolutionId, string Name, string VideoCodecName)
         {
             DownloadedDb downloadedDb = new DownloadedDb();
-            return downloadedDb.GetDownloadedUuid(Cid, ResolutionId, AudioCodecName, VideoCodecName);
+            return downloadedDb.GetDownloadedUuid(Cid, Avid, Bvid, ResolutionId, Name, VideoCodecName);
         }
         #endregion
 

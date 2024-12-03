@@ -286,7 +286,7 @@
     <system:String x:Key="SettingUseDefaultUpDirectory">设此文件夹为默认生成文件夹</system:String>
     <system:String x:Key="IsUseDefaultUpDirectory">使用默认生成目录</system:String>
     <system:String x:Key="IsMoveVideoUpDirectory">将视频复制到生成目录</system:String>
-    <system:String x:Key="DefaultUpVer">默认版本号  </system:String>
+    <system:String x:Key="DefaultUpVer">默认版本号</system:String>
     <system:String x:Key="UpupCreate">生成</system:String>
     <system:String x:Key="UpupCreatesuffix">个upupWallpaper资源</system:String>
     <system:String x:Key="DropNoVideoFileTip">仅支持视频文件</system:String>
@@ -392,7 +392,7 @@
     <system:String x:Key="ParseCurrentSection">解析当前页视频</system:String>
     <system:String x:Key="ParseAll">解析所有视频</system:String>
     <system:String x:Key="SetParseDefault">设为默认，下次不再弹出</system:String>
-    
+
     <!--  分页组件  -->
     <system:String x:Key="TotalText">共</system:String>
     <system:String x:Key="ItemText">条</system:String>
