@@ -33,9 +33,18 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Border BorderBrush="Transparent" Margin="0" BorderThickness="0" CornerRadius="8"  Background="#00FFFFFF">
+    <Border
+        Margin="0"
+        Background="#00FFFFFF"
+        BorderBrush="Transparent"
+        BorderThickness="0"
+        CornerRadius="8">
         <Border.Effect>
-            <DropShadowEffect ShadowDepth="3" BlurRadius="1" Opacity="0.7" Color="#AA6A0A"/>
+            <DropShadowEffect
+                BlurRadius="1"
+                Opacity="0.7"
+                ShadowDepth="3"
+                Color="#AA6A0A" />
         </Border.Effect>
         <Border.Style>
             <Style TargetType="{x:Type Border}">

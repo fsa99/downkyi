@@ -1,6 +1,7 @@
 using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
@@ -11,6 +12,7 @@ namespace DownKyi.Core.Storage.Database.Download
     public class DownloadedDb : DownloadDb
     {
         private readonly string tableName_base = "download_base";
+        private static bool isReverseOrder = false; // 当前是否为逆序
 
         public DownloadedDb()
         {
@@ -331,33 +333,47 @@ namespace DownKyi.Core.Storage.Database.Download
             int itemsPer = SettingsManager.GetInstance().GetLastItemsPerPage();
             int startIndex = itemsPer * (curPage - 1);
             DownloadFinishedSort finishedSort = SettingsManager.GetInstance().GetDownloadFinishedSort();
+            
+            isReverseOrder = SettingsManager.GetInstance().GetSortOrder() == SortOrder.DESCENDING;
 
             List<string> curPageUuids = new List<string>();
             if (downloadedSorts.Any())
             {
+                IEnumerable<DownloadedSortModel> sortedList;
+
                 switch (finishedSort)
                 {
                     case DownloadFinishedSort.DOWNLOAD:
-                        curPageUuids = downloadedSorts.OrderBy(item => item.FinishedTimestamp).Skip(startIndex).Take(itemsPer).Select(x => x.Uuid).ToList();
+                        sortedList = downloadedSorts.OrderBy(item => item.FinishedTimestamp);
                         break;
                     case DownloadFinishedSort.NUMBER:
-                        curPageUuids = downloadedSorts.OrderBy(item => item.Order).Skip(startIndex).Take(itemsPer).Select(x => x.Uuid).ToList();
+                        sortedList = downloadedSorts.OrderBy(item => item.Order);
                         break;
                     case DownloadFinishedSort.UPZHUID:
-                        curPageUuids = downloadedSorts.OrderBy(item => item.UpOwnerMid).ThenBy(item => item.Order).Skip(startIndex).Take(itemsPer).Select(x => x.Uuid).ToList();
+                        sortedList = downloadedSorts.OrderBy(item => item.UpOwnerMid).ThenBy(item => item.Order);
                         break;
                     case DownloadFinishedSort.FILESIZE:
-                        curPageUuids = downloadedSorts.OrderBy(item => item.FileSize).ThenBy(item => item.Order).Skip(startIndex).Take(itemsPer).Select(x => x.Uuid).ToList();
+                        sortedList = downloadedSorts.OrderBy(item => item.FileSize).ThenBy(item => item.Order);
                         break;
                     case DownloadFinishedSort.VIDEODURATION:
-                        curPageUuids = downloadedSorts.OrderBy(item => item.Duration).ThenBy(item => item.Order).Skip(startIndex).Take(itemsPer).Select(x => x.Uuid).ToList();
+                        sortedList = downloadedSorts.OrderBy(item => item.Duration).ThenBy(item => item.Order);
                         break;
                     case DownloadFinishedSort.ZONEID:
-                        curPageUuids = downloadedSorts.OrderBy(item => item.ZoneId).ThenBy(item => item.UpOwnerMid).ThenBy(item => item.Order).Skip(startIndex).Take(itemsPer).Select(x => x.Uuid).ToList();
+                        sortedList = downloadedSorts.OrderBy(item => item.ZoneId).ThenBy(item => item.UpOwnerMid).ThenBy(item => item.Order);
                         break;
                     default:
+                        sortedList = downloadedSorts;
                         break;
                 }
+
+                // 如果是逆序，则反转排序
+                if (isReverseOrder)
+                {
+                    sortedList = sortedList.Reverse();
+                }
+
+                // 分页获取当前页的 UUID 列表
+                curPageUuids = sortedList.Skip(startIndex).Take(itemsPer).Select(x => x.Uuid).ToList();
             }
 
             return curPageUuids;

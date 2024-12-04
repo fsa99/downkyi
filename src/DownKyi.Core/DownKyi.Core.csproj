@@ -335,6 +335,7 @@
     <Compile Include="Settings\Models\DanmakuSettings.cs" />
     <Compile Include="Settings\Models\NetworkSettings.cs" />
     <Compile Include="Settings\Models\UserInfoSettings.cs" />
+    <Compile Include="Settings\SortOrder.cs" />
     <Compile Include="Settings\VideoCodecs.cs" />
     <Compile Include="Settings\Models\VideoSettings.cs" />
     <Compile Include="Settings\SettingsManager.cs" />

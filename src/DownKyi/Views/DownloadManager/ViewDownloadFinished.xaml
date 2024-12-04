@@ -540,7 +540,8 @@
                     Width="120"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    SelectedIndex="{Binding FinishedSortBy}">
+                    SelectedIndex="{Binding FinishedSortBy}"
+                    ToolTip="{DynamicResource FinishedSortTip}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding FinishedSortCommand}" CommandParameter="{Binding ElementName=nameFinishedSort, Path=SelectedIndex}" />

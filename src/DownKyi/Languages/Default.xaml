@@ -185,6 +185,7 @@
     <system:String x:Key="QueryingOrFilteringData">查询或筛选数据</system:String>
     <system:String x:Key="RefreshCompletedTip">刷新完成</system:String>
     <system:String x:Key="RefreshDoubleClickTip">双击此处刷新</system:String>
+    <system:String x:Key="FinishedSortTip">连续两次以上选择相同排序方式会在顺序和逆序之间切换</system:String>
 
     <system:String x:Key="StartDownload">开始</system:String>
     <system:String x:Key="PauseDownload">暂停</system:String>

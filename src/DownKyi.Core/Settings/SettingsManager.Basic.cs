@@ -20,6 +20,9 @@ namespace DownKyi.Core.Settings
         // 下载完成列表排序
         private readonly DownloadFinishedSort finishedSort = DownloadFinishedSort.DOWNLOAD;
 
+        // 排序方式
+        private readonly SortOrder sortOrder = SortOrder.ASCENDING;
+
         // 记录上次修改的单页显示条数
         private readonly int lastItemsPerPage = 20;
 
@@ -185,6 +188,32 @@ namespace DownKyi.Core.Settings
             return SetSettings();
         }
 
+        /// <summary>
+        /// 获取排序方式
+        /// </summary>
+        /// <returns></returns>
+        public SortOrder GetSortOrder()
+        {
+            appSettings = GetSettings();
+            if (appSettings.Basic.SortOrder == SortOrder.NOT_SET)
+            {
+                // 第一次获取，先设置默认值
+                SetSortOrder(sortOrder);
+                return sortOrder;
+            }
+            return appSettings.Basic.SortOrder;
+        }
+
+        /// <summary>
+        /// 设置排序方式
+        /// </summary>
+        /// <param name="finishedSort"></param>
+        /// <returns></returns>
+        public bool SetSortOrder(SortOrder sortOrder)
+        {
+            appSettings.Basic.SortOrder = sortOrder;
+            return SetSettings();
+        }
 
         /// <summary>
         /// 获取单页显示条数

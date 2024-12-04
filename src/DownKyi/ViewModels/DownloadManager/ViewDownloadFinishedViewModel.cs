@@ -255,7 +255,12 @@ namespace DownKyi.ViewModels.DownloadManager
 
             if (index == lastTimeSortSelected)
             {
-                DownloadedList = new ObservableCollection<DownloadedItem>(DownloadedList.Reverse());
+                if (SettingsManager.GetInstance().GetSortOrder() == SortOrder.DESCENDING)
+                    SettingsManager.GetInstance().SetSortOrder(SortOrder.ASCENDING);
+                else
+                    SettingsManager.GetInstance().SetSortOrder(SortOrder.DESCENDING);
+                DownloadedList = new ObservableCollection<DownloadedItem>();
+                UpdateDownloadedItemList(Pager.CurrentPage);
             }
         }
 
