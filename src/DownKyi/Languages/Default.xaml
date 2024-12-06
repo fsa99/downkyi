@@ -7,6 +7,7 @@
     <!--  App  -->
     <system:String x:Key="AppName">哔哩下载姬</system:String>
     <system:String x:Key="Unknown">未知</system:String>
+    <system:String x:Key="ErrorTip">程序出错了,出错的方法是:</system:String>
 
     <!--  系统  -->
     <system:String x:Key="Close">关闭</system:String>
@@ -145,6 +146,8 @@
     <system:String x:Key="TipAlreadyToAddDownloading">已经添加到下载列表~</system:String>
     <system:String x:Key="TipAlreadyToAddDownloaded">已经下载完成~</system:String>
     <system:String x:Key="TipAlreadyToAddDownloaded2">该视频已经下载完成，是否重新下载？</system:String>
+    <system:String x:Key="TipAlreadyToAddDownloaded3">已经下载完成,跳过~</system:String>
+    <system:String x:Key="TipAlreadyToAddDownloaded4">已经下载完成,再次下载~</system:String>
     <system:String x:Key="TipAddDownloadingZero">没有选中项符合下载要求！</system:String>
     <system:String x:Key="TipAddDownloadingFinished1">成功添加了</system:String>
     <system:String x:Key="TipAddDownloadingFinished2">项~</system:String>
@@ -186,6 +189,11 @@
     <system:String x:Key="RefreshCompletedTip">刷新完成</system:String>
     <system:String x:Key="RefreshDoubleClickTip">双击此处刷新</system:String>
     <system:String x:Key="FinishedSortTip">连续两次以上选择相同排序方式会在顺序和逆序之间切换</system:String>
+    <system:String x:Key="SortOrderChangeASCENDINGTip">排序方式改为顺序</system:String>
+    <system:String x:Key="SortOrderChangeDESCENDINGTip">排序方式改为逆序</system:String>
+    <system:String x:Key="OpenVideoWebsiteErrorTip">视频网址出错或打开浏览器出错</system:String>
+    <system:String x:Key="OpenUpupPersonalSpaceErrorTip">Up主个人主页打开失败</system:String>
+    <system:String x:Key="OpenUpupPersonalSpaceSucceedTip">已经在浏览器中打开个人主页</system:String>
 
     <system:String x:Key="StartDownload">开始</system:String>
     <system:String x:Key="PauseDownload">暂停</system:String>

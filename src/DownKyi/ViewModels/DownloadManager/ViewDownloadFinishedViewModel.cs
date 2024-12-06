@@ -249,18 +249,24 @@ namespace DownKyi.ViewModels.DownloadManager
         /// 两次选择相同的排序 则逆序
         /// </summary>
         /// <param name="parameter"></param>
-        private void ExecuteReverseSortCommand(object parameter)
+        private async void ExecuteReverseSortCommand(object parameter)
         {
             if (!(parameter is int index)) { return; }
 
             if (index == lastTimeSortSelected)
             {
                 if (SettingsManager.GetInstance().GetSortOrder() == SortOrder.DESCENDING)
+                {
                     SettingsManager.GetInstance().SetSortOrder(SortOrder.ASCENDING);
+                    PublishTipHandler(DictionaryResource.GetString("SortOrderChangeASCENDINGTip"));
+                }
                 else
+                {
                     SettingsManager.GetInstance().SetSortOrder(SortOrder.DESCENDING);
+                    PublishTipHandler(DictionaryResource.GetString("SortOrderChangeDESCENDINGTip"));
+                }
                 DownloadedList = new ObservableCollection<DownloadedItem>();
-                UpdateDownloadedItemList(Pager.CurrentPage);
+                await UpdateDownloadedItemList(Pager.CurrentPage);
             }
         }
 

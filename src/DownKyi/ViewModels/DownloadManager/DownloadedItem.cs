@@ -12,9 +12,11 @@ using DownKyi.ViewModels.Dialogs;
 using Prism.Commands;
 using Prism.Services.Dialogs;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace DownKyi.ViewModels.DownloadManager
 {
@@ -184,85 +186,150 @@ namespace DownKyi.ViewModels.DownloadManager
         private void ExecuteCreateUpupThemeCommand()
         {
             if (DownloadBase == null) { return; }
-            // 选择文件夹
-            string directory = SetDirectory(DialogService);
-            if (string.IsNullOrEmpty(directory)) { return; }
-
-            // 构造upup类
-            UpupModel upupModel = new UpupModel()
+            try
             {
-                UserName = SettingsManager.GetInstance().GetDefaultUseName(),
-                Author = DownloadBase.UpOwner.Name,
-                Name = DownloadBase.Name,
-                Src = DownloadBase.FilePath + ".mp4",
-                Tag = DownloadBase.ZoneId.ToString(),
-                Description = DownloadBase.Description
-            };
-            upupModel.SetReprintUrl(DownloadBase.Bvid);
-            upupModel.SetThemeno((int)DownloadBase.Avid);
-            UpupUtils upupUtils = new UpupUtils(directory, DownloadBase.FilePath, ref upupModel);
+                // 选择文件夹
+                string directory = SetDirectory(DialogService);
+                if (string.IsNullOrEmpty(directory)) { return; }
 
-            AlertService alertService = new AlertService(DialogService);
-            // 判断视频的 宽高比是否为 16:9
-            if (DownloadBase.Dimension != null && DownloadBase.Dimension.Width * DownloadBase.Dimension.Height > 1)
-            {
-                if (!VideoSizeGet.DetectingVideoAspectRatio(DownloadBase.Dimension.Width, DownloadBase.Dimension.Height))
+                // 构造upup类
+                UpupModel upupModel = new UpupModel()
                 {
-                    // 不是16:9 的操作
-                    ButtonResult result = alertService.ShowInfo(DictionaryResource.GetString("CreateUpupFailedTip4"));
-                    if (result != ButtonResult.OK)
+                    UserName = SettingsManager.GetInstance().GetDefaultUseName(),
+                    Author = DownloadBase.UpOwner.Name,
+                    Name = DownloadBase.Name,
+                    Src = DownloadBase.FilePath + ".mp4",
+                    Tag = DownloadBase.ZoneId.ToString(),
+                    Description = DownloadBase.Description
+                };
+                upupModel.SetReprintUrl(DownloadBase.Bvid);
+                upupModel.SetThemeno((int)DownloadBase.Avid);
+                UpupUtils upupUtils = new UpupUtils(directory, DownloadBase.FilePath, ref upupModel);
+
+                AlertService alertService = new AlertService(DialogService);
+                // 判断视频的 宽高比是否为 16:9
+                if (DownloadBase.Dimension != null && DownloadBase.Dimension.Width * DownloadBase.Dimension.Height > 1)
+                {
+                    if (!VideoSizeGet.DetectingVideoAspectRatio(DownloadBase.Dimension.Width, DownloadBase.Dimension.Height))
                     {
-                        return;
+                        // 不是16:9 的操作
+                        ButtonResult result = alertService.ShowInfo(DictionaryResource.GetString("CreateUpupFailedTip4"));
+                        if (result != ButtonResult.OK)
+                        {
+                            return;
+                        }
                     }
                 }
-            }
-            else
-            {
-                (int width, int height) = System.Threading.Tasks.Task.Run(async () => await upupUtils.GetVideoAspectRatio()).Result;
-                if (!VideoSizeGet.DetectingVideoAspectRatio(width, height))
+                else
                 {
-                    // 不是16:9 的操作
-                    ButtonResult result = alertService.ShowInfo("不是16:9");
-                    if (result != ButtonResult.OK)
+                    (int width, int height) = System.Threading.Tasks.Task.Run(async () => await upupUtils.GetVideoAspectRatio()).Result;
+                    if (!VideoSizeGet.DetectingVideoAspectRatio(width, height))
                     {
-                        return;
+                        // 不是16:9 的操作
+                        ButtonResult result = alertService.ShowInfo("不是16:9");
+                        if (result != ButtonResult.OK)
+                        {
+                            return;
+                        }
                     }
                 }
-            }
 
 
-            // 判断是否下载了视频
-            if (DownloadBase.NeedDownloadContent.ContainsKey("downloadVideo") && DownloadBase.NeedDownloadContent["downloadVideo"])
-            {
-                // 视频的处理
-                if (SettingsManager.GetInstance().GetIsMoveVideoUpDirectory() == AllowStatus.YES)
+                // 判断是否下载了视频
+                if (DownloadBase.NeedDownloadContent.ContainsKey("downloadVideo") && DownloadBase.NeedDownloadContent["downloadVideo"])
                 {
-                    var videores = upupUtils.UpupCreate_Video();
-                    if (!videores) { PublishTip?.Invoke(DictionaryResource.GetString("CreateUpupFailedTip2")); }
-                }
-                // 封面的处理
-                bool coverres = true;
-                if (DownloadBase.NeedDownloadContent.ContainsKey("downloadCover") && DownloadBase.NeedDownloadContent["downloadCover"])
-                    coverres = upupUtils.UpupCreate_CoverCopy();
-                if (!coverres)
-                {
-                    StorageCover storageCover = new StorageCover();
-                    string cover = storageCover.GetCover(DownloadBase.Avid, DownloadBase.Bvid, DownloadBase.Cid, DownloadBase.CoverUrl);
-                    if (cover == null)
-                        PublishTip?.Invoke(DictionaryResource.GetString("CreateUpupFailedTip3"));
-                    using (Bitmap bitmap = new Bitmap(cover))
+                    // 视频的处理
+                    if (SettingsManager.GetInstance().GetIsMoveVideoUpDirectory() == AllowStatus.YES)
                     {
-                        bitmap.Save(upupUtils.TargetIMGFileName);
+                        var videores = upupUtils.UpupCreate_Video();
+                        if (!videores) { PublishTip?.Invoke(DictionaryResource.GetString("CreateUpupFailedTip2")); }
                     }
+                    // 封面的处理
+                    bool coverres = true;
+                    if (DownloadBase.NeedDownloadContent.ContainsKey("downloadCover") && DownloadBase.NeedDownloadContent["downloadCover"])
+                        coverres = upupUtils.UpupCreate_CoverCopy();
+                    if (!coverres)
+                    {
+                        StorageCover storageCover = new StorageCover();
+                        string cover = storageCover.GetCover(DownloadBase.Avid, DownloadBase.Bvid, DownloadBase.Cid, DownloadBase.CoverUrl);
+                        if (cover == null)
+                            PublishTip?.Invoke(DictionaryResource.GetString("CreateUpupFailedTip3"));
+                        using (Bitmap bitmap = new Bitmap(cover))
+                        {
+                            bitmap.Save(upupUtils.TargetIMGFileName);
+                        }
+                    }
+                    // 配置文件处理
+                    upupUtils.UpupWriteupupJsonFile();
+                    PublishTip?.Invoke(DictionaryResource.GetString("CreateUpupSucceedTip"));
                 }
-                // 配置文件处理
-                upupUtils.UpupWriteupupJsonFile();
-                PublishTip?.Invoke(DictionaryResource.GetString("CreateUpupSucceedTip"));
+                else
+                {
+                    // 没有下载视频
+                    PublishTip?.Invoke(DictionaryResource.GetString("CreateUpupFailedTip1"));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // 没有下载视频
-                PublishTip?.Invoke(DictionaryResource.GetString("CreateUpupFailedTip1"));
+                PublishTip?.Invoke(DictionaryResource.GetString("ErrorTip") + nameof(ExecuteCreateUpupThemeCommand));
+                Core.Logging.LogManager.Error(nameof(DownloadedItem), ex.Message);
+            }
+        }
+
+        // 打开原视频网站
+        private DelegateCommand openVideoWebsiteCommand;
+        public DelegateCommand OpenVideoWebsiteCommand => openVideoWebsiteCommand ?? (openVideoWebsiteCommand = new DelegateCommand(ExecuteOpenVideoWebsiteCommand));
+
+        private void ExecuteOpenVideoWebsiteCommand()
+        {
+            if (DownloadBase == null) { return; }
+            if (string.IsNullOrWhiteSpace(DownloadBase.Bvid))
+            {
+                return;
+            }
+
+            string url = $"https://www.bilibili.com/video/{DownloadBase.Bvid}";
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                });
+
+            }
+            catch (Exception ex)
+            {
+                PublishTip?.Invoke(DictionaryResource.GetString("OpenVideoWebsiteErrorTip"));
+                Core.Logging.LogManager.Error(nameof(DownloadedItem), ex.Message);
+            }
+        }
+        // 打开原视频网站
+        private DelegateCommand openUpupPersonalSpaceCommand;
+        public DelegateCommand OpenUpupPersonalSpaceCommand => openUpupPersonalSpaceCommand ?? (openUpupPersonalSpaceCommand = new DelegateCommand(ExecuteOpenUpupPersonalSpaceCommand));
+
+        private void ExecuteOpenUpupPersonalSpaceCommand()
+        {
+            if (DownloadBase == null) { return; }
+            if (string.IsNullOrWhiteSpace(DownloadBase.Bvid))
+            {
+                return;
+            }
+
+            string url = $"https://space.bilibili.com/{DownloadBase.UpOwner.Mid}";
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                });
+                PublishTip?.Invoke(DictionaryResource.GetString("OpenUpupPersonalSpaceSucceedTip"));
+            }
+            catch (Exception ex)
+            {
+                PublishTip?.Invoke(DictionaryResource.GetString("OpenUpupPersonalSpaceErrorTip"));
+                Core.Logging.LogManager.Error(nameof(DownloadedItem), ex.Message);
             }
         }
         #endregion

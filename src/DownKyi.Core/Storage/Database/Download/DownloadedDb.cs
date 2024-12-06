@@ -101,7 +101,7 @@ namespace DownKyi.Core.Storage.Database.Download
         /// 查询分页数据
         /// </summary>
         /// <returns></returns>
-        public new List<dynamic> QueryPageData(int curPage)
+        public List<dynamic> QueryPageData(int curPage)
         {
             List<string> uuids = GetSortedUuids(GetSortedData(), curPage);
             List<dynamic> results = new List<dynamic>();
@@ -292,13 +292,25 @@ namespace DownKyi.Core.Storage.Database.Download
         /// 获取所有的可排序的字段  数据
         /// </summary>
         /// <returns></returns>
-        private List<DownloadedSortModel> GetSortedData()
+        private List<DownloadedSortModel> GetSortedData(long upOwnerMid = 0, int zoneId = -2, string upName = null)
         {
             List<DownloadedSortModel> sortModels = new List<DownloadedSortModel>();
             string sql = $@"SELECT t1.Uuid, t2.""ORDER"", t2.FileSize, t2.UpOwnerMid, t2.ZoneId, t2.Duration, t1.FinishedTimestamp
                             from ""{tableName}"" t1
-                            INNER JOIN ""{tableName_base}"" t2 on t1.Uuid = t2.Uuid";
-
+                            INNER JOIN ""{tableName_base}"" t2 on t1.Uuid = t2.Uuid
+                            WHERE 1 = 1 ";
+            if (zoneId != -2)
+            {
+                sql += $"AND t2.ZoneId = {zoneId};";
+            }
+            if (string.IsNullOrEmpty(upName) && upOwnerMid != 0)
+            {
+                sql += $"AND t1.UpOwnerMid = {upOwnerMid};";
+            }
+            if (!string.IsNullOrEmpty(upName))
+            {
+                sql += $"AND t1.Name LIKE '%{upName}%';";
+            }
             try
             {
                 dbHelper.ExecuteQuery(sql, reader =>

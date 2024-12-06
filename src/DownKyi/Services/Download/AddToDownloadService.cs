@@ -283,12 +283,14 @@ namespace DownKyi.Services.Download
                             if (result == ButtonResult.OK)
                             {
                                 downloadStorage.RemoveDownloaded(isExistedUuid);
+                                eventAggregator.GetEvent<MessageEvent>().Publish($"{page.Name}{DictionaryResource.GetString("TipAlreadyToAddDownloaded4")}");
 
                                 isDownloaded = false;
                             }
                             else
                             {
                                 isDownloaded = true;
+                                eventAggregator.GetEvent<MessageEvent>().Publish($"{page.Name}{DictionaryResource.GetString("TipAlreadyToAddDownloaded3")}");
                             }
                         }
                         else
@@ -296,8 +298,14 @@ namespace DownKyi.Services.Download
                             if (SettingsManager.GetInstance().IsRedownloadAllowed() == AllowStatus.YES)
                             {
                                 downloadStorage.RemoveDownloaded(isExistedUuid);
+                                eventAggregator.GetEvent<MessageEvent>().Publish($"{page.Name}{DictionaryResource.GetString("TipAlreadyToAddDownloaded4")}");
 
                                 isDownloaded = false;
+                            }
+                            else
+                            {
+                                eventAggregator.GetEvent<MessageEvent>().Publish($"{page.Name}{DictionaryResource.GetString("TipAlreadyToAddDownloaded3")}");
+                                isDownloaded = true;
                             }
                         }
                     }

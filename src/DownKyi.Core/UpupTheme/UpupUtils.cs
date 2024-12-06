@@ -133,6 +133,7 @@ namespace DownKyi.Core.UpupTheme
             }
             catch (Exception ex)
             {
+                Logging.LogManager.Error(nameof(UpupUtils), ex.ToString());
                 return false;
             }
         }

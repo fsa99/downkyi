@@ -16,7 +16,7 @@
                         <Grid
                             Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=ActualWidth}"
                             Height="70"
-                            Margin="0,0,0,5">
+                            Margin="0,0,0,1">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="112" />
@@ -27,11 +27,28 @@
                                 </Grid.ColumnDefinitions>
                                 <!--  视频封面图  -->
                                 <Border ToolTip="{Binding Description}">
-                                    <Image
-                                        Grid.Column="0"
-                                        Width="112"
-                                        Height="70"
-                                        Source="{Binding VideoCoverImage}" />
+                                    <Button Command="{Binding OpenVideoWebsiteCommand}">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Background" Value="Transparent" />
+                                                <Setter Property="BorderBrush" Value="Transparent" />
+                                                <Setter Property="BorderThickness" Value="0" />
+                                                <Setter Property="Padding" Value="0" />
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <ContentPresenter />
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </Button.Style>
+                                        <Image
+                                            Grid.Column="0"
+                                            Width="112"
+                                            Height="70"
+                                            Source="{Binding VideoCoverImage}" />
+                                    </Button>
                                 </Border>
                                 <!--  视频截图上的时长  -->
                                 <Canvas
@@ -146,7 +163,12 @@
                                             <Image
                                                 Width="33"
                                                 Height="33"
-                                                Source="{Binding UPHeaderFaceImage}" />
+                                                Source="{Binding UPHeaderFaceImage}">
+                                                <Image.InputBindings>
+                                                    <MouseBinding Command="{Binding OpenUpupPersonalSpaceCommand}" Gesture="LeftClick" />
+                                                </Image.InputBindings>
+                                            </Image>
+
                                         </Border>
                                         <!--  UP主图标和 名字  -->
                                         <StackPanel
