@@ -350,23 +350,51 @@ namespace DownKyi.ViewModels
             {
                 return;
             }
-
-            string input;
             try
             {
+                // 获取剪贴板数据
                 IDataObject data = Clipboard.GetDataObject();
-                string[] fs = data.GetFormats();
-                input = data.GetData(fs[0]).ToString();
+
+                // 判断是否包含文本格式
+                if (data != null && (data.GetDataPresent(DataFormats.Text) || data.GetDataPresent(DataFormats.UnicodeText)))
+                {
+                    string input = data.GetData(DataFormats.Text) as string ??
+                                   data.GetData(DataFormats.UnicodeText) as string;
+
+                    if (!string.IsNullOrEmpty(input))
+                    {
+                        // 执行搜索服务
+                        SearchService searchService = new SearchService();
+                        searchService.BiliInput(input + AppConstant.ClipboardId, ViewIndexViewModel.Tag, eventAggregator);
+                    }
+                }
+                else
+                {
+                    // 非文本数据，跳过
+                }
             }
             catch (Exception exc)
             {
                 Console.WriteLine("OnClipboardUpdated()发生异常: {0}", exc);
                 LogManager.Error("OnClipboardUpdated", exc);
-                return;
             }
 
-            SearchService searchService = new SearchService();
-            searchService.BiliInput(input + AppConstant.ClipboardId, ViewIndexViewModel.Tag, eventAggregator);
+            //string input;
+            //try
+            //{
+            //    IDataObject data = Clipboard.GetDataObject();
+            //    string[] fs = data.GetFormats();
+            //    input = data.GetData(fs[0]).ToString();
+            //}
+            //catch (Exception exc)
+            //{
+            //    Console.WriteLine("OnClipboardUpdated()发生异常: {0}", exc);
+            //    LogManager.Error("OnClipboardUpdated", exc);
+            //    return;
+            //}
+
+            //SearchService searchService = new SearchService();
+            //searchService.BiliInput(input + AppConstant.ClipboardId, ViewIndexViewModel.Tag, eventAggregator);
         }
 
         #endregion
