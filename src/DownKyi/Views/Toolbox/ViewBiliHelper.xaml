@@ -144,6 +144,35 @@
                 </StackPanel>
             </GroupBox>
 
+            <GroupBox
+                Margin="0,20,0,0"
+                Padding="10,5"
+                HorizontalAlignment="Left"
+                Header="{DynamicResource CleanUpPictureFolder}">
+
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center" Text="{DynamicResource CleanPictureFolderPath}" />
+                        <TextBox
+                            Name="nameFolderPath"
+                            Width="150"
+                            Height="20"
+                            Margin="10"
+                            VerticalContentAlignment="Center"
+                            Text="{Binding CleanPictureFolderPath, Mode=TwoWay}" />
+                    </StackPanel>
+
+                    <Button
+                        Margin="30,0,0,0"
+                        VerticalAlignment="Center"
+                        Command="{Binding CleanPictureStartCommand}"
+                        Content="{DynamicResource CleanPictureStart}"
+                        FontSize="12"
+                        Style="{StaticResource BtnBorderStyle}" />
+
+                </StackPanel>
+            </GroupBox>
+
         </StackPanel>
     </ScrollViewer>
 </UserControl>

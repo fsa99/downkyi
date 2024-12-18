@@ -341,6 +341,15 @@
     <system:String x:Key="DanmakuUserID">弹幕中的userID:</system:String>
     <system:String x:Key="FindDanmakuSender">查询弹幕发送者-&gt;</system:String>
 
+    <system:String x:Key="CleanUpPictureFolder">清理图片</system:String>
+    <system:String x:Key="CleanPictureFolderPath">清理路径:</system:String>
+    <system:String x:Key="CleanPictureStart">开始清理-&gt;</system:String>
+    <system:String x:Key="CleanPictureFinishTip">图片清理完成!</system:String>
+    <system:String x:Key="FolderPathCannotEmptyTip">文件夹路径不能为空!</system:String>
+    <system:String x:Key="FolderPathDoesnotexistTip">文件夹路径不存在!</system:String>
+    <system:String x:Key="FolderPathDoesnotexistTip2">权限错误，无法访问文件夹!</system:String>
+
+
     <system:String x:Key="Delogo">去水印</system:String>
     <system:String x:Key="VideoFilePath">视频地址：</system:String>
     <system:String x:Key="SelectVideo">选择视频</system:String>

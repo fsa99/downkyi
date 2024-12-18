@@ -1,16 +1,21 @@
 ﻿using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.Logging;
+using DownKyi.Events;
+using DownKyi.Utils;
 using Prism.Commands;
 using Prism.Events;
 using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace DownKyi.ViewModels.Toolbox
 {
     public class ViewBiliHelperViewModel : BaseViewModel
     {
         public const string Tag = "PageToolboxBiliHelper";
-
+        private static readonly string[] ImageExtensions = { ".jpg", ".jpeg", ".png", ".bmp", ".gif", ".tiff" };
         #region 页面属性申明
 
         private string avid;
@@ -39,6 +44,13 @@ namespace DownKyi.ViewModels.Toolbox
         {
             get { return userMid; }
             set { SetProperty(ref userMid, value); }
+        }
+
+        private string cleanPictureFolderPath;
+        public string CleanPictureFolderPath
+        {
+            get { return cleanPictureFolderPath; }
+            set { SetProperty(ref cleanPictureFolderPath, value); }
         }
 
         #endregion
@@ -143,6 +155,63 @@ namespace DownKyi.ViewModels.Toolbox
 
             string baseUrl = "https://space.bilibili.com/";
             System.Diagnostics.Process.Start(baseUrl + UserMid);
+        }
+
+        // 清理文件夹下的图片事件
+        private DelegateCommand cleanPictureStartCommand;
+        public DelegateCommand CleanPictureStartCommand => cleanPictureStartCommand ?? (cleanPictureStartCommand = new DelegateCommand(ExecuteCleanPictureStartCommand));
+
+        /// <summary>
+        /// 清理文件夹下的图片事件
+        /// </summary>
+        private void ExecuteCleanPictureStartCommand()
+        {
+            if (string.IsNullOrWhiteSpace(CleanPictureFolderPath))
+            {
+                eventAggregator.GetEvent<MessageEvent>().Publish(CleanPictureFolderPath + DictionaryResource.GetString("FolderPathCannotEmptyTip"));
+                return;
+            }
+
+            if (!Directory.Exists(CleanPictureFolderPath))
+            {
+                eventAggregator.GetEvent<MessageEvent>().Publish(CleanPictureFolderPath + DictionaryResource.GetString("FolderPathDoesnotexistTip"));
+                return;
+            }
+
+            try
+            {
+                var files = Directory.GetFiles(CleanPictureFolderPath, "*.*", SearchOption.AllDirectories);
+
+                foreach (var file in files)
+                {
+                    try
+                    {
+                        if (ImageExtensions.Contains(Path.GetExtension(file)?.ToLower()))
+                        {
+                            if (File.Exists(file))
+                            {
+                                File.Delete(file);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        eventAggregator.GetEvent<MessageEvent>().Publish(CleanPictureFolderPath + DictionaryResource.GetString("Error" + ex.Message));
+                        return;
+                    }
+                }
+                eventAggregator.GetEvent<MessageEvent>().Publish(CleanPictureFolderPath + DictionaryResource.GetString("CleanPictureFinishTip"));
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                eventAggregator.GetEvent<MessageEvent>().Publish(CleanPictureFolderPath + DictionaryResource.GetString("FolderPathDoesnotexistTip2" + ex.Message));
+                return;
+            }
+            catch (Exception ex)
+            {
+                eventAggregator.GetEvent<MessageEvent>().Publish(CleanPictureFolderPath + DictionaryResource.GetString("Error" + ex.Message));
+                return;
+            }
         }
 
         #endregion

@@ -112,7 +112,7 @@ namespace DownKyi.Services.Download
             AddDownloadBase(downloadedItem.DownloadBase);
 
             DownloadedDb downloadedDb = new DownloadedDb();
-            object obj = downloadedDb.QueryById(downloadedItem.DownloadBase.Uuid);
+            object obj = downloadedDb.QueryByUuid(downloadedItem.DownloadBase.Uuid);
             if (obj == null)
             {
                 downloadedDb.SaveDownloaded(downloadedItem.DownloadBase.Uuid, downloadedItem.Downloaded);

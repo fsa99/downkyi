@@ -18,6 +18,7 @@ namespace DownKyi.Core.Storage
         /// <returns></returns>
         public static bool DownloadImage(string url, string localFile)
         {
+            if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(localFile)) return false;
             try
             {
                 WebClient mywebclient = new WebClient();

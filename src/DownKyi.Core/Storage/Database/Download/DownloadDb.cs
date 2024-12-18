@@ -149,13 +149,35 @@ namespace DownKyi.Core.Storage.Database.Download
         }
 
         /// <summary>
-        /// 查询uuid对应的数据
+        /// 查询id对应的数据
         /// </summary>
         /// <param name="uuid"></param>
         /// <returns></returns>
         public object QueryById(string uuid)
         {
             string sql = $"select * from {tableName} where id glob '{uuid}'";
+            Dictionary<string, object> query = Query(sql);
+
+            if (query.ContainsKey(uuid))
+            {
+                query.TryGetValue(uuid, out object obj);
+                //LogManager.Info("SQLite执行记录", nameof(QueryById), $"执行语句：{sql}\t 返回行数：{obj.ToString()}");
+                return obj;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 查询id对应的数据
+        /// </summary>
+        /// <param name="uuid"></param>
+        /// <returns></returns>
+        public object QueryByUuid(string uuid)
+        {
+            string sql = $"select * from {tableName} where Uuid glob '{uuid}'";
             Dictionary<string, object> query = Query(sql);
 
             if (query.ContainsKey(uuid))
