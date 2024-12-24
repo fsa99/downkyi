@@ -107,7 +107,11 @@ namespace DownKyi.Core.Storage.Database.Download
             List<dynamic> results = new List<dynamic>();
             foreach (var uuid in uuids)
             {
-                results.Add(QueryByUuid(uuid));
+                var result = QueryByUuid(uuid);
+                if (result != null)
+                {
+                    results.Add(result);
+                }
             }
             return results;
         }
@@ -139,12 +143,19 @@ namespace DownKyi.Core.Storage.Database.Download
         /// </summary>
         /// <param name="uuids"></param>
         /// <returns></returns>
-        public dynamic QueryByUuid(string uuid)
+        public new dynamic QueryByUuid(string uuid)
         {
             string sql = $@"SELECT Uuid, MaxSpeedDisplay, FinishedTimestamp
                             FROM ""{tableName}""
                             WHERE Uuid in ('{uuid}')";
-            return Query(sql)?[0];
+            var results = Query(sql);
+
+            if (results == null || results.Count == 0)
+            {
+                return null; 
+            }
+
+            return results[0];
         }
 
         /// <summary>

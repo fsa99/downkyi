@@ -9,7 +9,7 @@ namespace DownKyi.Core.Storage.Database
     {
         private readonly string connStr;
         private readonly SQLiteConnection conn;
-
+        private static readonly object _lock = new object();
         private static readonly Dictionary<string, SQLiteConnection> database = new Dictionary<string, SQLiteConnection>();
 
         /// <summary>
@@ -20,18 +20,31 @@ namespace DownKyi.Core.Storage.Database
         {
             connStr = $"Data Source={dbPath};Version=3;";
 
-            if (database.ContainsKey(connStr))
+            try
             {
-                conn = database[connStr];
-
-                if (conn != null)
+                lock (_lock)
                 {
-                    return;
+                    if (database.ContainsKey(connStr))
+                    {
+                        conn = database[connStr];
+
+                        if (conn != null)
+                        {
+                            return;
+                        }
+                    }
+
+                    conn = new SQLiteConnection(connStr);
+                    database.Add(connStr, conn);
                 }
             }
-
-            conn = new SQLiteConnection(connStr);
-            database.Add(connStr, conn);
+            catch (Exception ex)
+            {
+                // 输出 connStr 和 database 的所有键
+                var databaseKeys = string.Join(", ", database.Keys);
+                LogManager.Error("DbHelper DbHelper()",
+                    $"异常信息: {ex.Message}\nconnStr: {connStr}\n当前数据库键: {databaseKeys}");
+            }
         }
 
         /// <summary>

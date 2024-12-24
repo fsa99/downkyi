@@ -58,6 +58,7 @@ namespace DownKyi.ViewModels.Toolbox
         public ViewBiliHelperViewModel(IEventAggregator eventAggregator) : base(eventAggregator)
         {
             #region 属性初始化
+            CleanPictureFolderPath = "D:\\BIlibili4K";
             #endregion
         }
 
@@ -178,6 +179,8 @@ namespace DownKyi.ViewModels.Toolbox
                 return;
             }
 
+            int cleanedFileCount = 0; // 统计清理的文件数量
+
             try
             {
                 var files = Directory.GetFiles(CleanPictureFolderPath, "*.*", SearchOption.AllDirectories);
@@ -186,31 +189,33 @@ namespace DownKyi.ViewModels.Toolbox
                 {
                     try
                     {
-                        if (ImageExtensions.Contains(Path.GetExtension(file)?.ToLower()))
+                        // 检查扩展名是否为 MP4，如果不是则清理
+                        if (!".mp4".Equals(Path.GetExtension(file)?.ToLower()))
                         {
                             if (File.Exists(file))
                             {
                                 File.Delete(file);
+                                cleanedFileCount++;
                             }
                         }
                     }
                     catch (Exception ex)
                     {
                         eventAggregator.GetEvent<MessageEvent>().Publish(CleanPictureFolderPath + DictionaryResource.GetString("Error" + ex.Message));
-                        return;
+                        continue; // 继续处理其他文件
                     }
                 }
-                eventAggregator.GetEvent<MessageEvent>().Publish(CleanPictureFolderPath + DictionaryResource.GetString("CleanPictureFinishTip"));
+
+                // 发布清理完成消息，显示清理的文件数量
+                eventAggregator.GetEvent<MessageEvent>().Publish(CleanPictureFolderPath + DictionaryResource.GetString("CleanPictureFinishTip") + $": {cleanedFileCount}");
             }
             catch (UnauthorizedAccessException ex)
             {
-                eventAggregator.GetEvent<MessageEvent>().Publish(CleanPictureFolderPath + DictionaryResource.GetString("FolderPathDoesnotexistTip2" + ex.Message));
-                return;
+                eventAggregator.GetEvent<MessageEvent>().Publish(CleanPictureFolderPath + DictionaryResource.GetString("FolderPathDoesnotexistTip2") + ex.Message);
             }
             catch (Exception ex)
             {
-                eventAggregator.GetEvent<MessageEvent>().Publish(CleanPictureFolderPath + DictionaryResource.GetString("Error" + ex.Message));
-                return;
+                eventAggregator.GetEvent<MessageEvent>().Publish(CleanPictureFolderPath + DictionaryResource.GetString("Error") + ex.Message);
             }
         }
 

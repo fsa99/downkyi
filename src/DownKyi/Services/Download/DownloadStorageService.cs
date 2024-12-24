@@ -225,6 +225,7 @@ namespace DownKyi.Services.Download
         {
             DownloadedDb downloadedDb = new DownloadedDb();
             dynamic downloaded = downloadedDb.QueryByUuid(Uuid);
+            if (downloaded == null) return null;
             return Downloaded.FromDynamic(downloaded);
         }
 
